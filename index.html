@@ -398,7 +398,9 @@ nav{
 
 /* HERO */
 #hero{
-  position:relative;height:100vh;
+  position:relative;
+  height:100vh;
+  height:100svh;
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;
 }
@@ -1523,17 +1525,61 @@ footer{
   align-items:center;
   justify-content:center;
   pointer-events:none;
+  background:#000;
 }
 #hero-video{
   width:100%;
   height:100%;
   object-fit:cover;
+  object-position:center center;
   display:block;
   opacity:0;
   transition:opacity 1.2s cubic-bezier(0.22,1,0.36,1);
 }
 #hero-video.loaded{
   opacity:1;
+}
+
+/* ── VIDEO RESPONSIVE — mobile: نمایش کامل بدون crop ── */
+@media(max-width:600px){
+  #hero-video-wrap{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    background:#000;
+  }
+  #hero-video{
+    width:100vw;
+    height:auto;
+    max-height:100svh;
+    min-width:unset;
+    min-height:unset;
+    object-fit:contain;
+    object-position:center center;
+  }
+}
+
+/* ── VIDEO RESPONSIVE — tablet ── */
+@media(min-width:601px) and (max-width:900px){
+  #hero-video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center center;
+  }
+}
+
+/* ── VIDEO RESPONSIVE — desktop/laptop ── */
+@media(min-width:901px){
+  #hero-video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center center;
+  }
 }
 #hero-video-vignette{
   position:absolute;
