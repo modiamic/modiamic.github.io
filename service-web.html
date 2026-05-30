@@ -1,0 +1,2042 @@
+'HTMLEOF'
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050507">
+<title>Web Design & Digital — Modiamic Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,700;1,300;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Cinzel:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --silver:#c8cdd4;
+  --silver-bright:#e8ecf0;
+  --silver-dark:#8a8f96;
+  --gold:#b8a070;
+  --bg:#050507;
+  --bg2:#090910;
+  --text:#d8dde4;
+  --accent:#ffffff;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  overflow-x:hidden;
+  cursor:none;
+  -webkit-text-size-adjust:100%;
+}
+*,*::before,*::after{cursor:none!important;-webkit-tap-highlight-color:transparent}
+
+/* ── Cursor ── */
+#cursor{
+  width:12px;height:12px;border-radius:50%;
+  position:fixed;left:0;top:0;pointer-events:none;z-index:9999;
+  will-change:transform;transform:translate(-50%,-50%);
+  background:radial-gradient(circle at 38% 36%,#ffffff 0%,#d8eeff 40%,#a0c8ff 70%,transparent 100%);
+  box-shadow:0 0 6px 2px rgba(180,220,255,0.9),0 0 18px 5px rgba(140,190,255,0.55),0 0 40px 10px rgba(100,160,255,0.22);
+  transition:width 0.3s,height 0.3s,box-shadow 0.3s;
+}
+#cursor.big{
+  width:20px;height:20px;
+  box-shadow:0 0 8px 3px rgba(220,200,255,0.95),0 0 28px 8px rgba(184,160,255,0.6),0 0 60px 16px rgba(150,120,255,0.25);
+  background:radial-gradient(circle at 38% 36%,#ffffff 0%,#eeddff 40%,#c8a8ff 70%,transparent 100%);
+}
+
+/* ── Scroll progress ── */
+#scroll-progress{
+  position:fixed;top:0;left:0;height:2px;width:0%;
+  background:linear-gradient(90deg,var(--gold),#e8d4a8,var(--gold));
+  z-index:9998;transition:width 0.1s linear;
+  box-shadow:0 0 8px var(--gold);
+}
+
+/* ── Back to top ── */
+#back-top{
+  position:fixed;bottom:32px;left:32px;
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(10,10,14,0.85);
+  border:1px solid rgba(184,160,112,0.35);
+  display:flex;align-items:center;justify-content:center;
+  z-index:200;opacity:0;pointer-events:none;
+  transition:opacity 0.4s,transform 0.4s,border-color 0.3s;
+  backdrop-filter:blur(12px);
+}
+#back-top.visible{opacity:1;pointer-events:auto}
+#back-top:hover{border-color:var(--gold);transform:translateY(-3px)}
+#back-top svg{width:16px;height:16px;stroke:var(--gold);stroke-width:1.5;fill:none}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:linear-gradient(to bottom,rgba(5,5,7,0.97) 0%,transparent 100%);
+  transition:background 0.4s;
+}
+.nav-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:28px 60px;
+}
+.logo-nav{
+  font-family:'Cinzel',serif;
+  font-size:18px;letter-spacing:0.35em;
+  color:var(--silver-bright);
+  text-transform:uppercase;
+  text-decoration:none;
+  display:flex;align-items:center;gap:10px;
+}
+.nav-links{display:flex;gap:48px;list-style:none}
+.nav-links a{
+  color:var(--silver-dark);text-decoration:none;
+  font-size:12px;letter-spacing:0.18em;text-transform:uppercase;
+  transition:color 0.3s;
+}
+.nav-links a:hover{color:white}
+.nav-links a.active{color:var(--gold)}
+
+/* Lang switcher */
+#lang-switcher{position:relative;display:flex;align-items:center}
+#lang-btn{
+  display:flex;align-items:center;gap:8px;background:none;
+  border:1px solid rgba(184,160,112,0.25);border-radius:28px;
+  padding:7px 14px 7px 10px;cursor:pointer;
+  transition:all 0.35s cubic-bezier(0.22,1,0.36,1);position:relative;overflow:visible;
+}
+#lang-btn::before{
+  content:'';position:absolute;inset:-1px;border-radius:28px;
+  background:conic-gradient(from 0deg,rgba(184,160,112,0) 0deg,rgba(184,160,112,0.4) 120deg,rgba(232,212,168,0.6) 180deg,rgba(184,160,112,0.4) 240deg,rgba(184,160,112,0) 360deg);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 1.5px),#000 calc(100% - 1.5px));
+  mask:radial-gradient(farthest-side,transparent calc(100% - 1.5px),#000 calc(100% - 1.5px));
+  opacity:0;animation:langRingRotate 4s linear infinite;transition:opacity 0.35s;
+}
+@keyframes langRingRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+#lang-btn:hover::before,#lang-btn.active::before{opacity:1}
+#lang-btn:hover{border-color:rgba(184,160,112,0.5);background:rgba(184,160,112,0.06)}
+#lang-btn.active{border-color:rgba(184,160,112,0.5);background:rgba(184,160,112,0.08)}
+.lang-globe{width:16px;height:16px;flex-shrink:0;transition:transform 0.5s}
+#lang-btn:hover .lang-globe,#lang-btn.active .lang-globe{transform:rotate(30deg) scale(1.1)}
+.lang-current{font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--silver-bright);line-height:1}
+.lang-chevron{width:10px;height:10px;stroke:var(--gold);stroke-width:1.5;fill:none;transition:transform 0.35s;flex-shrink:0}
+#lang-btn.active .lang-chevron{transform:rotate(180deg)}
+#lang-dropdown{
+  position:absolute;top:calc(100% + 10px);right:0;min-width:210px;
+  background:rgba(8,8,12,0.97);border:1px solid rgba(184,160,112,0.2);border-radius:8px;overflow:hidden;
+  opacity:0;pointer-events:none;transform:translateY(-8px) scale(0.97);transform-origin:top right;
+  transition:opacity 0.3s,transform 0.35s;z-index:500;backdrop-filter:blur(24px);
+  box-shadow:0 20px 60px rgba(0,0,0,0.7),0 0 0 1px rgba(184,160,112,0.08);
+}
+#lang-dropdown.open{opacity:1;pointer-events:auto;transform:translateY(0) scale(1)}
+.lang-option{
+  display:flex;align-items:center;gap:12px;padding:11px 16px;cursor:pointer;
+  transition:background 0.2s;border-bottom:1px solid rgba(255,255,255,0.04);position:relative;
+}
+.lang-option:last-child{border-bottom:none}
+.lang-option::after{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,transparent,var(--gold),transparent);transform:scaleY(0);transition:transform 0.3s}
+.lang-option:hover::after,.lang-option.selected::after{transform:scaleY(1)}
+.lang-option:hover{background:rgba(184,160,112,0.07)}
+.lang-option.selected{background:rgba(184,160,112,0.1)}
+.lang-option.selected .lang-opt-name{color:var(--gold)}
+.lang-flag{font-size:16px;line-height:1;flex-shrink:0}
+.lang-opt-name{font-family:'DM Sans',sans-serif;font-size:12px;letter-spacing:0.1em;color:var(--silver-bright);flex:1}
+.lang-opt-native{font-size:11px;color:var(--silver-dark);letter-spacing:0.05em}
+.lang-check{width:12px;height:12px;stroke:var(--gold);stroke-width:2;fill:none;opacity:0;transition:opacity 0.2s}
+.lang-option.selected .lang-check{opacity:1}
+
+/* Hamburger mobile */
+#nav-toggle{display:none;align-items:center;justify-content:center;background:none;border:none;outline:none;padding:8px;cursor:pointer;position:relative;width:44px;height:44px}
+#nav-toggle span{position:absolute;left:50%;z-index:2;transform-origin:center;transform:translateX(-50%);height:1.5px;border-radius:2px;background:linear-gradient(90deg,var(--silver-dark),var(--silver-bright));transition:transform 0.5s,opacity 0.3s,width 0.4s}
+#nav-toggle span:nth-child(1){top:15px;width:20px}
+#nav-toggle span:nth-child(2){top:22.5px;width:14px}
+#nav-toggle span:nth-child(3){top:30px;width:20px}
+
+/* Mobile overlay nav */
+#nav-overlay{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:fixed;inset:0;z-index:300;
+  opacity:0;pointer-events:none;transition:opacity 0.45s;visibility:hidden;
+  background:rgba(3,3,5,0.98);backdrop-filter:blur(32px);
+}
+#nav-overlay.open{opacity:1;pointer-events:auto;visibility:visible}
+#nav-overlay ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:0}
+#nav-overlay ul li{overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.04)}
+#nav-overlay ul li a{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 40px;text-decoration:none;
+  font-family:'Playfair Display',serif;font-size:clamp(22px,6vw,32px);font-weight:300;
+  color:var(--silver-bright);letter-spacing:0.02em;
+  transition:color 0.3s,padding 0.35s;
+}
+#nav-overlay ul li a:hover{color:var(--gold);padding-right:52px}
+#nav-overlay ul li a .link-num{font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:0.3em;color:var(--silver-dark)}
+
+/* ── HERO / PAGE HEADER ── */
+.page-hero{
+  position:relative;min-height:60vh;
+  display:flex;align-items:flex-end;justify-content:center;
+  overflow:hidden;padding:0 60px 80px;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at 40% 60%,rgba(64,144,216,0.15) 0%,rgba(40,80,160,0.08) 40%,transparent 70%),
+             radial-gradient(ellipse at 80% 20%,rgba(184,160,112,0.1) 0%,transparent 50%);
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(200,205,212,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(200,205,212,0.025) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse at center,rgba(0,0,0,0.6) 0%,transparent 70%);
+}
+.hero-particles{position:absolute;inset:0;pointer-events:none}
+.hero-content-wrap{
+  position:relative;z-index:2;
+  max-width:1100px;width:100%;
+}
+.breadcrumb{
+  display:flex;align-items:center;gap:12px;
+  font-size:10px;letter-spacing:0.35em;text-transform:uppercase;
+  color:var(--silver-dark);margin-bottom:40px;
+}
+.breadcrumb a{color:var(--gold);text-decoration:none;transition:color 0.3s}
+.breadcrumb a:hover{color:white}
+.breadcrumb-sep{color:rgba(255,255,255,0.2)}
+.page-hero-tag{
+  display:inline-block;
+  font-size:9px;letter-spacing:0.45em;text-transform:uppercase;
+  color:var(--gold);
+  border:1px solid rgba(184,160,112,0.3);
+  padding:6px 16px;border-radius:20px;
+  margin-bottom:32px;
+  background:rgba(184,160,112,0.05);
+}
+.page-hero-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(52px,7vw,100px);
+  font-weight:300;line-height:0.95;
+  letter-spacing:-0.02em;
+  color:transparent;
+  background:linear-gradient(135deg,#ffffff 0%,#c8cdd4 40%,#8a8f96 70%,#c8cdd4 100%);
+  -webkit-background-clip:text;background-clip:text;
+  margin-bottom:28px;
+}
+.page-hero-sub{
+  font-size:14px;line-height:2;color:var(--silver-dark);
+  max-width:520px;
+}
+.hero-line-accent{
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:1px;height:60px;
+  background:linear-gradient(to bottom,transparent,var(--gold));
+}
+
+/* ── SECTION BASE ── */
+.section-label{
+  font-size:10px;letter-spacing:0.45em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:80px;
+  display:flex;align-items:center;gap:20px;
+}
+.section-label::before{content:'✦';color:var(--gold);opacity:0.5;font-size:8px;margin-left:4px}
+.section-label::after{content:'';flex:1;max-width:60px;height:1px;background:var(--gold);opacity:0.4}
+
+/* ── CAPABILITIES SECTION ── */
+#capabilities{padding:140px 60px;background:var(--bg)}
+.cap-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:60px 100px;
+  margin-top:80px;
+}
+.cap-item{
+  display:flex;flex-direction:column;gap:20px;
+  padding-bottom:60px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  opacity:0;transform:translateY(30px);
+  transition:opacity 0.8s,transform 0.8s;
+}
+.cap-item.visible{opacity:1;transform:none}
+.cap-num{font-size:10px;letter-spacing:0.4em;color:var(--gold);opacity:0.6}
+.cap-icon-wrap{
+  width:64px;height:64px;position:relative;
+}
+.cap-icon-wrap::before{
+  content:'';position:absolute;inset:-8px;border-radius:50%;
+  background:radial-gradient(circle,rgba(64,144,216,0.15) 0%,transparent 70%);
+  opacity:0;transition:opacity 0.4s;
+}
+.cap-item:hover .cap-icon-wrap::before{opacity:1}
+.cap-title{
+  font-family:'Playfair Display',serif;font-size:26px;font-weight:300;
+  color:var(--silver-bright);
+}
+.cap-desc{font-size:13px;line-height:2;color:var(--silver-dark)}
+.cap-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.cap-tag{
+  font-size:9px;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--silver-dark);
+  border:1px solid rgba(200,205,212,0.12);padding:5px 12px;border-radius:2px;
+  transition:all 0.3s;
+}
+.cap-item:hover .cap-tag{border-color:rgba(184,160,112,0.3);color:var(--silver-bright)}
+
+/* ── PROCESS SECTION ── */
+#process{padding:140px 60px;background:var(--bg2);position:relative;overflow:hidden}
+#process::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 70% 50%,rgba(64,144,216,0.06) 0%,transparent 60%);
+  pointer-events:none;
+}
+.process-intro{
+  display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:start;margin-bottom:100px;
+}
+.process-title{
+  font-family:'Playfair Display',serif;font-size:clamp(40px,4vw,64px);
+  font-weight:300;color:var(--silver-bright);line-height:1.1;
+}
+.process-copy{font-size:14px;line-height:2;color:var(--silver-dark);padding-top:12px}
+.process-steps{display:flex;flex-direction:column;gap:0}
+.process-step{
+  display:grid;grid-template-columns:80px 1fr;
+  padding:44px 0;border-bottom:1px solid rgba(255,255,255,0.05);
+  position:relative;opacity:0;transform:translateX(-20px);
+  transition:opacity 0.7s,transform 0.7s;
+}
+.process-step.visible{opacity:1;transform:none}
+.process-step::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:1px;
+  background:linear-gradient(to bottom,transparent,var(--gold),transparent);
+  transform:scaleY(0);transform-origin:top;transition:transform 0.5s 0.3s;
+}
+.process-step.visible::before{transform:scaleY(1)}
+.step-num{
+  font-family:'Playfair Display',serif;font-size:48px;font-weight:300;
+  color:rgba(184,160,112,0.15);line-height:1;padding-top:6px;
+}
+.step-body{padding-right:40px}
+.step-title{
+  font-family:'Playfair Display',serif;font-size:22px;font-weight:300;
+  color:var(--silver-bright);margin-bottom:12px;
+}
+.step-desc{font-size:13px;line-height:1.9;color:var(--silver-dark)}
+
+/* ── WORKS SECTION ── */
+#works{padding:140px 60px;background:var(--bg)}
+.works-title-block{
+  display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:end;margin-bottom:80px;
+}
+.works-big-title{
+  font-family:'Playfair Display',serif;font-size:clamp(40px,4.5vw,68px);
+  font-weight:300;color:var(--silver-bright);line-height:1.1;
+}
+.works-big-copy{font-size:14px;line-height:2;color:var(--silver-dark);padding-bottom:8px}
+
+/* Project cards */
+.projects-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.project-card{
+  position:relative;overflow:hidden;background:var(--bg2);
+  cursor:pointer;
+  transition:transform 0.1s linear;
+  will-change:transform;
+}
+.project-card-inner{
+  position:relative;overflow:hidden;
+}
+.project-preview{
+  width:100%;aspect-ratio:16/10;overflow:hidden;position:relative;
+  background:var(--bg);
+}
+.project-preview canvas{width:100%!important;height:100%!important;display:block;transition:transform 0.6s cubic-bezier(0.22,1,0.36,1)}
+.project-card:hover .project-preview canvas{transform:scale(1.04)}
+.project-info{
+  padding:36px 40px;
+  position:relative;
+}
+.project-info::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(184,160,112,0.3),transparent);
+  transform:scaleX(0);transform-origin:left;transition:transform 0.5s;
+}
+.project-card:hover .project-info::before{transform:scaleX(1)}
+.project-cat{font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.project-name{
+  font-family:'Playfair Display',serif;font-size:24px;font-weight:300;
+  color:var(--silver-bright);margin-bottom:12px;
+}
+.project-desc{font-size:13px;line-height:1.8;color:var(--silver-dark);margin-bottom:20px}
+.project-tech{display:flex;flex-wrap:wrap;gap:6px}
+.tech-tag{
+  font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--silver-dark);border:1px solid rgba(200,205,212,0.1);padding:4px 10px;
+}
+.project-cta{
+  position:absolute;top:36px;left:40px;
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:9px;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--gold);opacity:0;transform:translateY(8px);
+  transition:opacity 0.4s 0.1s,transform 0.4s 0.1s;
+}
+.project-cta::after{
+  content:'';width:20px;height:1px;background:var(--gold);
+  transform:scaleX(0);transform-origin:left;transition:transform 0.35s 0.3s;
+}
+.project-card:hover .project-cta{opacity:1;transform:none}
+.project-card:hover .project-cta::after{transform:scaleX(1)}
+
+/* ── FEATURED WIDE CARD ── */
+.project-wide{grid-column:1/-1}
+.project-wide .project-preview{aspect-ratio:21/8}
+
+/* ── MARQUEE ── */
+.works-marquee{
+  overflow:hidden;white-space:nowrap;margin:60px 0;
+  border-top:1px solid rgba(255,255,255,0.05);
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  padding:18px 0;
+}
+.marquee-inner{display:inline-block;animation:marquee 22s linear infinite}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.marquee-item{
+  display:inline-block;
+  font-family:'Playfair Display',serif;font-size:13px;letter-spacing:0.3em;
+  text-transform:uppercase;color:rgba(255,255,255,0.18);margin:0 44px;
+}
+.marquee-item span{color:var(--gold);margin-left:8px;font-size:10px}
+
+/* ── STATS ── */
+#stats-section{
+  background:var(--bg2);padding:80px 60px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:2px;
+}
+.stat-box{
+  padding:48px 40px;background:var(--bg);text-align:center;position:relative;overflow:hidden;
+  transition:transform 0.35s,box-shadow 0.35s;
+}
+.stat-box:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(184,160,112,0.08)}
+.stat-num{
+  font-family:'Playfair Display',serif;font-size:64px;font-weight:300;
+  color:var(--silver-bright);display:block;line-height:1;margin-bottom:12px;
+}
+.stat-label{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--silver-dark)}
+.stat-box::after{
+  content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:30px;height:2px;background:var(--gold);
+}
+
+/* ── TECHNOLOGY STACK ── */
+#stack{padding:140px 60px;background:var(--bg);position:relative}
+.stack-intro{max-width:600px;margin-bottom:80px}
+.stack-title{
+  font-family:'Playfair Display',serif;font-size:clamp(36px,3.5vw,56px);
+  font-weight:300;color:var(--silver-bright);line-height:1.1;margin-bottom:24px;
+}
+.stack-copy{font-size:14px;line-height:2;color:var(--silver-dark)}
+.stack-categories{display:flex;flex-direction:column;gap:48px}
+.stack-cat-title{
+  font-size:10px;letter-spacing:0.4em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:24px;
+  display:flex;align-items:center;gap:16px;
+}
+.stack-cat-title::after{content:'';flex:1;height:1px;background:var(--gold);opacity:0.2}
+.stack-items{display:flex;flex-wrap:wrap;gap:12px}
+.stack-item{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 24px;
+  background:var(--bg2);border:1px solid rgba(255,255,255,0.05);
+  transition:all 0.35s;position:relative;overflow:hidden;
+}
+.stack-item::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(64,144,216,0.06) 0%,transparent 60%);
+  opacity:0;transition:opacity 0.3s;
+}
+.stack-item:hover{border-color:rgba(184,160,112,0.25);transform:translateY(-2px)}
+.stack-item:hover::before{opacity:1}
+.stack-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);opacity:0.5}
+.stack-name{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--silver-bright)}
+
+/* ── CTA ── */
+#cta-section{
+  padding:160px 60px;background:var(--bg2);
+  display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center;
+  position:relative;overflow:hidden;
+}
+#cta-section::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 50%,rgba(184,160,112,0.06) 0%,transparent 60%);
+}
+.cta-left{position:relative;z-index:1}
+.cta-title{
+  font-family:'Playfair Display',serif;font-size:clamp(40px,4vw,68px);
+  font-weight:300;color:var(--silver-bright);line-height:1;margin-bottom:28px;
+}
+.cta-sub{font-size:14px;line-height:2;color:var(--silver-dark);margin-bottom:48px}
+.cta-btn{
+  display:inline-block;padding:18px 48px;
+  border:1px solid rgba(200,205,212,0.3);
+  color:var(--silver-bright);text-decoration:none;
+  font-size:11px;letter-spacing:0.3em;text-transform:uppercase;
+  transition:all 0.4s;position:relative;overflow:hidden;
+}
+.cta-btn::before{
+  content:'';position:absolute;inset:0;background:rgba(255,255,255,0.06);
+  transform:scaleX(0);transform-origin:left;transition:transform 0.4s;
+}
+.cta-btn:hover::before{transform:scaleX(1)}
+.cta-right{position:relative;z-index:1}
+.cta-features{display:flex;flex-direction:column;gap:24px}
+.cta-feat{
+  display:flex;align-items:center;gap:20px;
+  padding:20px 24px;
+  background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);
+  transition:all 0.4s;
+}
+.cta-feat:hover{border-color:rgba(184,160,112,0.2);background:rgba(184,160,112,0.04)}
+.cta-feat-icon{width:36px;height:36px;flex-shrink:0}
+.cta-feat-text{font-size:12px;letter-spacing:0.1em;color:var(--silver-bright)}
+.cta-feat-sub{font-size:11px;color:var(--silver-dark);margin-top:3px}
+
+/* ── FOOTER ── */
+footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:40px 60px;background:var(--bg);
+  border-top:1px solid rgba(255,255,255,0.04);
+  flex-wrap:wrap;gap:20px;
+}
+.footer-logo{
+  font-family:'Cinzel',serif;font-size:16px;letter-spacing:0.35em;
+  color:var(--silver-bright);text-transform:uppercase;
+}
+.footer-copy{font-size:10px;letter-spacing:0.12em;color:var(--silver-dark)}
+.footer-links{display:flex;gap:32px;align-items:center}
+.footer-links a{
+  color:var(--silver-dark);text-decoration:none;
+  font-size:11px;letter-spacing:0.16em;text-transform:uppercase;
+  transition:color 0.3s;display:flex;align-items:center;gap:6px;
+}
+.footer-links a:hover{color:white}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.9s cubic-bezier(0.22,1,0.36,1),transform 0.9s}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .nav-inner{padding:20px 28px}
+  .nav-links{gap:24px}
+  .page-hero{padding:0 28px 60px}
+  #capabilities{padding:90px 28px}
+  .cap-grid{grid-template-columns:1fr;gap:0}
+  #process{padding:90px 28px}
+  .process-intro{grid-template-columns:1fr;gap:32px}
+  #works{padding:90px 28px}
+  .works-title-block{grid-template-columns:1fr;gap:20px}
+  .projects-grid{grid-template-columns:1fr}
+  #stats-section{grid-template-columns:1fr 1fr;padding:60px 28px}
+  #stack{padding:90px 28px}
+  #cta-section{grid-template-columns:1fr;gap:52px;padding:90px 28px}
+  footer{flex-direction:column;gap:20px;text-align:center;padding:40px 28px}
+  .footer-links{justify-content:center}
+}
+@media(max-width:600px){
+  *,*::before,*::after{cursor:auto!important}
+  #cursor{display:none}
+  #nav-toggle{display:flex!important}
+  .nav-links{display:none!important}
+  .nav-inner{padding:14px 20px}
+  .page-hero{padding:0 20px 60px;min-height:50vh}
+  .page-hero-title{font-size:clamp(40px,12vw,64px)}
+  #capabilities,.section-label{padding:68px 20px}
+  .cap-grid{gap:0}
+  #process,#works,#stack,#cta-section{padding:68px 20px}
+  .projects-grid{grid-template-columns:1fr}
+  .project-info{padding:24px 20px}
+  .project-wide .project-preview{aspect-ratio:16/9}
+  #stats-section{grid-template-columns:1fr 1fr;padding:36px 16px;gap:2px}
+  .stat-num{font-size:40px}
+  .stat-box{padding:26px 14px}
+  #back-top{bottom:20px;left:20px;width:38px;height:38px}
+  footer{padding:28px 20px}
+}
+</style>
+</head>
+<body>
+
+<div id="scroll-progress"></div>
+<div id="cursor"></div>
+
+<button id="back-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg viewBox="0 0 16 16"><polyline points="3,10 8,5 13,10"/></svg>
+</button>
+
+<!-- Mobile nav overlay -->
+<div id="nav-overlay">
+  <ul>
+    <li><a href="index.html#services" onclick="closeNav()"><span data-i18n="nav_services">Services</span><span class="link-num">01</span></a></li>
+    <li><a href="index.html#works" onclick="closeNav()"><span data-i18n="nav_works">Works</span><span class="link-num">02</span></a></li>
+    <li><a href="index.html#philosophy" onclick="closeNav()"><span data-i18n="nav_studio">Studio</span><span class="link-num">03</span></a></li>
+    <li><a href="index.html#contact" onclick="closeNav()"><span data-i18n="nav_contact">Contact</span><span class="link-num">04</span></a></li>
+  </ul>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo-nav">
+      <svg width="28" height="28" viewBox="0 0 56 56" fill="none">
+        <polygon points="8,10 22,10 22,46 8,46" fill="#c8cdd4" opacity="0.9"/>
+        <polygon points="22,10 34,10 48,46 36,46" fill="#c8cdd4" opacity="0.9"/>
+        <polygon points="30,28 42,28 48,46 36,46" fill="#8a8f96" opacity="0.7"/>
+      </svg>
+      <span>Modiamic</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html#services" data-i18n="nav_services">Services</a></li>
+      <li><a href="index.html#works" data-i18n="nav_works">Works</a></li>
+      <li><a href="index.html#philosophy" data-i18n="nav_studio">Studio</a></li>
+      <li><a href="index.html#contact" data-i18n="nav_contact">Contact</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:16px">
+      <div id="lang-switcher">
+        <button id="lang-btn" aria-label="Change language">
+          <svg class="lang-globe" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="6.5" stroke="#b8a070" stroke-width="1"/>
+            <ellipse cx="8" cy="8" rx="2.8" ry="6.5" stroke="#b8a070" stroke-width="0.8"/>
+            <line x1="1.5" y1="6" x2="14.5" y2="6" stroke="#b8a070" stroke-width="0.8"/>
+            <line x1="1.5" y1="10" x2="14.5" y2="10" stroke="#b8a070" stroke-width="0.8"/>
+          </svg>
+          <span class="lang-current" id="lang-current-label">FA</span>
+          <svg class="lang-chevron" viewBox="0 0 10 10"><polyline points="2,3 5,7 8,3"/></svg>
+        </button>
+        <div id="lang-dropdown">
+          <div class="lang-option selected" data-lang="fa">
+            <span class="lang-flag">🇮🇷</span><span class="lang-opt-name">فارسی</span><span class="lang-opt-native">FA</span>
+            <svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg>
+          </div>
+          <div class="lang-option" data-lang="en">
+            <span class="lang-flag">🇬🇧</span><span class="lang-opt-name">English</span><span class="lang-opt-native">EN</span>
+            <svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg>
+          </div>
+          <div class="lang-option" data-lang="tr">
+            <span class="lang-flag">🇹🇷</span><span class="lang-opt-name">Türkçe</span><span class="lang-opt-native">TR</span>
+            <svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg>
+          </div>
+          <div class="lang-option" data-lang="de">
+            <span class="lang-flag">🇩🇪</span><span class="lang-opt-name">Deutsch</span><span class="lang-opt-native">DE</span>
+            <svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg>
+          </div>
+          <div class="lang-option" data-lang="fr">
+            <span class="lang-flag">🇫🇷</span><span class="lang-opt-name">Français</span><span class="lang-opt-native">FR</span>
+            <svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg>
+          </div>
+          <div class="lang-option" data-lang="it">
+            <span class="lang-flag">🇮🇹</span><span class="lang-opt-name">Italiano</span><span class="lang-opt-native">IT</span>
+            <svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg>
+          </div>
+          <div class="lang-option" data-lang="es">
+            <span class="lang-flag">🇪🇸</span><span class="lang-opt-name">Español</span><span class="lang-opt-native">ES</span>
+            <svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg>
+          </div>
+          <div class="lang-option" data-lang="el">
+            <span class="lang-flag">🇬🇷</span><span class="lang-opt-name">Ελληνικά</span><span class="lang-opt-native">EL</span>
+            <svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg>
+          </div>
+        </div>
+      </div>
+      <button id="nav-toggle" aria-label="Menu" onclick="toggleNav()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero" style="padding-top:120px">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <canvas class="hero-particles" id="hero-particles"></canvas>
+  <div class="hero-content-wrap">
+    <div class="breadcrumb reveal">
+      <a href="index.html" data-i18n="nav_home">خانه</a>
+      <span class="breadcrumb-sep">—</span>
+      <a href="index.html#services" data-i18n="nav_services">خدمات</a>
+      <span class="breadcrumb-sep">—</span>
+      <span data-i18n="hero_page_label">طراحی وب & دیجیتال</span>
+    </div>
+    <div class="page-hero-tag reveal" data-i18n="hero_tag">UX · UI · DEVELOPMENT</div>
+    <h1 class="page-hero-title reveal" data-i18n="hero_title">طراحی وب<br>& دیجیتال</h1>
+    <p class="page-hero-sub reveal" data-i18n="hero_sub">رابط‌های کاربری نسل بعد، تجربه دیجیتال ایمرسیو، و هویت برند با زبان بصری منحصربه‌فرد که در ذهن ماندگار می‌شود.</p>
+  </div>
+  <div class="hero-line-accent"></div>
+</section>
+
+<!-- CAPABILITIES -->
+<section id="capabilities">
+  <div class="section-label reveal" data-i18n="section_capabilities">قابلیت‌ها</div>
+  <div class="cap-grid">
+    <div class="cap-item">
+      <div class="cap-num">01</div>
+      <div class="cap-icon-wrap">
+        <svg viewBox="0 0 64 64" fill="none" width="64" height="64">
+          <rect x="6" y="10" width="52" height="36" rx="3" stroke="#c8cdd4" stroke-width="0.8" fill="none" opacity="0.5"/>
+          <line x1="6" y1="20" x2="58" y2="20" stroke="#b8a070" stroke-width="0.6" opacity="0.5"/>
+          <circle cx="12" cy="15" r="2" fill="#ff5f57" opacity="0.7"/>
+          <circle cx="19" cy="15" r="2" fill="#febb2d" opacity="0.7"/>
+          <circle cx="26" cy="15" r="2" fill="#28c840" opacity="0.7"/>
+          <rect x="14" y="28" width="18" height="3" rx="1.5" fill="#c8cdd4" opacity="0.3"/>
+          <rect x="14" y="34" width="28" height="2" rx="1" fill="#c8cdd4" opacity="0.2"/>
+          <rect x="14" y="39" width="22" height="2" rx="1" fill="#c8cdd4" opacity="0.15"/>
+          <line x1="32" y1="46" x2="32" y2="54" stroke="#c8cdd4" stroke-width="1" opacity="0.4"/>
+          <line x1="20" y1="54" x2="44" y2="54" stroke="#c8cdd4" stroke-width="1" opacity="0.4"/>
+        </svg>
+      </div>
+      <div class="cap-title" data-i18n="cap1_title">طراحی UI/UX</div>
+      <div class="cap-desc" data-i18n="cap1_desc">طراحی رابط‌های کاربری اینتویتیو و فریبا که کاربر را به تجربه‌ای جذاب دعوت می‌کند. هر المان با هدف روشن و زیبایی بصری چیده می‌شود.</div>
+      <div class="cap-tags">
+        <span class="cap-tag">Figma</span><span class="cap-tag">Prototyping</span><span class="cap-tag">Design System</span><span class="cap-tag">Wireframe</span>
+      </div>
+    </div>
+    <div class="cap-item" style="transition-delay:0.1s">
+      <div class="cap-num">02</div>
+      <div class="cap-icon-wrap">
+        <svg viewBox="0 0 64 64" fill="none" width="64" height="64">
+          <polyline points="8,40 20,28 30,34 42,18 56,24" stroke="#b8a070" stroke-width="1.2" fill="none" opacity="0.8"/>
+          <circle cx="8" cy="40" r="2.5" fill="#b8a070" opacity="0.6"/>
+          <circle cx="20" cy="28" r="2" fill="#b8a070" opacity="0.5"/>
+          <circle cx="30" cy="34" r="2" fill="#b8a070" opacity="0.5"/>
+          <circle cx="42" cy="18" r="2.5" fill="#b8a070" opacity="0.7"/>
+          <circle cx="56" cy="24" r="2" fill="#b8a070" opacity="0.5"/>
+          <line x1="8" y1="50" x2="56" y2="50" stroke="#c8cdd4" stroke-width="0.5" opacity="0.2"/>
+          <line x1="8" y1="50" x2="8" y2="14" stroke="#c8cdd4" stroke-width="0.5" opacity="0.2"/>
+        </svg>
+      </div>
+      <div class="cap-title" data-i18n="cap2_title">توسعه Front-End</div>
+      <div class="cap-desc" data-i18n="cap2_desc">توسعه وب مبتنی بر React، Next.js و فریم‌ورک‌های مدرن با انیمیشن‌های خیره‌کننده، عملکرد بهینه و کد تمیز که تجربه‌ای بی‌نقص خلق می‌کند.</div>
+      <div class="cap-tags">
+        <span class="cap-tag">React</span><span class="cap-tag">Next.js</span><span class="cap-tag">Three.js</span><span class="cap-tag">GSAP</span>
+      </div>
+    </div>
+    <div class="cap-item" style="transition-delay:0.15s">
+      <div class="cap-num">03</div>
+      <div class="cap-icon-wrap">
+        <svg viewBox="0 0 64 64" fill="none" width="64" height="64">
+          <rect x="10" y="10" width="44" height="44" rx="8" stroke="#c8cdd4" stroke-width="0.8" fill="none" opacity="0.3"/>
+          <rect x="16" y="16" width="32" height="20" rx="4" fill="#0a1428" stroke="#4090d8" stroke-width="0.7" opacity="0.8"/>
+          <circle cx="22" cy="24" r="5" fill="none" stroke="#b8a070" stroke-width="0.8"/>
+          <line x1="27" y1="29" x2="34" y2="36" stroke="#b8a070" stroke-width="1.2" stroke-linecap="round"/>
+          <rect x="16" y="40" width="14" height="10" rx="2" fill="#0d1830" stroke="#4090d8" stroke-width="0.5" opacity="0.7"/>
+          <rect x="34" y="40" width="14" height="10" rx="2" fill="#0d1830" stroke="#b8a070" stroke-width="0.5" opacity="0.7"/>
+          <rect x="18" y="42" width="8" height="2" rx="1" fill="#4090d8" opacity="0.5"/>
+          <rect x="36" y="42" width="8" height="2" rx="1" fill="#b8a070" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="cap-title" data-i18n="cap3_title">تجربه موبایل</div>
+      <div class="cap-desc" data-i18n="cap3_desc">طراحی و توسعه اپلیکیشن‌های موبایل نیتیو و هیبرید با رویکرد Mobile First، بهینه‌سازی عملکرد و تجربه کاربری روان در همه دستگاه‌ها.</div>
+      <div class="cap-tags">
+        <span class="cap-tag">React Native</span><span class="cap-tag">PWA</span><span class="cap-tag">Mobile First</span>
+      </div>
+    </div>
+    <div class="cap-item" style="transition-delay:0.2s">
+      <div class="cap-num">04</div>
+      <div class="cap-icon-wrap">
+        <svg viewBox="0 0 64 64" fill="none" width="64" height="64">
+          <path d="M32 8 L56 20 L56 44 L32 56 L8 44 L8 20 Z" stroke="#c8cdd4" stroke-width="0.8" fill="none" opacity="0.3"/>
+          <path d="M32 16 L48 24 L48 40 L32 48 L16 40 L16 24 Z" stroke="#b8a070" stroke-width="0.6" fill="none" opacity="0.5"/>
+          <circle cx="32" cy="32" r="8" fill="none" stroke="#4090d8" stroke-width="0.8" opacity="0.8"/>
+          <circle cx="32" cy="32" r="3" fill="#4090d8" opacity="0.6"/>
+          <line x1="32" y1="8" x2="32" y2="24" stroke="#c8cdd4" stroke-width="0.4" opacity="0.3"/>
+          <line x1="32" y1="40" x2="32" y2="56" stroke="#c8cdd4" stroke-width="0.4" opacity="0.3"/>
+          <line x1="8" y1="32" x2="24" y2="32" stroke="#c8cdd4" stroke-width="0.4" opacity="0.3"/>
+          <line x1="40" y1="32" x2="56" y2="32" stroke="#c8cdd4" stroke-width="0.4" opacity="0.3"/>
+        </svg>
+      </div>
+      <div class="cap-title" data-i18n="cap4_title">Motion & انیمیشن</div>
+      <div class="cap-desc" data-i18n="cap4_desc">خلق انیمیشن‌های سیال و تعاملات ظریف که روح بصری برند را به حرکت درمی‌آورند. از micro-interactions تا تجربه‌های scroll-driven کامل.</div>
+      <div class="cap-tags">
+        <span class="cap-tag">GSAP</span><span class="cap-tag">Framer Motion</span><span class="cap-tag">CSS Animation</span>
+      </div>
+    </div>
+    <div class="cap-item" style="transition-delay:0.25s">
+      <div class="cap-num">05</div>
+      <div class="cap-icon-wrap">
+        <svg viewBox="0 0 64 64" fill="none" width="64" height="64">
+          <rect x="8" y="18" width="48" height="34" rx="3" stroke="#c8cdd4" stroke-width="0.8" fill="none" opacity="0.3"/>
+          <path d="M20 32 L24 36 L32 28" stroke="#28c840" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+          <rect x="38" y="28" width="12" height="2" rx="1" fill="#c8cdd4" opacity="0.2"/>
+          <rect x="38" y="32" width="8" height="2" rx="1" fill="#c8cdd4" opacity="0.15"/>
+          <rect x="38" y="36" width="10" height="2" rx="1" fill="#c8cdd4" opacity="0.15"/>
+          <line x1="8" y1="26" x2="56" y2="26" stroke="#b8a070" stroke-width="0.5" opacity="0.3"/>
+          <circle cx="13" cy="22" r="1.5" fill="#ff5f57" opacity="0.7"/>
+          <circle cx="18" cy="22" r="1.5" fill="#febb2d" opacity="0.7"/>
+          <circle cx="23" cy="22" r="1.5" fill="#28c840" opacity="0.7"/>
+          <line x1="32" y1="52" x2="32" y2="58" stroke="#c8cdd4" stroke-width="1" opacity="0.4"/>
+          <line x1="20" y1="58" x2="44" y2="58" stroke="#c8cdd4" stroke-width="1" opacity="0.4"/>
+        </svg>
+      </div>
+      <div class="cap-title" data-i18n="cap5_title">سئو & بهینه‌سازی</div>
+      <div class="cap-desc" data-i18n="cap5_desc">استراتژی سئوی تکنیکال، بهینه‌سازی Core Web Vitals، و ساختار فنی که موتورهای جستجو را متقاعد می‌کند شما را اول نشان دهند.</div>
+      <div class="cap-tags">
+        <span class="cap-tag">Technical SEO</span><span class="cap-tag">Core Web Vitals</span><span class="cap-tag">Analytics</span>
+      </div>
+    </div>
+    <div class="cap-item" style="transition-delay:0.3s">
+      <div class="cap-num">06</div>
+      <div class="cap-icon-wrap">
+        <svg viewBox="0 0 64 64" fill="none" width="64" height="64">
+          <circle cx="32" cy="32" r="22" stroke="#c8cdd4" stroke-width="0.8" fill="none" opacity="0.3"/>
+          <ellipse cx="32" cy="32" rx="10" ry="22" stroke="#b8a070" stroke-width="0.7" fill="none" opacity="0.5"/>
+          <line x1="10" y1="24" x2="54" y2="24" stroke="#4090d8" stroke-width="0.5" opacity="0.4"/>
+          <line x1="10" y1="40" x2="54" y2="40" stroke="#4090d8" stroke-width="0.5" opacity="0.4"/>
+          <circle cx="32" cy="32" r="3" fill="#b8a070" opacity="0.7"/>
+        </svg>
+      </div>
+      <div class="cap-title" data-i18n="cap6_title">وب‌سایت چند زبانه</div>
+      <div class="cap-desc" data-i18n="cap6_desc">ساخت وب‌سایت‌های بین‌المللی با پشتیبانی از زبان‌های راست‌چین و چپ‌چین، بومی‌سازی محتوا، و اینترفیس‌های سازگار با فرهنگ‌های مختلف.</div>
+      <div class="cap-tags">
+        <span class="cap-tag">i18n</span><span class="cap-tag">RTL Support</span><span class="cap-tag">Localization</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="section-label reveal" data-i18n="section_process">فرآیند کاری</div>
+  <div class="process-intro reveal">
+    <h2 class="process-title" data-i18n="process_title">از ایده تا<br>پیاده‌سازی</h2>
+    <p class="process-copy" data-i18n="process_copy">هر پروژه وب با درک عمیق از اهداف کسب‌وکار آغاز می‌شود. ما یک فرآیند دقیق و آزموده‌شده داریم که ایده را به تجربه دیجیتال تبدیل می‌کند.</p>
+  </div>
+  <div class="process-steps">
+    <div class="process-step">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <div class="step-title" data-i18n="step1_title">کشف & استراتژی</div>
+        <div class="step-desc" data-i18n="step1_desc">تحلیل عمیق نیازها، رقبا، و مخاطبان هدف. تعریف KPI، معماری اطلاعات، و نقشه راه دیجیتال که پروژه را پیش می‌برد.</div>
+      </div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <div class="step-title" data-i18n="step2_title">طراحی & پروتوتایپ</div>
+        <div class="step-desc" data-i18n="step2_desc">طراحی Wireframe، موکاپ‌های با وفاداری بالا، و پروتوتایپ تعاملی. تست کاربری و تکرار تا رسیدن به تجربه بی‌نقص.</div>
+      </div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <div class="step-title" data-i18n="step3_title">توسعه & کدنویسی</div>
+        <div class="step-desc" data-i18n="step3_desc">پیاده‌سازی با کدنویسی تمیز، مقیاس‌پذیر و مبتنی بر فریم‌ورک‌های مدرن. بهینه‌سازی عملکرد و اطمینان از سازگاری با همه مرورگرها.</div>
+      </div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">04</div>
+      <div class="step-body">
+        <div class="step-title" data-i18n="step4_title">تست & راه‌اندازی</div>
+        <div class="step-desc" data-i18n="step4_desc">تست کامل در دستگاه‌ها و مرورگرهای مختلف، بهینه‌سازی سرعت، ارزیابی دسترس‌پذیری، و استقرار روی سرور با پشتیبانی کامل.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKS -->
+<section id="works">
+  <div class="section-label reveal" data-i18n="section_works_web">نمونه کارهای وب</div>
+  <div class="works-title-block reveal">
+    <h2 class="works-big-title" data-i18n="works_web_title">پروژه‌هایی که<br>دیجیتال را<br>بازتعریف کردند</h2>
+    <p class="works-big-copy" data-i18n="works_web_copy">هر وب‌سایت یک تجربه زنده است. ما با ترکیب زیبایی بصری، فناوری پیشرفته، و درک عمیق از رفتار کاربر، وب‌سایت‌هایی می‌سازیم که در یاد می‌مانند.</p>
+  </div>
+
+  <div class="works-marquee">
+    <div class="marquee-inner">
+      <span class="marquee-item">UI Design<span>✦</span></span>
+      <span class="marquee-item">React Development<span>✦</span></span>
+      <span class="marquee-item">Motion Design<span>✦</span></span>
+      <span class="marquee-item">Brand Identity<span>✦</span></span>
+      <span class="marquee-item">E-Commerce<span>✦</span></span>
+      <span class="marquee-item">Landing Pages<span>✦</span></span>
+      <span class="marquee-item">UI Design<span>✦</span></span>
+      <span class="marquee-item">React Development<span>✦</span></span>
+      <span class="marquee-item">Motion Design<span>✦</span></span>
+      <span class="marquee-item">Brand Identity<span>✦</span></span>
+      <span class="marquee-item">E-Commerce<span>✦</span></span>
+      <span class="marquee-item">Landing Pages<span>✦</span></span>
+    </div>
+  </div>
+
+  <div class="projects-grid reveal">
+
+    <!-- Project 1 — Wide Featured -->
+    <div class="project-card project-wide">
+      <div class="project-card-inner">
+        <div class="project-preview">
+          <canvas id="web-canvas-1"></canvas>
+        </div>
+        <div class="project-info">
+          <div class="project-cat" data-i18n="proj1_cat">Luxury Brand Website · 2024</div>
+          <div class="project-name">Obsidian Atelier — Website</div>
+          <div class="project-desc" data-i18n="proj1_desc">طراحی و توسعه وب‌سایت برند مد لوکس با انیمیشن‌های پارالاکس، تجربه scroll-driven و گالری محصولات سه‌بعدی که فروش آنلاین را متحول کرد.</div>
+          <div class="project-tech">
+            <span class="tech-tag">Next.js</span>
+            <span class="tech-tag">Three.js</span>
+            <span class="tech-tag">GSAP</span>
+            <span class="tech-tag">Contentful CMS</span>
+          </div>
+          <div class="project-cta" data-i18n="view_project">مشاهده پروژه</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 2 -->
+    <div class="project-card">
+      <div class="project-card-inner">
+        <div class="project-preview">
+          <canvas id="web-canvas-2"></canvas>
+        </div>
+        <div class="project-info">
+          <div class="project-cat" data-i18n="proj2_cat">SaaS Dashboard · 2024</div>
+          <div class="project-name">Nexus Analytics Platform</div>
+          <div class="project-desc" data-i18n="proj2_desc">داشبورد تحلیل داده با ویژوالیزیشن‌های پیچیده، Real-time data streaming و رابط کاربری تیره که تجربه‌ای سینماتیک از داده‌ها خلق می‌کند.</div>
+          <div class="project-tech">
+            <span class="tech-tag">React</span>
+            <span class="tech-tag">D3.js</span>
+            <span class="tech-tag">WebSocket</span>
+          </div>
+          <div class="project-cta" data-i18n="view_project">مشاهده پروژه</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 3 -->
+    <div class="project-card">
+      <div class="project-card-inner">
+        <div class="project-preview">
+          <canvas id="web-canvas-3"></canvas>
+        </div>
+        <div class="project-info">
+          <div class="project-cat" data-i18n="proj3_cat">Architecture Studio · 2023</div>
+          <div class="project-name">Forma Architects — Portfolio</div>
+          <div class="project-desc" data-i18n="proj3_desc">پورتفولیو تعاملی استودیوی معماری با گالری پروژه‌های سه‌بعدی، فیلترهای پویا و تجربه‌ای ایمرسیو که بازدیدکننده را وارد دنیای معماری می‌کند.</div>
+          <div class="project-tech">
+            <span class="tech-tag">Vue.js</span>
+            <span class="tech-tag">WebGL</span>
+            <span class="tech-tag">Nuxt</span>
+          </div>
+          <div class="project-cta" data-i18n="view_project">مشاهده پروژه</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 4 -->
+    <div class="project-card">
+      <div class="project-card-inner">
+        <div class="project-preview">
+          <canvas id="web-canvas-4"></canvas>
+        </div>
+        <div class="project-info">
+          <div class="project-cat" data-i18n="proj4_cat">E-Commerce · 2024</div>
+          <div class="project-name">Ethereal Jewels — Shop</div>
+          <div class="project-desc" data-i18n="proj4_desc">فروشگاه آنلاین جواهرات لوکس با تجربه خرید ایمرسیو، نمایش ۳۶۰ درجه محصولات و سفارشی‌سازی آنلاین که نرخ تبدیل را ۳۴٪ افزایش داد.</div>
+          <div class="project-tech">
+            <span class="tech-tag">Shopify</span>
+            <span class="tech-tag">React</span>
+            <span class="tech-tag">AR.js</span>
+          </div>
+          <div class="project-cta" data-i18n="view_project">مشاهده پروژه</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 5 — Wide -->
+    <div class="project-card project-wide">
+      <div class="project-card-inner">
+        <div class="project-preview">
+          <canvas id="web-canvas-5"></canvas>
+        </div>
+        <div class="project-info">
+          <div class="project-cat" data-i18n="proj5_cat">Interactive Campaign · 2024</div>
+          <div class="project-name">Vortex Campaign — Microsite</div>
+          <div class="project-desc" data-i18n="proj5_desc">میکروسایت کمپین تبلیغاتی با تجربه اسکرول اینتراکتیو، ذرات سه‌بعدی و روایت بصری که بازدیدکننده را برای ۸ دقیقه متوسط روی صفحه نگه می‌دارد.</div>
+          <div class="project-tech">
+            <span class="tech-tag">Vanilla JS</span>
+            <span class="tech-tag">Three.js</span>
+            <span class="tech-tag">GSAP ScrollTrigger</span>
+            <span class="tech-tag">WebAudio API</span>
+          </div>
+          <div class="project-cta" data-i18n="view_project">مشاهده پروژه</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- STATS -->
+<div id="stats-section">
+  <div class="stat-box reveal">
+    <span class="stat-num" data-target="86">0</span>
+    <span class="stat-label" data-i18n="wstat1">وب‌سایت طراحی شده</span>
+  </div>
+  <div class="stat-box reveal" style="transition-delay:0.1s">
+    <span class="stat-num" data-target="99">0</span>
+    <span class="stat-label" data-i18n="wstat2">امتیاز PageSpeed</span>
+  </div>
+  <div class="stat-box reveal" style="transition-delay:0.2s">
+    <span class="stat-num" data-target="34">0</span>
+    <span class="stat-label" data-i18n="wstat3">افزایش نرخ تبدیل %</span>
+  </div>
+  <div class="stat-box reveal" style="transition-delay:0.3s">
+    <span class="stat-num" data-target="12">0</span>
+    <span class="stat-label" data-i18n="wstat4">جایزه وب</span>
+  </div>
+</div>
+
+<!-- TECH STACK -->
+<section id="stack">
+  <div class="section-label reveal" data-i18n="section_stack">تکنولوژی‌ها</div>
+  <div class="stack-intro reveal">
+    <h2 class="stack-title" data-i18n="stack_title">ابزارهای ما برای<br>ساخت آینده</h2>
+    <p class="stack-copy" data-i18n="stack_copy">ما از بهترین تکنولوژی‌های روز دنیا استفاده می‌کنیم تا محصولات دیجیتال سریع، زیبا و پایدار بسازیم.</p>
+  </div>
+  <div class="stack-categories reveal">
+    <div>
+      <div class="stack-cat-title" data-i18n="stack_cat1">فریم‌ورک & کتابخانه</div>
+      <div class="stack-items">
+        <div class="stack-item"><div class="stack-dot"></div><span class="stack-name">React</span></div>
+        <div class="stack-item"><div class="stack-dot"></div><span class="stack-name">Next.js</span></div>
+        <div class="stack-item"><div class="stack-dot"></div><span class="stack-name">Vue.js</span></div>
+        <div class="stack-item"><div class="stack-dot"></div><span class="stack-name">Nuxt</span></div>
+        <div class="stack-item"><div class="stack-dot"></div><span class="stack-name">SvelteKit</span></div>
+        <div class="stack-item"><div class="stack-dot"></div><span class="stack-name">Astro</span></div>
+        <div class="stack-item"><div class="stack-dot"></div><span class="stack-name">React Native</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="stack-cat-title" data-i18n="stack_cat2">انیمیشن & ۳D</div>
+      <div class="stack-items">
+        <div class="stack-item"><div class="stack-dot" style="background:#4090d8"></div><span class="stack-name">Three.js</span></div>
+        <div class="stack-item"><div class="stack-dot" style="background:#4090d8"></div><span class="stack-name">GSAP</span></div>
+        <div class="stack-item"><div class="stack-dot" style="background:#4090d8"></div><span class="stack-name">Framer Motion</span></div>
+        <div class="stack-item"><div class="stack-dot" style="background:#4090d8"></div><span class="stack-name">Lottie</span></div>
+        <div class="stack-item"><div class="stack-dot" style="background:#4090d8"></div><span class="stack-name">WebGL</span></div>
+        <div class="stack-item"><div class="stack-dot" style="background:#4090d8"></div><span class="stack-name">R3F</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="stack-cat-title" data-i18n="stack_cat3">طراحی & پروتوتایپ</div>
+      <div class="stack-items">
+        <div class="stack-item"><div class="stack-dot" style="background:#c8a8ff"></div><span class="stack-name">Figma</span></div>
+        <div class="stack-item"><div class="stack-dot" style="background:#c8a8ff"></div><span class="stack-name">Spline</span></div>
+        <div class="stack-item"><div class="stack-dot" style="background:#c8a8ff"></div><span class="stack-name">Adobe XD</span></div>
+        <div class="stack-item"><div class="stack-dot" style="background:#c8a8ff"></div><span class="stack-name">ProtoPie</span></div>
+        <div class="stack-item"><div class="stack-dot" style="background:#c8a8ff"></div><span class="stack-name">Principle</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="stack-cat-title" data-i18n="stack_cat4">backend & زیرساخت</div>
+      <div class="stack-items">
+        <div class="stack-item"><div class="stack-dot" style="background:#90d8a0"></div><span class="stack-name">Node.js</span></div>
+        <div class="stack-item"><div class="stack-dot" style="background:#90d8a0"></div><span class="stack-name">Supabase</span></div>
+        <div class="stack-item"><div class="stack-dot" style="background:#90d8a0"></div><span class="stack-name">Vercel</span></div>
+        <div class="stack-item"><div class="stack-dot" style="background:#90d8a0"></div><span class="stack-name">Sanity CMS</span></div>
+        <div class="stack-item"><div class="stack-dot" style="background:#90d8a0"></div><span class="stack-name">Contentful</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta-section">
+  <div class="cta-left reveal">
+    <h2 class="cta-title" data-i18n="cta_title">آماده شروع<br>پروژه<br>بعدی‌تان؟</h2>
+    <p class="cta-sub" data-i18n="cta_sub">از ایده تا راه‌اندازی در کنارتان هستیم. با تیم ما در تماس باشید و بگذارید تجربه دیجیتال ایده‌آل شما را بسازیم.</p>
+    <a href="index.html#contact" class="cta-btn" data-i18n="cta_btn">شروع همکاری</a>
+  </div>
+  <div class="cta-right reveal" style="transition-delay:0.15s">
+    <div class="cta-features">
+      <div class="cta-feat">
+        <svg class="cta-feat-icon" viewBox="0 0 36 36" fill="none">
+          <circle cx="18" cy="18" r="16" stroke="#b8a070" stroke-width="0.8" fill="none" opacity="0.3"/>
+          <polyline points="10,18 15,23 26,12" stroke="#b8a070" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div>
+          <div class="cta-feat-text" data-i18n="feat1_title">مشاوره رایگان</div>
+          <div class="cta-feat-sub" data-i18n="feat1_sub">جلسه اول بدون هزینه</div>
+        </div>
+      </div>
+      <div class="cta-feat">
+        <svg class="cta-feat-icon" viewBox="0 0 36 36" fill="none">
+          <circle cx="18" cy="18" r="16" stroke="#4090d8" stroke-width="0.8" fill="none" opacity="0.3"/>
+          <path d="M12 24 L18 12 L24 24" stroke="#4090d8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="14" y1="20" x2="22" y2="20" stroke="#4090d8" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <div>
+          <div class="cta-feat-text" data-i18n="feat2_title">تحویل سریع</div>
+          <div class="cta-feat-sub" data-i18n="feat2_sub">پروژه‌های استاندارد در ۴–۸ هفته</div>
+        </div>
+      </div>
+      <div class="cta-feat">
+        <svg class="cta-feat-icon" viewBox="0 0 36 36" fill="none">
+          <circle cx="18" cy="18" r="16" stroke="#c8a8ff" stroke-width="0.8" fill="none" opacity="0.3"/>
+          <circle cx="18" cy="14" r="4" stroke="#c8a8ff" stroke-width="1.2" fill="none"/>
+          <path d="M10 26 C10 22 14 20 18 20 C22 20 26 22 26 26" stroke="#c8a8ff" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+        </svg>
+        <div>
+          <div class="cta-feat-text" data-i18n="feat3_title">پشتیبانی دائمی</div>
+          <div class="cta-feat-sub" data-i18n="feat3_sub">۶ ماه پشتیبانی رایگان پس از راه‌اندازی</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Modiamic Studio</div>
+  <div class="footer-copy" data-i18n="footer_copy">© ۲۰۲۴ تمامی حقوق محفوظ است</div>
+  <div class="footer-links">
+    <a href="https://www.instagram.com/modiamic" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+      Instagram
+    </a>
+    <a href="https://wa.me/905391377686" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.477 2 12c0 1.82.487 3.53 1.338 5.007L2 22l5.119-1.32A9.945 9.945 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      WhatsApp
+    </a>
+    <a href="index.html" data-i18n="nav_home">خانه</a>
+  </div>
+</footer>
+
+<script>
+/* ─── Cursor ─── */
+const cursor = document.getElementById('cursor');
+let mx=0,my=0,cx=0,cy=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function tickCursor(){
+  cx+=(mx-cx)*0.18;cy+=(my-cy)*0.18;
+  cursor.style.transform=`translate(${cx}px,${cy}px) translate(-50%,-50%)`;
+  requestAnimationFrame(tickCursor);
+})();
+document.querySelectorAll('a,button,.project-card,.cap-item,.stack-item,.cta-feat').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cursor.classList.add('big'));
+  el.addEventListener('mouseleave',()=>cursor.classList.remove('big'));
+});
+
+/* ─── Scroll progress ─── */
+const prog = document.getElementById('scroll-progress');
+const backTop = document.getElementById('back-top');
+window.addEventListener('scroll',()=>{
+  const p = window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  prog.style.width = p+'%';
+  backTop.classList.toggle('visible',window.scrollY>400);
+},{passive:true});
+
+/* ─── Reveal ─── */
+const revealObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revealObs.unobserve(e.target);}});
+},{threshold:0.12});
+document.querySelectorAll('.reveal,.cap-item,.process-step').forEach(el=>revealObs.observe(el));
+
+/* ─── Nav toggle (mobile) ─── */
+function toggleNav(){
+  const nav=document.getElementById('nav-overlay');
+  const btn=document.getElementById('nav-toggle');
+  const open=nav.classList.toggle('open');
+  btn.classList.toggle('open',open);
+  document.body.style.overflow=open?'hidden':'';
+}
+function closeNav(){
+  document.getElementById('nav-overlay').classList.remove('open');
+  document.getElementById('nav-toggle').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+/* ─── Stat counter ─── */
+function animateStat(el){
+  const target=parseInt(el.getAttribute('data-target'));
+  const start=performance.now();
+  const dur=1800;
+  function tick(now){
+    const p=Math.min((now-start)/dur,1);
+    const ease=1-Math.pow(1-p,3);
+    el.textContent=Math.round(ease*target)+(el.dataset.suffix||'');
+    if(p<1)requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+const statObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){animateStat(e.target);statObs.unobserve(e.target);}});
+},{threshold:0.5});
+document.querySelectorAll('.stat-num[data-target]').forEach(el=>statObs.observe(el));
+
+/* ─── Hero Particles Canvas ─── */
+(function(){
+  const c=document.getElementById('hero-particles');
+  if(!c)return;
+  const ctx=c.getContext('2d');
+  function resize(){c.width=c.offsetWidth;c.height=c.offsetHeight}
+  resize();window.addEventListener('resize',resize);
+  const N=80;
+  const pts=Array.from({length:N},()=>({
+    x:Math.random()*c.width,y:Math.random()*c.height,
+    vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,
+    r:Math.random()*1.5+0.3,
+    op:Math.random()*0.4+0.1
+  }));
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    pts.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>c.width)p.vx*=-1;
+      if(p.y<0||p.y>c.height)p.vy*=-1;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(184,160,112,${p.op})`;ctx.fill();
+    });
+    // Connect close pts
+    for(let i=0;i<N;i++){
+      for(let j=i+1;j<N;j++){
+        const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<100){
+          ctx.beginPath();
+          ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
+          ctx.strokeStyle=`rgba(184,160,112,${(1-d/100)*0.08})`;
+          ctx.lineWidth=0.5;ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ─── Web Canvas Scenes ─── */
+function makeWebScene(id, drawFn) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  function resize() {
+    canvas.width = canvas.offsetWidth * Math.min(devicePixelRatio, 2);
+    canvas.height = canvas.offsetHeight * Math.min(devicePixelRatio, 2);
+    ctx.scale(Math.min(devicePixelRatio, 2), Math.min(devicePixelRatio, 2));
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  let t = 0;
+  function loop() {
+    const w = canvas.offsetWidth, h = canvas.offsetHeight;
+    ctx.clearRect(0, 0, w, h);
+    drawFn(ctx, w, h, t);
+    t += 0.016;
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+/* Canvas 1 — Luxury Website UI */
+makeWebScene('web-canvas-1', (ctx, w, h, t) => {
+  // Background
+  const bg = ctx.createLinearGradient(0, 0, w, h);
+  bg.addColorStop(0, '#040810');
+  bg.addColorStop(1, '#081020');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, w, h);
+
+  // Floating grid lines
+  ctx.strokeStyle = 'rgba(64,144,216,0.06)';
+  ctx.lineWidth = 0.5;
+  for (let x = 0; x < w; x += 60) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+  }
+  for (let y = 0; y < h; y += 60) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+  }
+
+  // Browser chrome
+  const bx = w * 0.08, by = h * 0.08, bw = w * 0.84, bh = h * 0.84;
+  ctx.strokeStyle = 'rgba(200,205,212,0.15)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(bx, by, bw, bh);
+
+  // Header bar
+  ctx.fillStyle = 'rgba(14,26,56,0.9)';
+  ctx.fillRect(bx, by, bw, 30);
+  ctx.strokeStyle = 'rgba(64,144,216,0.2)';
+  ctx.lineWidth = 0.5;
+  ctx.beginPath(); ctx.moveTo(bx, by+30); ctx.lineTo(bx+bw, by+30); ctx.stroke();
+  // Traffic lights
+  [0,1,2].forEach((i) => {
+    ctx.beginPath();
+    ctx.arc(bx + 14 + i*16, by+15, 5, 0, Math.PI*2);
+    ctx.fillStyle = ['#ff5f57','#febb2d','#28c840'][i];
+    ctx.globalAlpha = 0.7;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  });
+  // Nav links in header
+  for (let i = 0; i < 4; i++) {
+    ctx.fillStyle = 'rgba(200,205,212,0.2)';
+    ctx.fillRect(bx + bw - 180 + i*42, by+10, 30, 10);
+  }
+
+  // Hero section of fake website
+  const heroH = bh * 0.42;
+  const heroGrad = ctx.createLinearGradient(bx, by+30, bx+bw, by+30+heroH);
+  heroGrad.addColorStop(0, '#050812');
+  heroGrad.addColorStop(1, '#0a1428');
+  ctx.fillStyle = heroGrad;
+  ctx.fillRect(bx, by+30, bw, heroH);
+
+  // Animated glow circle in hero
+  const gx = bx + bw * 0.35, gy = by + 30 + heroH * 0.5;
+  const gr = ctx.createRadialGradient(gx, gy, 0, gx, gy, heroH * 0.6);
+  gr.addColorStop(0, `rgba(64,144,216,${0.08 + Math.sin(t)*0.03})`);
+  gr.addColorStop(1, 'rgba(64,144,216,0)');
+  ctx.fillStyle = gr;
+  ctx.fillRect(bx, by+30, bw, heroH);
+
+  // Hero text blocks
+  ctx.fillStyle = 'rgba(232,236,240,0.9)';
+  const titleY = by + 30 + heroH * 0.3;
+  ctx.fillRect(bx + bw*0.06, titleY, bw*0.45, 22);
+  ctx.fillStyle = 'rgba(184,160,112,0.6)';
+  ctx.fillRect(bx + bw*0.06, titleY + 32, bw*0.3, 14);
+  ctx.fillStyle = 'rgba(138,143,150,0.4)';
+  ctx.fillRect(bx + bw*0.06, titleY + 56, bw*0.38, 8);
+  ctx.fillRect(bx + bw*0.06, titleY + 70, bw*0.30, 8);
+
+  // CTA button
+  ctx.strokeStyle = 'rgba(184,160,112,0.5)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(bx + bw*0.06, titleY + 90, 120, 32);
+  ctx.fillStyle = 'rgba(184,160,112,0.15)';
+  ctx.fillRect(bx + bw*0.06, titleY + 90, 120, 32);
+  ctx.fillStyle = 'rgba(184,160,112,0.7)';
+  ctx.fillRect(bx + bw*0.06 + 20, titleY + 102, 80, 8);
+
+  // Hero image placeholder
+  ctx.strokeStyle = 'rgba(64,144,216,0.2)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(bx + bw*0.58, by + 30 + heroH*0.1, bw*0.34, heroH*0.8);
+  ctx.fillStyle = 'rgba(10,20,40,0.5)';
+  ctx.fillRect(bx + bw*0.58, by + 30 + heroH*0.1, bw*0.34, heroH*0.8);
+  // Animated ring in image
+  ctx.strokeStyle = `rgba(64,144,216,${0.3 + Math.sin(t*1.5)*0.1})`;
+  ctx.lineWidth = 1;
+  const rx = bx + bw*0.75, ry = by + 30 + heroH*0.5, rr = heroH*0.25;
+  ctx.beginPath(); ctx.arc(rx, ry, rr * (0.9 + Math.sin(t)*0.05), 0, Math.PI*2); ctx.stroke();
+  ctx.strokeStyle = `rgba(184,160,112,${0.2 + Math.sin(t*0.8)*0.1})`;
+  ctx.beginPath(); ctx.arc(rx, ry, rr * 0.6, 0, Math.PI*2); ctx.stroke();
+
+  // Cards section below hero
+  const cardY = by + 30 + heroH + 20;
+  const cardH = bh - 30 - heroH - 30;
+  for (let i = 0; i < 3; i++) {
+    const cx2 = bx + bw*0.06 + i*(bw*0.29);
+    ctx.fillStyle = `rgba(13,24,48,${0.7 + Math.sin(t + i)*0.1})`;
+    ctx.fillRect(cx2, cardY, bw*0.26, cardH);
+    ctx.strokeStyle = `rgba(${i===1?'64,144,216':'184,160,112'},0.2)`;
+    ctx.lineWidth = 0.5;
+    ctx.strokeRect(cx2, cardY, bw*0.26, cardH);
+    ctx.fillStyle = i===1 ? 'rgba(64,144,216,0.5)' : 'rgba(184,160,112,0.4)';
+    ctx.fillRect(cx2 + 12, cardY + 16, 40, 5);
+    ctx.fillStyle = 'rgba(200,205,212,0.25)';
+    ctx.fillRect(cx2 + 12, cardY + 28, bw*0.2, 6);
+    ctx.fillRect(cx2 + 12, cardY + 40, bw*0.15, 5);
+  }
+});
+
+/* Canvas 2 — Dashboard */
+makeWebScene('web-canvas-2', (ctx, w, h, t) => {
+  ctx.fillStyle = '#04060e';
+  ctx.fillRect(0, 0, w, h);
+
+  // Sidebar
+  ctx.fillStyle = 'rgba(8,12,24,0.95)';
+  ctx.fillRect(0, 0, 55, h);
+  ctx.strokeStyle = 'rgba(64,144,216,0.1)';
+  ctx.lineWidth = 0.5;
+  ctx.beginPath(); ctx.moveTo(55,0); ctx.lineTo(55,h); ctx.stroke();
+  for (let i = 0; i < 5; i++) {
+    ctx.fillStyle = i===0 ? 'rgba(184,160,112,0.2)' : 'rgba(100,120,160,0.1)';
+    ctx.beginPath();
+    const sy = 40 + i * 50;
+    ctx.roundRect(12, sy, 32, 28, 4);
+    ctx.fill();
+    ctx.strokeStyle = i===0 ? 'rgba(184,160,112,0.4)' : 'rgba(100,120,160,0.2)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  }
+
+  // Top bar
+  ctx.fillStyle = 'rgba(6,10,20,0.9)';
+  ctx.fillRect(55, 0, w-55, 40);
+  ctx.strokeStyle = 'rgba(64,144,216,0.1)';
+  ctx.lineWidth = 0.5;
+  ctx.beginPath(); ctx.moveTo(55,40); ctx.lineTo(w,40); ctx.stroke();
+
+  // Main area — stat cards
+  const sc = [
+    {c:'rgba(64,144,216,0.15)',bc:'rgba(64,144,216,0.3)'},
+    {c:'rgba(184,160,112,0.15)',bc:'rgba(184,160,112,0.3)'},
+    {c:'rgba(100,200,140,0.12)',bc:'rgba(100,200,140,0.3)'},
+    {c:'rgba(200,100,160,0.12)',bc:'rgba(200,100,160,0.3)'}
+  ];
+  sc.forEach((s, i) => {
+    const cx2 = 70 + i*(w-80)/4, cy2 = 55;
+    ctx.fillStyle = s.c;
+    ctx.fillRect(cx2, cy2, (w-80)/4 - 12, 50);
+    ctx.strokeStyle = s.bc;
+    ctx.lineWidth = 0.5;
+    ctx.strokeRect(cx2, cy2, (w-80)/4 - 12, 50);
+    ctx.fillStyle = 'rgba(232,236,240,0.6)';
+    ctx.fillRect(cx2+10, cy2+14, 50, 12);
+    ctx.fillStyle = 'rgba(160,170,190,0.3)';
+    ctx.fillRect(cx2+10, cy2+32, 30, 7);
+  });
+
+  // Chart area
+  ctx.fillStyle = 'rgba(8,12,24,0.8)';
+  ctx.fillRect(70, 115, w-140, h*0.48);
+  ctx.strokeStyle = 'rgba(64,144,216,0.1)';
+  ctx.lineWidth = 0.5;
+  ctx.strokeRect(70, 115, w-140, h*0.48);
+
+  // Grid lines in chart
+  for (let g = 0; g < 4; g++) {
+    ctx.strokeStyle = 'rgba(100,120,160,0.08)';
+    ctx.lineWidth = 0.5;
+    const gy = 115 + (h*0.48/4) * g;
+    ctx.beginPath(); ctx.moveTo(70, gy); ctx.lineTo(w-70, gy); ctx.stroke();
+  }
+
+  // Animated line chart
+  ctx.beginPath();
+  const pts2 = [0, 0.4, 0.25, 0.6, 0.35, 0.75, 0.5, 0.9, 0.65, 0.55, 0.8, 0.85, 1];
+  const cw = w - 140, ch = h*0.48;
+  pts2.forEach((p, i) => {
+    const px = 70 + (cw / (pts2.length-1)) * i;
+    const py = 115 + ch * (1 - p * 0.8 - 0.1 + Math.sin(t + i*0.3)*0.03);
+    i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+  });
+  ctx.strokeStyle = 'rgba(64,144,216,0.8)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Area fill
+  ctx.lineTo(w-70, 115+ch); ctx.lineTo(70, 115+ch);
+  ctx.fillStyle = 'rgba(64,144,216,0.05)';
+  ctx.fill();
+
+  // Second line (gold)
+  ctx.beginPath();
+  const pts3 = [0.6, 0.3, 0.55, 0.45, 0.7, 0.4, 0.65, 0.5, 0.75, 0.45, 0.8, 0.55, 0.7];
+  pts3.forEach((p, i) => {
+    const px = 70 + (cw/(pts3.length-1))*i;
+    const py = 115 + ch*(1-p*0.8-0.1+Math.sin(t*1.3+i*0.4)*0.03);
+    i===0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
+  });
+  ctx.strokeStyle = 'rgba(184,160,112,0.5)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Bottom widgets
+  const bw2 = (w - 140) / 3 - 8;
+  for (let b = 0; b < 3; b++) {
+    const bx2 = 70 + b*(bw2+12);
+    const by2 = 115 + h*0.48 + 16;
+    ctx.fillStyle = 'rgba(8,12,24,0.7)';
+    ctx.fillRect(bx2, by2, bw2, h - by2 - 20);
+    ctx.strokeStyle = 'rgba(100,120,160,0.1)';
+    ctx.lineWidth = 0.5;
+    ctx.strokeRect(bx2, by2, bw2, h - by2 - 20);
+    if (b === 0) {
+      // Donut
+      const dcx = bx2 + bw2/2, dcy = by2 + (h-by2-20)/2, dr = Math.min(bw2, h-by2-20)*0.28;
+      const colors = ['rgba(64,144,216,0.8)','rgba(184,160,112,0.6)','rgba(100,200,140,0.5)'];
+      let sa = -Math.PI/2;
+      [0.4,0.35,0.25].forEach((pct,i)=>{
+        const ea = sa + pct * Math.PI * 2;
+        ctx.beginPath(); ctx.moveTo(dcx,dcy);
+        ctx.arc(dcx,dcy,dr,sa,ea);
+        ctx.closePath();
+        ctx.fillStyle = colors[i]; ctx.fill();
+        sa = ea;
+      });
+      ctx.beginPath(); ctx.arc(dcx,dcy,dr*0.6,0,Math.PI*2);
+      ctx.fillStyle = '#04060e'; ctx.fill();
+    }
+  }
+});
+
+/* Canvas 3 — Portfolio site */
+makeWebScene('web-canvas-3', (ctx, w, h, t) => {
+  ctx.fillStyle = '#06080c';
+  ctx.fillRect(0, 0, w, h);
+
+  // Dark atmospheric gradient
+  const atm = ctx.createRadialGradient(w*0.3, h*0.4, 0, w*0.3, h*0.4, h*0.8);
+  atm.addColorStop(0, 'rgba(184,160,112,0.06)');
+  atm.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = atm;
+  ctx.fillRect(0,0,w,h);
+
+  // Full-bleed hero image (dark overlay with text)
+  ctx.strokeStyle = 'rgba(200,205,212,0.05)';
+  ctx.lineWidth = 0.5;
+  ctx.strokeRect(0, 0, w, h*0.65);
+  ctx.fillStyle = 'rgba(6,8,12,0.4)';
+  ctx.fillRect(0, 0, w, h*0.65);
+
+  // Animated geometric hero element
+  ctx.save();
+  ctx.translate(w*0.7, h*0.32);
+  ctx.rotate(t*0.15);
+  ctx.strokeStyle = 'rgba(184,160,112,0.2)';
+  ctx.lineWidth = 0.8;
+  for (let s = 0; s < 3; s++) {
+    const sr = 40 + s*30;
+    ctx.beginPath();
+    for (let i = 0; i < 6; i++) {
+      const a = (i/6)*Math.PI*2;
+      i===0 ? ctx.moveTo(Math.cos(a)*sr, Math.sin(a)*sr) : ctx.lineTo(Math.cos(a)*sr, Math.sin(a)*sr);
+    }
+    ctx.closePath();
+    ctx.globalAlpha = 0.5 - s*0.15;
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+  ctx.restore();
+
+  // Large typography
+  ctx.fillStyle = 'rgba(232,236,240,0.85)';
+  ctx.fillRect(w*0.08, h*0.18, w*0.5, 28);
+  ctx.fillStyle = 'rgba(232,236,240,0.5)';
+  ctx.fillRect(w*0.08, h*0.18+38, w*0.35, 20);
+  ctx.fillStyle = 'rgba(184,160,112,0.6)';
+  ctx.fillRect(w*0.08, h*0.18+68, 80, 10);
+  ctx.fillStyle = 'rgba(138,143,150,0.3)';
+  ctx.fillRect(w*0.08, h*0.18+90, w*0.35, 7);
+  ctx.fillRect(w*0.08, h*0.18+103, w*0.28, 7);
+
+  // Portfolio grid below
+  const gY = h*0.68;
+  const gH = h*0.28;
+  const gW = w/3;
+  for (let g = 0; g < 3; g++) {
+    const hover = Math.sin(t + g) > 0.5;
+    ctx.fillStyle = hover ? 'rgba(14,20,34,0.9)' : 'rgba(10,14,24,0.7)';
+    ctx.fillRect(g*gW+1, gY+1, gW-2, gH-2);
+    ctx.strokeStyle = hover ? 'rgba(184,160,112,0.3)' : 'rgba(200,205,212,0.08)';
+    ctx.lineWidth = 0.5;
+    ctx.strokeRect(g*gW, gY, gW, gH);
+    ctx.fillStyle = 'rgba(200,205,212,0.15)';
+    ctx.fillRect(g*gW+12, gY+gH*0.2, gW*0.7, gH*0.25);
+    ctx.fillStyle = hover ? 'rgba(184,160,112,0.4)' : 'rgba(138,143,150,0.2)';
+    ctx.fillRect(g*gW+12, gY+gH*0.55, gW*0.5, 7);
+    ctx.fillStyle = 'rgba(138,143,150,0.15)';
+    ctx.fillRect(g*gW+12, gY+gH*0.68, gW*0.38, 6);
+  }
+});
+
+/* Canvas 4 — E-Commerce */
+makeWebScene('web-canvas-4', (ctx, w, h, t) => {
+  ctx.fillStyle = '#050507';
+  ctx.fillRect(0, 0, w, h);
+
+  // Product showcase — center ring
+  const cx2 = w/2, cy2 = h*0.4;
+  const r = Math.min(w, h) * 0.22;
+
+  // Outer decorative rings
+  [1.6, 1.35, 1.1].forEach((rm, i) => {
+    ctx.beginPath();
+    ctx.arc(cx2, cy2, r*rm, 0, Math.PI*2);
+    ctx.strokeStyle = `rgba(184,160,112,${0.06-i*0.015})`;
+    ctx.lineWidth = 0.5;
+    ctx.setLineDash(i===0?[4,8]:[]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  });
+
+  // Rotating orbit
+  ctx.save();
+  ctx.translate(cx2, cy2);
+  ctx.rotate(t*0.3);
+  ctx.strokeStyle = 'rgba(64,144,216,0.15)';
+  ctx.lineWidth = 0.8;
+  ctx.beginPath(); ctx.arc(0, 0, r*1.25, 0, Math.PI*2); ctx.stroke();
+  // Orbit dot
+  ctx.fillStyle = 'rgba(64,144,216,0.8)';
+  ctx.beginPath(); ctx.arc(r*1.25, 0, 3, 0, Math.PI*2); ctx.fill();
+  ctx.restore();
+
+  // Product circle (simulated ring)
+  const prodGrad = ctx.createRadialGradient(cx2, cy2, 0, cx2, cy2, r);
+  prodGrad.addColorStop(0, 'rgba(30,25,15,0.9)');
+  prodGrad.addColorStop(0.7, 'rgba(184,160,112,0.08)');
+  prodGrad.addColorStop(1, 'rgba(184,160,112,0)');
+  ctx.fillStyle = prodGrad;
+  ctx.beginPath(); ctx.arc(cx2, cy2, r, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = 'rgba(184,160,112,0.3)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.arc(cx2, cy2, r, 0, Math.PI*2); ctx.stroke();
+
+  // Product silhouette (diamond/ring shape)
+  ctx.save();
+  ctx.translate(cx2, cy2);
+  ctx.rotate(t*0.08);
+  ctx.strokeStyle = 'rgba(232,236,240,0.6)';
+  ctx.lineWidth = 1.2;
+  const ps = r*0.55;
+  ctx.beginPath();
+  ctx.moveTo(0, -ps); ctx.lineTo(ps*0.7, 0); ctx.lineTo(0, ps*0.5);
+  ctx.lineTo(-ps*0.7, 0); ctx.closePath();
+  ctx.stroke();
+  ctx.strokeStyle = 'rgba(184,160,112,0.3)';
+  ctx.lineWidth = 0.5;
+  ctx.beginPath();
+  ctx.moveTo(0,-ps); ctx.lineTo(0,ps*0.5);
+  ctx.moveTo(-ps*0.7,0); ctx.lineTo(ps*0.7,0);
+  ctx.stroke();
+  ctx.restore();
+
+  // Bottom product info panel
+  const pY = h*0.68;
+  ctx.fillStyle = 'rgba(8,8,14,0.95)';
+  ctx.fillRect(w*0.06, pY, w*0.88, h*0.26);
+  ctx.strokeStyle = 'rgba(184,160,112,0.15)';
+  ctx.lineWidth = 0.5;
+  ctx.strokeRect(w*0.06, pY, w*0.88, h*0.26);
+
+  // Product title
+  ctx.fillStyle = 'rgba(232,236,240,0.8)';
+  ctx.fillRect(w*0.1, pY+16, w*0.4, 14);
+  ctx.fillStyle = 'rgba(184,160,112,0.5)';
+  ctx.fillRect(w*0.1, pY+36, w*0.2, 10);
+
+  // Price tag
+  ctx.fillStyle = 'rgba(184,160,112,0.7)';
+  ctx.fillRect(w*0.65, pY+16, w*0.22, 14);
+  ctx.fillStyle = 'rgba(64,144,216,0.5)';
+  ctx.fillRect(w*0.6, pY+40, w*0.28, 24);
+  ctx.fillStyle = 'rgba(232,236,240,0.5)';
+  ctx.fillRect(w*0.6+12, pY+48, w*0.22, 8);
+
+  // Color dots
+  const cols = ['#b8a070','#c8cdd4','#2a2a2a','#4090d8'];
+  cols.forEach((c, i) => {
+    ctx.fillStyle = c;
+    ctx.beginPath(); ctx.arc(w*0.1 + i*22, pY + 62, 7, 0, Math.PI*2); ctx.fill();
+    if (i===0) { ctx.strokeStyle = 'rgba(232,236,240,0.5)'; ctx.lineWidth = 1; ctx.stroke(); }
+  });
+});
+
+/* Canvas 5 — Interactive Campaign */
+makeWebScene('web-canvas-5', (ctx, w, h, t) => {
+  ctx.fillStyle = '#020204';
+  ctx.fillRect(0, 0, w, h);
+
+  // Vortex spiral particles
+  const N = 200;
+  for (let i = 0; i < N; i++) {
+    const prog = i / N;
+    const angle = prog * Math.PI * 2 * 6 + t * 0.5;
+    const rad = (1 - prog) * Math.min(w, h) * 0.4 + 5;
+    const px = w/2 + Math.cos(angle) * rad * (0.5 + prog*0.5);
+    const py = h/2 + Math.sin(angle) * rad * 0.4;
+    const alpha = prog * 0.6;
+    const hue = prog > 0.5 ? 'rgba(184,160,112,' : 'rgba(64,144,216,';
+    ctx.beginPath();
+    ctx.arc(px, py, 0.8 + prog*1.5, 0, Math.PI*2);
+    ctx.fillStyle = hue + alpha + ')';
+    ctx.fill();
+  }
+
+  // Center glow
+  const cg = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, 60);
+  cg.addColorStop(0, `rgba(255,255,255,${0.15+Math.sin(t*2)*0.05})`);
+  cg.addColorStop(0.3, `rgba(184,160,112,${0.08+Math.sin(t*1.5)*0.03})`);
+  cg.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = cg;
+  ctx.fillRect(0,0,w,h);
+
+  // Scroll progress indicator (left side)
+  ctx.strokeStyle = 'rgba(200,205,212,0.1)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(30, h*0.15); ctx.lineTo(30, h*0.85); ctx.stroke();
+  const prog2 = (Math.sin(t*0.4)+1)/2;
+  ctx.strokeStyle = 'rgba(184,160,112,0.6)';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(30, h*0.15); ctx.lineTo(30, h*0.15 + (h*0.7)*prog2); ctx.stroke();
+  ctx.fillStyle = 'rgba(184,160,112,0.8)';
+  ctx.beginPath(); ctx.arc(30, h*0.15 + (h*0.7)*prog2, 4, 0, Math.PI*2); ctx.fill();
+
+  // Floating text blocks (scroll sections)
+  const secs = 3;
+  for (let s = 0; s < secs; s++) {
+    const sy = h*0.18 + s*(h*0.22);
+    const alpha2 = Math.max(0, 1 - Math.abs(prog2*secs - s - 0.5)*2);
+    ctx.fillStyle = `rgba(232,236,240,${alpha2*0.6})`;
+    ctx.fillRect(w*0.15, sy, w*0.45, 14);
+    ctx.fillStyle = `rgba(138,143,150,${alpha2*0.35})`;
+    ctx.fillRect(w*0.15, sy+20, w*0.35, 8);
+    ctx.fillRect(w*0.15, sy+32, w*0.28, 8);
+  }
+
+  // Right — video frame
+  ctx.strokeStyle = 'rgba(200,205,212,0.1)';
+  ctx.lineWidth = 0.5;
+  ctx.strokeRect(w*0.65, h*0.15, w*0.3, h*0.7);
+  // Scan line effect
+  const scanY = ((t*50) % (h*0.7)) + h*0.15;
+  const scanGrad = ctx.createLinearGradient(w*0.65, scanY-20, w*0.65, scanY+20);
+  scanGrad.addColorStop(0, 'rgba(64,144,216,0)');
+  scanGrad.addColorStop(0.5, 'rgba(64,144,216,0.08)');
+  scanGrad.addColorStop(1, 'rgba(64,144,216,0)');
+  ctx.fillStyle = scanGrad;
+  ctx.fillRect(w*0.65, Math.max(h*0.15, scanY-20), w*0.3, 40);
+});
+
+/* ─── LANGUAGE SYSTEM ─── */
+const TRANSLATIONS = {
+  fa:{
+    nav_services:'خدمات',nav_works:'کارها',nav_studio:'استودیو',nav_contact:'تماس',nav_home:'خانه',
+    hero_page_label:'طراحی وب & دیجیتال',hero_tag:'UX · UI · DEVELOPMENT',
+    hero_title:'طراحی وب<br>& دیجیتال',
+    hero_sub:'رابط‌های کاربری نسل بعد، تجربه دیجیتال ایمرسیو، و هویت برند با زبان بصری منحصربه‌فرد که در ذهن ماندگار می‌شود.',
+    section_capabilities:'قابلیت‌ها',
+    cap1_title:'طراحی UI/UX',cap1_desc:'طراحی رابط‌های کاربری اینتویتیو و فریبا که کاربر را به تجربه‌ای جذاب دعوت می‌کند. هر المان با هدف روشن و زیبایی بصری چیده می‌شود.',
+    cap2_title:'توسعه Front-End',cap2_desc:'توسعه وب مبتنی بر React، Next.js و فریم‌ورک‌های مدرن با انیمیشن‌های خیره‌کننده، عملکرد بهینه و کد تمیز که تجربه‌ای بی‌نقص خلق می‌کند.',
+    cap3_title:'تجربه موبایل',cap3_desc:'طراحی و توسعه اپلیکیشن‌های موبایل نیتیو و هیبرید با رویکرد Mobile First، بهینه‌سازی عملکرد و تجربه کاربری روان در همه دستگاه‌ها.',
+    cap4_title:'Motion & انیمیشن',cap4_desc:'خلق انیمیشن‌های سیال و تعاملات ظریف که روح بصری برند را به حرکت درمی‌آورند. از micro-interactions تا تجربه‌های scroll-driven کامل.',
+    cap5_title:'سئو & بهینه‌سازی',cap5_desc:'استراتژی سئوی تکنیکال، بهینه‌سازی Core Web Vitals، و ساختار فنی که موتورهای جستجو را متقاعد می‌کند شما را اول نشان دهند.',
+    cap6_title:'وب‌سایت چند زبانه',cap6_desc:'ساخت وب‌سایت‌های بین‌المللی با پشتیبانی از زبان‌های راست‌چین و چپ‌چین، بومی‌سازی محتوا، و اینترفیس‌های سازگار با فرهنگ‌های مختلف.',
+    section_process:'فرآیند کاری',
+    process_title:'از ایده تا<br>پیاده‌سازی',process_copy:'هر پروژه وب با درک عمیق از اهداف کسب‌وکار آغاز می‌شود. ما یک فرآیند دقیق و آزموده‌شده داریم که ایده را به تجربه دیجیتال تبدیل می‌کند.',
+    step1_title:'کشف & استراتژی',step1_desc:'تحلیل عمیق نیازها، رقبا، و مخاطبان هدف. تعریف KPI، معماری اطلاعات، و نقشه راه دیجیتال که پروژه را پیش می‌برد.',
+    step2_title:'طراحی & پروتوتایپ',step2_desc:'طراحی Wireframe، موکاپ‌های با وفاداری بالا، و پروتوتایپ تعاملی. تست کاربری و تکرار تا رسیدن به تجربه بی‌نقص.',
+    step3_title:'توسعه & کدنویسی',step3_desc:'پیاده‌سازی با کدنویسی تمیز، مقیاس‌پذیر و مبتنی بر فریم‌ورک‌های مدرن. بهینه‌سازی عملکرد و اطمینان از سازگاری با همه مرورگرها.',
+    step4_title:'تست & راه‌اندازی',step4_desc:'تست کامل در دستگاه‌ها و مرورگرهای مختلف، بهینه‌سازی سرعت، ارزیابی دسترس‌پذیری، و استقرار روی سرور با پشتیبانی کامل.',
+    section_works_web:'نمونه کارهای وب',
+    works_web_title:'پروژه‌هایی که<br>دیجیتال را<br>بازتعریف کردند',works_web_copy:'هر وب‌سایت یک تجربه زنده است. ما با ترکیب زیبایی بصری، فناوری پیشرفته، و درک عمیق از رفتار کاربر، وب‌سایت‌هایی می‌سازیم که در یاد می‌مانند.',
+    proj1_cat:'Luxury Brand Website · ۲۰۲۴',proj1_desc:'طراحی و توسعه وب‌سایت برند مد لوکس با انیمیشن‌های پارالاکس، تجربه scroll-driven و گالری محصولات سه‌بعدی که فروش آنلاین را متحول کرد.',
+    proj2_cat:'SaaS Dashboard · ۲۰۲۴',proj2_desc:'داشبورد تحلیل داده با ویژوالیزیشن‌های پیچیده، Real-time data streaming و رابط کاربری تیره که تجربه‌ای سینماتیک از داده‌ها خلق می‌کند.',
+    proj3_cat:'Architecture Studio · ۲۰۲۳',proj3_desc:'پورتفولیو تعاملی استودیوی معماری با گالری پروژه‌های سه‌بعدی، فیلترهای پویا و تجربه‌ای ایمرسیو که بازدیدکننده را وارد دنیای معماری می‌کند.',
+    proj4_cat:'E-Commerce · ۲۰۲۴',proj4_desc:'فروشگاه آنلاین جواهرات لوکس با تجربه خرید ایمرسیو، نمایش ۳۶۰ درجه محصولات و سفارشی‌سازی آنلاین که نرخ تبدیل را ۳۴٪ افزایش داد.',
+    proj5_cat:'Interactive Campaign · ۲۰۲۴',proj5_desc:'میکروسایت کمپین تبلیغاتی با تجربه اسکرول اینتراکتیو، ذرات سه‌بعدی و روایت بصری که بازدیدکننده را برای ۸ دقیقه متوسط روی صفحه نگه می‌دارد.',
+    view_project:'مشاهده پروژه',
+    wstat1:'وب‌سایت طراحی شده',wstat2:'امتیاز PageSpeed',wstat3:'افزایش نرخ تبدیل %',wstat4:'جایزه وب',
+    section_stack:'تکنولوژی‌ها',
+    stack_title:'ابزارهای ما برای<br>ساخت آینده',stack_copy:'ما از بهترین تکنولوژی‌های روز دنیا استفاده می‌کنیم تا محصولات دیجیتال سریع، زیبا و پایدار بسازیم.',
+    stack_cat1:'فریم‌ورک & کتابخانه',stack_cat2:'انیمیشن & ۳D',stack_cat3:'طراحی & پروتوتایپ',stack_cat4:'Backend & زیرساخت',
+    cta_title:'آماده شروع<br>پروژه<br>بعدی‌تان؟',cta_sub:'از ایده تا راه‌اندازی در کنارتان هستیم. با تیم ما در تماس باشید و بگذارید تجربه دیجیتال ایده‌آل شما را بسازیم.',cta_btn:'شروع همکاری',
+    feat1_title:'مشاوره رایگان',feat1_sub:'جلسه اول بدون هزینه',
+    feat2_title:'تحویل سریع',feat2_sub:'پروژه‌های استاندارد در ۴–۸ هفته',
+    feat3_title:'پشتیبانی دائمی',feat3_sub:'۶ ماه پشتیبانی رایگان پس از راه‌اندازی',
+    footer_copy:'© ۲۰۲۴ تمامی حقوق محفوظ است',
+    dir:'rtl',code:'FA'
+  },
+  en:{
+    nav_services:'Services',nav_works:'Works',nav_studio:'Studio',nav_contact:'Contact',nav_home:'Home',
+    hero_page_label:'Web Design & Digital',hero_tag:'UX · UI · DEVELOPMENT',
+    hero_title:'Web Design<br>& Digital',
+    hero_sub:'Next-generation user interfaces, immersive digital experiences, and brand identity with a unique visual language that lingers in the mind.',
+    section_capabilities:'Capabilities',
+    cap1_title:'UI/UX Design',cap1_desc:'Designing intuitive and captivating interfaces that invite users into a compelling experience. Every element is placed with clear purpose and visual beauty.',
+    cap2_title:'Front-End Development',cap2_desc:'Web development using React, Next.js, and modern frameworks with stunning animations, optimized performance, and clean code that creates a flawless experience.',
+    cap3_title:'Mobile Experience',cap3_desc:'Design and development of native and hybrid mobile applications with a Mobile First approach, performance optimization, and smooth UX across all devices.',
+    cap4_title:'Motion & Animation',cap4_desc:'Creating fluid animations and subtle interactions that bring your brand\'s visual spirit to life. From micro-interactions to full scroll-driven experiences.',
+    cap5_title:'SEO & Optimization',cap5_desc:'Technical SEO strategy, Core Web Vitals optimization, and technical architecture that convinces search engines to put you first.',
+    cap6_title:'Multilingual Websites',cap6_desc:'Building international websites with support for RTL and LTR languages, content localization, and interfaces adapted for diverse cultures.',
+    section_process:'Process',
+    process_title:'From Idea to<br>Implementation',process_copy:'Every web project begins with a deep understanding of business goals. We have a precise, proven process that transforms ideas into digital experiences.',
+    step1_title:'Discovery & Strategy',step1_desc:'Deep analysis of needs, competitors, and target audiences. Defining KPIs, information architecture, and a digital roadmap that drives the project.',
+    step2_title:'Design & Prototype',step2_desc:'Wireframe design, high-fidelity mockups, and interactive prototypes. User testing and iteration until reaching a flawless experience.',
+    step3_title:'Development & Coding',step3_desc:'Implementation with clean, scalable code built on modern frameworks. Performance optimization and ensuring compatibility across all browsers.',
+    step4_title:'Testing & Launch',step4_desc:'Full testing across devices and browsers, speed optimization, accessibility assessment, and server deployment with complete support.',
+    section_works_web:'Web Portfolio',
+    works_web_title:'Projects that<br>redefined<br>digital',works_web_copy:'Every website is a living experience. We combine visual beauty, advanced technology, and deep understanding of user behavior to build websites that are remembered.',
+    proj1_cat:'Luxury Brand Website · 2024',proj1_desc:'Design and development of a luxury fashion brand website with parallax animations, scroll-driven experience, and a 3D product gallery that transformed online sales.',
+    proj2_cat:'SaaS Dashboard · 2024',proj2_desc:'Data analytics dashboard with complex visualizations, real-time data streaming, and a dark UI that creates a cinematic experience of data.',
+    proj3_cat:'Architecture Studio · 2023',proj3_desc:'Interactive portfolio for an architecture studio with 3D project galleries, dynamic filters, and an immersive experience that draws visitors into the world of architecture.',
+    proj4_cat:'E-Commerce · 2024',proj4_desc:'Online luxury jewelry store with an immersive shopping experience, 360-degree product views, and online customization that increased conversion rates by 34%.',
+    proj5_cat:'Interactive Campaign · 2024',proj5_desc:'Campaign microsite with interactive scroll experience, 3D particles, and visual storytelling that keeps visitors on the page for an average of 8 minutes.',
+    view_project:'View Project',
+    wstat1:'Websites Designed',wstat2:'PageSpeed Score',wstat3:'Conversion Rate Increase %',wstat4:'Web Awards',
+    section_stack:'Technology Stack',
+    stack_title:'Our tools for<br>building the future',stack_copy:'We use the best technologies in the world to build fast, beautiful, and durable digital products.',
+    stack_cat1:'Frameworks & Libraries',stack_cat2:'Animation & 3D',stack_cat3:'Design & Prototyping',stack_cat4:'Backend & Infrastructure',
+    cta_title:'Ready to start<br>your next<br>project?',cta_sub:'We\'re with you from idea to launch. Contact our team and let us build your ideal digital experience.',cta_btn:'Start a Project',
+    feat1_title:'Free Consultation',feat1_sub:'First session at no cost',
+    feat2_title:'Fast Delivery',feat2_sub:'Standard projects in 4–8 weeks',
+    feat3_title:'Ongoing Support',feat3_sub:'6 months free support after launch',
+    footer_copy:'© 2024 All rights reserved',
+    dir:'ltr',code:'EN'
+  },
+  tr:{
+    nav_services:'Hizmetler',nav_works:'Çalışmalar',nav_studio:'Stüdyo',nav_contact:'İletişim',nav_home:'Ana Sayfa',
+    hero_page_label:'Web Tasarımı & Dijital',hero_tag:'UX · UI · GELİŞTİRME',
+    hero_title:'Web Tasarımı<br>& Dijital',
+    hero_sub:'Yeni nesil kullanıcı arayüzleri, sürükleyici dijital deneyimler ve akılda kalan benzersiz görsel dille marka kimliği.',
+    section_capabilities:'Yetkinlikler',
+    cap1_title:'UI/UX Tasarımı',cap1_desc:'Kullanıcıyı çekici bir deneyime davet eden sezgisel ve büyüleyici arayüzler tasarlamak. Her öğe net bir amaç ve görsel güzellikle yerleştirilir.',
+    cap2_title:'Front-End Geliştirme',cap2_desc:'React, Next.js ve modern framework\'lerle çarpıcı animasyonlar, optimize performans ve kusursuz deneyim yaratan temiz kodla web geliştirme.',
+    cap3_title:'Mobil Deneyim',cap3_desc:'Mobile First yaklaşımı, performans optimizasyonu ve tüm cihazlarda sorunsuz kullanıcı deneyimiyle native ve hybrid mobil uygulama tasarımı ve geliştirmesi.',
+    cap4_title:'Motion & Animasyon',cap4_desc:'Markanızın görsel ruhunu hayata geçiren akıcı animasyonlar ve ince etkileşimler. Micro-interaction\'lardan tam scroll-driven deneyimlere kadar.',
+    cap5_title:'SEO & Optimizasyon',cap5_desc:'Teknik SEO stratejisi, Core Web Vitals optimizasyonu ve arama motorlarını sizi önce göstermeye ikna eden teknik yapı.',
+    cap6_title:'Çok Dilli Web Siteleri',cap6_desc:'RTL ve LTR dil desteği, içerik yerelleştirme ve farklı kültürlere uyarlanmış arayüzlerle uluslararası web siteleri oluşturma.',
+    section_process:'Süreç',
+    process_title:'Fikirden<br>Uygulamaya',process_copy:'Her web projesi, iş hedeflerinin derinlemesine anlaşılmasıyla başlar. Fikirleri dijital deneyimlere dönüştüren hassas ve kanıtlanmış bir sürecimiz var.',
+    step1_title:'Keşif & Strateji',step1_desc:'İhtiyaçların, rakiplerin ve hedef kitlelerin derinlemesine analizi. KPI\'ların, bilgi mimarisinin ve projeyi ilerleten dijital yol haritasının tanımlanması.',
+    step2_title:'Tasarım & Prototip',step2_desc:'Wireframe tasarımı, yüksek doğruluklu mockup\'lar ve interaktif prototipler. Kusursuz deneyime ulaşana kadar kullanıcı testi ve iterasyon.',
+    step3_title:'Geliştirme & Kodlama',step3_desc:'Modern framework\'lere dayalı temiz, ölçeklenebilir kodla uygulama. Performans optimizasyonu ve tüm tarayıcılarla uyumluluk sağlanması.',
+    step4_title:'Test & Lansman',step4_desc:'Cihazlar ve tarayıcılarda kapsamlı test, hız optimizasyonu, erişilebilirlik değerlendirmesi ve tam destekle sunucu kurulumu.',
+    section_works_web:'Web Portföyü',
+    works_web_title:'Dijitali<br>yeniden tanımlayan<br>projeler',works_web_copy:'Her web sitesi canlı bir deneyimdir. Görsel güzelliği, ileri teknolojiyi ve kullanıcı davranışının derin anlayışını birleştirerek hatırlanan web siteleri inşa ediyoruz.',
+    proj1_cat:'Lüks Marka Web Sitesi · 2024',proj1_desc:'Parallax animasyonlar, scroll-driven deneyim ve online satışı dönüştüren 3D ürün galerisi ile lüks moda markası web sitesi tasarımı ve geliştirmesi.',
+    proj2_cat:'SaaS Gösterge Paneli · 2024',proj2_desc:'Karmaşık görselleştirmeler, gerçek zamanlı veri akışı ve verinin sinematik bir deneyimini yaratan karanlık UI ile veri analiz gösterge paneli.',
+    proj3_cat:'Mimarlık Stüdyosu · 2023',proj3_desc:'3D proje galerileri, dinamik filtreler ve ziyaretçileri mimarlık dünyasına çeken sürükleyici deneyimle mimarlık stüdyosu için interaktif portföy.',
+    proj4_cat:'E-Ticaret · 2024',proj4_desc:'Sürükleyici alışveriş deneyimi, 360 derece ürün görünümleri ve dönüşüm oranını %34 artıran online kişiselleştirme ile lüks mücevher online mağazası.',
+    proj5_cat:'İnteraktif Kampanya · 2024',proj5_desc:'İnteraktif kaydırma deneyimi, 3D partiküller ve ziyaretçileri ortalama 8 dakika sayfada tutan görsel anlatımla kampanya mikrositesi.',
+    view_project:'Projeyi Gör',
+    wstat1:'Tasarlanan Web Sitesi',wstat2:'PageSpeed Puanı',wstat3:'Dönüşüm Oranı Artışı %',wstat4:'Web Ödülü',
+    section_stack:'Teknoloji Yığını',
+    stack_title:'Geleceği inşa etmek<br>için araçlarımız',stack_copy:'Hızlı, güzel ve dayanıklı dijital ürünler oluşturmak için dünyanın en iyi teknolojilerini kullanıyoruz.',
+    stack_cat1:'Framework\'ler & Kütüphaneler',stack_cat2:'Animasyon & 3D',stack_cat3:'Tasarım & Prototipleme',stack_cat4:'Backend & Altyapı',
+    cta_title:'Bir sonraki<br>projenize<br>başlamaya hazır mısınız?',cta_sub:'Fikirden lansmana kadar yanınızdayız. Ekibimizle iletişime geçin ve ideal dijital deneyiminizi birlikte inşa edelim.',cta_btn:'Projeye Başla',
+    feat1_title:'Ücretsiz Danışmanlık',feat1_sub:'İlk görüşme ücretsiz',
+    feat2_title:'Hızlı Teslimat',feat2_sub:'Standart projeler 4–8 haftada',
+    feat3_title:'Sürekli Destek',feat3_sub:'Lansman sonrası 6 ay ücretsiz destek',
+    footer_copy:'© 2024 Tüm hakları saklıdır',
+    dir:'ltr',code:'TR'
+  },
+  de:{
+    nav_services:'Leistungen',nav_works:'Arbeiten',nav_studio:'Studio',nav_contact:'Kontakt',nav_home:'Startseite',
+    hero_page_label:'Webdesign & Digital',hero_tag:'UX · UI · ENTWICKLUNG',
+    hero_title:'Webdesign<br>& Digital',
+    hero_sub:'Benutzeroberflächen der nächsten Generation, immersive digitale Erlebnisse und Markenidentität mit einer einzigartigen visuellen Sprache.',
+    section_capabilities:'Fähigkeiten',
+    cap1_title:'UI/UX Design',cap1_desc:'Gestaltung intuitiver und fesselnder Interfaces, die Nutzer zu einem überzeugenden Erlebnis einladen.',
+    cap2_title:'Front-End Entwicklung',cap2_desc:'Webentwicklung mit React, Next.js und modernen Frameworks mit atemberaubenden Animationen und optimalem Performance.',
+    cap3_title:'Mobile Erfahrung',cap3_desc:'Design und Entwicklung nativer und hybrider mobiler Apps mit Mobile-First-Ansatz und reibungsloser UX auf allen Geräten.',
+    cap4_title:'Motion & Animation',cap4_desc:'Flüssige Animationen und subtile Interaktionen, die den visuellen Geist Ihrer Marke zum Leben erwecken.',
+    cap5_title:'SEO & Optimierung',cap5_desc:'Technische SEO-Strategie, Core Web Vitals-Optimierung und technische Architektur, die Suchmaschinen überzeugt.',
+    cap6_title:'Mehrsprachige Websites',cap6_desc:'Erstellung internationaler Websites mit RTL- und LTR-Sprachunterstützung und kulturell angepassten Interfaces.',
+    section_process:'Prozess',
+    process_title:'Von der Idee zur<br>Umsetzung',process_copy:'Jedes Webprojekt beginnt mit einem tiefen Verständnis der Geschäftsziele.',
+    step1_title:'Entdeckung & Strategie',step1_desc:'Eingehende Analyse von Bedürfnissen, Wettbewerbern und Zielgruppen.',
+    step2_title:'Design & Prototyp',step2_desc:'Wireframe-Design, High-Fidelity-Mockups und interaktive Prototypen mit Nutzertests.',
+    step3_title:'Entwicklung & Coding',step3_desc:'Implementierung mit sauberem, skalierbarem Code auf Basis moderner Frameworks.',
+    step4_title:'Test & Launch',step4_desc:'Vollständige Tests auf Geräten und Browsern, Geschwindigkeitsoptimierung und Server-Deployment.',
+    section_works_web:'Web Portfolio',
+    works_web_title:'Projekte, die<br>Digital<br>neu definiert haben',works_web_copy:'Jede Website ist ein lebendiges Erlebnis. Wir verbinden visuelle Schönheit, fortschrittliche Technologie und tiefes Verständnis des Nutzerverhaltens.',
+    proj1_cat:'Luxus-Marken-Website · 2024',proj1_desc:'Design und Entwicklung einer Luxusmodewebsite mit Parallax-Animationen und einer 3D-Produktgalerie.',
+    proj2_cat:'SaaS Dashboard · 2024',proj2_desc:'Datenanalyse-Dashboard mit komplexen Visualisierungen und Echtzeit-Datenstreaming.',
+    proj3_cat:'Architekturbüro · 2023',proj3_desc:'Interaktives Portfolio eines Architekturbüros mit 3D-Projektgalerien und dynamischen Filtern.',
+    proj4_cat:'E-Commerce · 2024',proj4_desc:'Online-Luxusjuweliergeschäft mit immersivem Einkaufserlebnis und 360-Grad-Produktansichten.',
+    proj5_cat:'Interaktive Kampagne · 2024',proj5_desc:'Kampagnen-Microsite mit interaktivem Scroll-Erlebnis, 3D-Partikeln und visuellem Storytelling.',
+    view_project:'Projekt ansehen',
+    wstat1:'Gestaltete Websites',wstat2:'PageSpeed-Wert',wstat3:'Konversionsrate-Steigerung %',wstat4:'Web-Auszeichnung',
+    section_stack:'Technologie-Stack',
+    stack_title:'Unsere Werkzeuge für<br>die Zukunft',stack_copy:'Wir nutzen die besten Technologien weltweit für schnelle, schöne und langlebige digitale Produkte.',
+    stack_cat1:'Frameworks & Bibliotheken',stack_cat2:'Animation & 3D',stack_cat3:'Design & Prototyping',stack_cat4:'Backend & Infrastruktur',
+    cta_title:'Bereit für Ihr<br>nächstes<br>Projekt?',cta_sub:'Von der Idee bis zum Launch sind wir an Ihrer Seite.',cta_btn:'Projekt starten',
+    feat1_title:'Kostenlose Beratung',feat1_sub:'Erstgespräch kostenlos',
+    feat2_title:'Schnelle Lieferung',feat2_sub:'Standardprojekte in 4–8 Wochen',
+    feat3_title:'Laufender Support',feat3_sub:'6 Monate kostenloser Support nach Launch',
+    footer_copy:'© 2024 Alle Rechte vorbehalten',
+    dir:'ltr',code:'DE'
+  },
+  fr:{
+    nav_services:'Services',nav_works:'Travaux',nav_studio:'Studio',nav_contact:'Contact',nav_home:'Accueil',
+    hero_page_label:'Web Design & Digital',hero_tag:'UX · UI · DÉVELOPPEMENT',
+    hero_title:'Web Design<br>& Digital',
+    hero_sub:'Interfaces de prochaine génération, expériences numériques immersives et identité de marque avec un langage visuel unique qui reste dans les esprits.',
+    section_capabilities:'Compétences',
+    cap1_title:'Design UI/UX',cap1_desc:'Conception d\'interfaces intuitives et captivantes qui invitent les utilisateurs à une expérience convaincante.',
+    cap2_title:'Développement Front-End',cap2_desc:'Développement web avec React, Next.js et frameworks modernes avec des animations époustouflantes et une performance optimale.',
+    cap3_title:'Expérience Mobile',cap3_desc:'Design et développement d\'applications mobiles natives et hybrides avec une approche Mobile First.',
+    cap4_title:'Motion & Animation',cap4_desc:'Animations fluides et interactions subtiles qui donnent vie à l\'esprit visuel de votre marque.',
+    cap5_title:'SEO & Optimisation',cap5_desc:'Stratégie SEO technique, optimisation Core Web Vitals et architecture technique qui convainc les moteurs de recherche.',
+    cap6_title:'Sites Multilingues',cap6_desc:'Création de sites web internationaux avec support RTL et LTR, localisation du contenu et interfaces adaptées culturellement.',
+    section_process:'Processus',
+    process_title:'De l\'idée à<br>la mise en œuvre',process_copy:'Chaque projet web commence par une compréhension profonde des objectifs commerciaux.',
+    step1_title:'Découverte & Stratégie',step1_desc:'Analyse approfondie des besoins, des concurrents et des audiences cibles.',
+    step2_title:'Design & Prototype',step2_desc:'Design de wireframes, maquettes haute fidélité et prototypes interactifs avec tests utilisateurs.',
+    step3_title:'Développement & Code',step3_desc:'Implémentation avec un code propre et évolutif basé sur des frameworks modernes.',
+    step4_title:'Test & Lancement',step4_desc:'Tests complets sur appareils et navigateurs, optimisation de la vitesse et déploiement serveur.',
+    section_works_web:'Portfolio Web',
+    works_web_title:'Projets qui ont<br>redéfini<br>le digital',works_web_copy:'Chaque site web est une expérience vivante. Nous combinons beauté visuelle, technologie avancée et compréhension du comportement utilisateur.',
+    proj1_cat:'Site Marque Luxe · 2024',proj1_desc:'Design et développement d\'un site de mode luxe avec animations parallax et galerie produits 3D.',
+    proj2_cat:'Dashboard SaaS · 2024',proj2_desc:'Dashboard analytique avec visualisations complexes et streaming de données en temps réel.',
+    proj3_cat:'Studio Architecture · 2023',proj3_desc:'Portfolio interactif d\'un studio d\'architecture avec galeries 3D et filtres dynamiques.',
+    proj4_cat:'E-Commerce · 2024',proj4_desc:'Boutique bijoux luxe avec expérience d\'achat immersive et vues produit à 360 degrés.',
+    proj5_cat:'Campagne Interactive · 2024',proj5_desc:'Microsite de campagne avec défilement interactif, particules 3D et narration visuelle.',
+    view_project:'Voir le Projet',
+    wstat1:'Sites Conçus',wstat2:'Score PageSpeed',wstat3:'Augmentation Taux Conversion %',wstat4:'Prix Web',
+    section_stack:'Stack Technologique',
+    stack_title:'Nos outils pour<br>construire l\'avenir',stack_copy:'Nous utilisons les meilleures technologies mondiales pour des produits numériques rapides, beaux et durables.',
+    stack_cat1:'Frameworks & Bibliothèques',stack_cat2:'Animation & 3D',stack_cat3:'Design & Prototypage',stack_cat4:'Backend & Infrastructure',
+    cta_title:'Prêt à démarrer<br>votre prochain<br>projet ?',cta_sub:'De l\'idée au lancement, nous sommes à vos côtés.',cta_btn:'Démarrer un Projet',
+    feat1_title:'Consultation Gratuite',feat1_sub:'Première session sans frais',
+    feat2_title:'Livraison Rapide',feat2_sub:'Projets standard en 4–8 semaines',
+    feat3_title:'Support Continu',feat3_sub:'6 mois de support gratuit après lancement',
+    footer_copy:'© 2024 Tous droits réservés',
+    dir:'ltr',code:'FR'
+  },
+  it:{
+    nav_services:'Servizi',nav_works:'Lavori',nav_studio:'Studio',nav_contact:'Contatto',nav_home:'Home',
+    hero_page_label:'Web Design & Digital',hero_tag:'UX · UI · SVILUPPO',
+    hero_title:'Web Design<br>& Digital',
+    hero_sub:'Interfacce di nuova generazione, esperienze digitali immersive e identità di marca con un linguaggio visivo unico che rimane nella mente.',
+    section_capabilities:'Competenze',
+    cap1_title:'Design UI/UX',cap1_desc:'Progettare interfacce intuitive e accattivanti che invitano gli utenti a un\'esperienza coinvolgente.',
+    cap2_title:'Sviluppo Front-End',cap2_desc:'Sviluppo web con React, Next.js e framework moderni con animazioni sorprendenti e prestazioni ottimali.',
+    cap3_title:'Esperienza Mobile',cap3_desc:'Design e sviluppo di app mobili native e ibride con approccio Mobile First e UX fluida su tutti i dispositivi.',
+    cap4_title:'Motion & Animazione',cap4_desc:'Animazioni fluide e interazioni sottili che danno vita allo spirito visivo del tuo brand.',
+    cap5_title:'SEO & Ottimizzazione',cap5_desc:'Strategia SEO tecnica, ottimizzazione Core Web Vitals e architettura tecnica che convince i motori di ricerca.',
+    cap6_title:'Siti Multilingue',cap6_desc:'Creazione di siti web internazionali con supporto RTL e LTR, localizzazione dei contenuti e interfacce adattate culturalmente.',
+    section_process:'Processo',
+    process_title:'Dall\'idea all\'<br>implementazione',process_copy:'Ogni progetto web inizia con una profonda comprensione degli obiettivi aziendali.',
+    step1_title:'Scoperta & Strategia',step1_desc:'Analisi approfondita di esigenze, concorrenti e pubblico target.',
+    step2_title:'Design & Prototipo',step2_desc:'Design wireframe, mockup ad alta fedeltà e prototipi interattivi con test utente.',
+    step3_title:'Sviluppo & Coding',step3_desc:'Implementazione con codice pulito e scalabile basato su framework moderni.',
+    step4_title:'Test & Lancio',step4_desc:'Test completi su dispositivi e browser, ottimizzazione della velocità e distribuzione su server.',
+    section_works_web:'Portfolio Web',
+    works_web_title:'Progetti che hanno<br>ridefinito<br>il digitale',works_web_copy:'Ogni sito web è un\'esperienza vivente. Combiniamo bellezza visiva, tecnologia avanzata e profonda comprensione del comportamento utente.',
+    proj1_cat:'Sito Brand Lusso · 2024',proj1_desc:'Design e sviluppo di un sito di moda lusso con animazioni parallax e galleria prodotti 3D.',
+    proj2_cat:'Dashboard SaaS · 2024',proj2_desc:'Dashboard analitico con visualizzazioni complesse e streaming dati in tempo reale.',
+    proj3_cat:'Studio Architettura · 2023',proj3_desc:'Portfolio interattivo di uno studio di architettura con gallerie 3D e filtri dinamici.',
+    proj4_cat:'E-Commerce · 2024',proj4_desc:'Negozio online gioielli lusso con esperienza d\'acquisto immersiva e viste prodotto a 360 gradi.',
+    proj5_cat:'Campagna Interattiva · 2024',proj5_desc:'Microsite campagna con scrolling interattivo, particelle 3D e narrazione visiva.',
+    view_project:'Vedi Progetto',
+    wstat1:'Siti Progettati',wstat2:'Punteggio PageSpeed',wstat3:'Aumento Tasso Conversione %',wstat4:'Premio Web',
+    section_stack:'Stack Tecnologico',
+    stack_title:'I nostri strumenti per<br>costruire il futuro',stack_copy:'Utilizziamo le migliori tecnologie al mondo per prodotti digitali veloci, belli e duraturi.',
+    stack_cat1:'Framework & Librerie',stack_cat2:'Animazione & 3D',stack_cat3:'Design & Prototipazione',stack_cat4:'Backend & Infrastruttura',
+    cta_title:'Pronto per iniziare<br>il tuo prossimo<br>progetto?',cta_sub:'Siamo al tuo fianco dall\'idea al lancio.',cta_btn:'Inizia un Progetto',
+    feat1_title:'Consulenza Gratuita',feat1_sub:'Prima sessione senza costi',
+    feat2_title:'Consegna Rapida',feat2_sub:'Progetti standard in 4–8 settimane',
+    feat3_title:'Supporto Continuo',feat3_sub:'6 mesi di supporto gratuito dopo il lancio',
+    footer_copy:'© 2024 Tutti i diritti riservati',
+    dir:'ltr',code:'IT'
+  },
+  es:{
+    nav_services:'Servicios',nav_works:'Trabajos',nav_studio:'Estudio',nav_contact:'Contacto',nav_home:'Inicio',
+    hero_page_label:'Diseño Web & Digital',hero_tag:'UX · UI · DESARROLLO',
+    hero_title:'Diseño Web<br>& Digital',
+    hero_sub:'Interfaces de nueva generación, experiencias digitales inmersivas e identidad de marca con un lenguaje visual único que perdura en la mente.',
+    section_capabilities:'Capacidades',
+    cap1_title:'Diseño UI/UX',cap1_desc:'Diseño de interfaces intuitivas y cautivadoras que invitan a los usuarios a una experiencia convincente.',
+    cap2_title:'Desarrollo Front-End',cap2_desc:'Desarrollo web con React, Next.js y frameworks modernos con animaciones impresionantes y rendimiento óptimo.',
+    cap3_title:'Experiencia Móvil',cap3_desc:'Diseño y desarrollo de apps móviles nativas e híbridas con enfoque Mobile First y UX fluida en todos los dispositivos.',
+    cap4_title:'Motion & Animación',cap4_desc:'Animaciones fluidas e interacciones sutiles que dan vida al espíritu visual de tu marca.',
+    cap5_title:'SEO & Optimización',cap5_desc:'Estrategia SEO técnica, optimización Core Web Vitals y arquitectura técnica que convence a los motores de búsqueda.',
+    cap6_title:'Sitios Multilingüe',cap6_desc:'Creación de sitios web internacionales con soporte RTL y LTR, localización de contenidos e interfaces adaptadas culturalmente.',
+    section_process:'Proceso',
+    process_title:'De la idea a<br>la implementación',process_copy:'Cada proyecto web comienza con una comprensión profunda de los objetivos empresariales.',
+    step1_title:'Descubrimiento & Estrategia',step1_desc:'Análisis profundo de necesidades, competidores y audiencias objetivo.',
+    step2_title:'Diseño & Prototipo',step2_desc:'Diseño de wireframes, mockups de alta fidelidad y prototipos interactivos con pruebas de usuario.',
+    step3_title:'Desarrollo & Código',step3_desc:'Implementación con código limpio y escalable basado en frameworks modernos.',
+    step4_title:'Pruebas & Lanzamiento',step4_desc:'Pruebas completas en dispositivos y navegadores, optimización de velocidad y despliegue en servidor.',
+    section_works_web:'Portafolio Web',
+    works_web_title:'Proyectos que<br>redefinieron<br>lo digital',works_web_copy:'Cada sitio web es una experiencia viva. Combinamos belleza visual, tecnología avanzada y comprensión profunda del comportamiento del usuario.',
+    proj1_cat:'Web de Marca Lujo · 2024',proj1_desc:'Diseño y desarrollo de un sitio de moda de lujo con animaciones parallax y galería de productos 3D.',
+    proj2_cat:'Dashboard SaaS · 2024',proj2_desc:'Dashboard analítico con visualizaciones complejas y streaming de datos en tiempo real.',
+    proj3_cat:'Estudio de Arquitectura · 2023',proj3_desc:'Portfolio interactivo de un estudio de arquitectura con galerías 3D y filtros dinámicos.',
+    proj4_cat:'E-Commerce · 2024',proj4_desc:'Tienda online de joyería de lujo con experiencia de compra inmersiva y vistas de producto a 360 grados.',
+    proj5_cat:'Campaña Interactiva · 2024',proj5_desc:'Microsite de campaña con desplazamiento interactivo, partículas 3D y narración visual.',
+    view_project:'Ver Proyecto',
+    wstat1:'Sitios Diseñados',wstat2:'Puntuación PageSpeed',wstat3:'Aumento Tasa Conversión %',wstat4:'Premio Web',
+    section_stack:'Stack Tecnológico',
+    stack_title:'Nuestras herramientas para<br>construir el futuro',stack_copy:'Usamos las mejores tecnologías del mundo para productos digitales rápidos, hermosos y duraderos.',
+    stack_cat1:'Frameworks & Librerías',stack_cat2:'Animación & 3D',stack_cat3:'Diseño & Prototipado',stack_cat4:'Backend & Infraestructura',
+    cta_title:'¿Listo para iniciar<br>tu próximo<br>proyecto?',cta_sub:'Estamos contigo desde la idea hasta el lanzamiento.',cta_btn:'Iniciar Proyecto',
+    feat1_title:'Consulta Gratuita',feat1_sub:'Primera sesión sin costo',
+    feat2_title:'Entrega Rápida',feat2_sub:'Proyectos estándar en 4–8 semanas',
+    feat3_title:'Soporte Continuo',feat3_sub:'6 meses de soporte gratuito tras el lanzamiento',
+    footer_copy:'© 2024 Todos los derechos reservados',
+    dir:'ltr',code:'ES'
+  },
+  el:{
+    nav_services:'Υπηρεσίες',nav_works:'Έργα',nav_studio:'Στούντιο',nav_contact:'Επικοινωνία',nav_home:'Αρχική',
+    hero_page_label:'Web Design & Ψηφιακά',hero_tag:'UX · UI · ΑΝΑΠΤΥΞΗ',
+    hero_title:'Web Design<br>& Ψηφιακά',
+    hero_sub:'Διεπαφές επόμενης γενιάς, καθηλωτικές ψηφιακές εμπειρίες και ταυτότητα μάρκας με μοναδική οπτική γλώσσα.',
+    section_capabilities:'Δυνατότητες',
+    cap1_title:'Σχεδιασμός UI/UX',cap1_desc:'Σχεδιασμός διαισθητικών και μαγευτικών διεπαφών που προσκαλούν χρήστες σε μια συναρπαστική εμπειρία.',
+    cap2_title:'Front-End Ανάπτυξη',cap2_desc:'Ανάπτυξη ιστού με React, Next.js και σύγχρονα frameworks με εντυπωσιακές κινούμενες εικόνες και βέλτιστη απόδοση.',
+    cap3_title:'Εμπειρία Mobile',cap3_desc:'Σχεδιασμός και ανάπτυξη εφαρμογών κινητού με προσέγγιση Mobile First και ομαλό UX σε όλες τις συσκευές.',
+    cap4_title:'Motion & Animation',cap4_desc:'Ρευστές κινούμενες εικόνες και λεπτές αλληλεπιδράσεις που δίνουν ζωή στο οπτικό πνεύμα της μάρκας σας.',
+    cap5_title:'SEO & Βελτιστοποίηση',cap5_desc:'Τεχνική στρατηγική SEO, βελτιστοποίηση Core Web Vitals και τεχνική αρχιτεκτονική που πείθει τις μηχανές αναζήτησης.',
+    cap6_title:'Πολύγλωσσες Ιστοσελίδες',cap6_desc:'Δημιουργία διεθνών ιστοσελίδων με υποστήριξη RTL και LTR, τοπικοποίηση περιεχομένου και πολιτισμικά προσαρμοσμένες διεπαφές.',
+    section_process:'Διαδικασία',
+    process_title:'Από την ιδέα στην<br>υλοποίηση',process_copy:'Κάθε διαδικτυακό έργο ξεκινά με βαθιά κατανόηση των επιχειρηματικών στόχων.',
+    step1_title:'Ανακάλυψη & Στρατηγική',step1_desc:'Εις βάθος ανάλυση αναγκών, ανταγωνιστών και στοχευμένου κοινού.',
+    step2_title:'Σχεδιασμός & Πρωτότυπο',step2_desc:'Σχεδιασμός wireframe, high-fidelity mockups και διαδραστικά πρωτότυπα με δοκιμές χρηστών.',
+    step3_title:'Ανάπτυξη & Κώδικας',step3_desc:'Υλοποίηση με καθαρό, επεκτάσιμο κώδικα βασισμένο σε σύγχρονα frameworks.',
+    step4_title:'Δοκιμή & Εκκίνηση',step4_desc:'Πλήρεις δοκιμές σε συσκευές και προγράμματα περιήγησης, βελτιστοποίηση ταχύτητας και ανάπτυξη διακομιστή.',
+    section_works_web:'Portfolio Web',
+    works_web_title:'Έργα που<br>επαναπροσδιόρισαν<br>το digital',works_web_copy:'Κάθε ιστοσελίδα είναι μια ζωντανή εμπειρία. Συνδυάζουμε οπτική ομορφιά, προηγμένη τεχνολογία και βαθιά κατανόηση της συμπεριφοράς χρηστών.',
+    proj1_cat:'Luxury Brand Website · 2024',proj1_desc:'Σχεδιασμός και ανάπτυξη ιστοσελίδας luxury fashion brand με parallax animations και 3D gallery.',
+    proj2_cat:'SaaS Dashboard · 2024',proj2_desc:'Dashboard ανάλυσης δεδομένων με σύνθετες απεικονίσεις και real-time data streaming.',
+    proj3_cat:'Αρχιτεκτονικό Στούντιο · 2023',proj3_desc:'Διαδραστικό portfolio αρχιτεκτονικού στούντιο με 3D galleries και δυναμικά φίλτρα.',
+    proj4_cat:'E-Commerce · 2024',proj4_desc:'Online κατάστημα luxury κοσμημάτων με καθηλωτική εμπειρία αγοράς και 360° προβολή προϊόντων.',
+    proj5_cat:'Διαδραστική Καμπάνια · 2024',proj5_desc:'Microsite καμπάνιας με διαδραστικό scrolling, 3D particles και οπτική αφήγηση.',
+    view_project:'Δείτε Έργο',
+    wstat1:'Ιστοσελίδες Σχεδιασμένες',wstat2:'Βαθμολογία PageSpeed',wstat3:'Αύξηση Ποσοστού Μετατροπής %',wstat4:'Βραβείο Web',
+    section_stack:'Τεχνολογικό Stack',
+    stack_title:'Τα εργαλεία μας για<br>το μέλλον',stack_copy:'Χρησιμοποιούμε τις καλύτερες τεχνολογίες παγκοσμίως για γρήγορα, όμορφα και ανθεκτικά ψηφιακά προϊόντα.',
+    stack_cat1:'Frameworks & Βιβλιοθήκες',stack_cat2:'Animation & 3D',stack_cat3:'Σχεδιασμός & Πρωτοτυποποίηση',stack_cat4:'Backend & Υποδομή',
+    cta_title:'Έτοιμοι για το<br>επόμενο<br>έργο σας;',cta_sub:'Είμαστε μαζί σας από την ιδέα έως την εκκίνηση.',cta_btn:'Ξεκινήστε Έργο',
+    feat1_title:'Δωρεάν Συμβουλευτική',feat1_sub:'Πρώτη συνεδρία χωρίς κόστος',
+    feat2_title:'Γρήγορη Παράδοση',feat2_sub:'Τυπικά έργα σε 4–8 εβδομάδες',
+    feat3_title:'Συνεχής Υποστήριξη',feat3_sub:'6 μήνες δωρεάν υποστήριξη μετά την εκκίνηση',
+    footer_copy:'© 2024 Όλα τα δικαιώματα διατηρούνται',
+    dir:'ltr',code:'EL'
+  }
+};
+
+let currentLang = 'fa';
+
+function applyLanguage(lang) {
+  const t = TRANSLATIONS[lang];
+  if (!t) return;
+  currentLang = lang;
+  document.documentElement.setAttribute('dir', t.dir);
+  document.documentElement.setAttribute('lang', lang);
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+  document.getElementById('lang-current-label').textContent = t.code;
+  document.querySelectorAll('.lang-option').forEach(opt => {
+    opt.classList.toggle('selected', opt.dataset.lang === lang);
+  });
+  try { localStorage.setItem('modiamic_lang', lang); } catch(e) {}
+}
+
+// Lang switcher
+const langBtn = document.getElementById('lang-btn');
+const langDropdown = document.getElementById('lang-dropdown');
+langBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  const isOpen = langDropdown.classList.contains('open');
+  langDropdown.classList.toggle('open', !isOpen);
+  langBtn.classList.toggle('active', !isOpen);
+});
+document.addEventListener('click', () => {
+  langDropdown.classList.remove('open');
+  langBtn.classList.remove('active');
+});
+langDropdown.addEventListener('click', e => {
+  const opt = e.target.closest('.lang-option');
+  if (opt) { applyLanguage(opt.dataset.lang); langDropdown.classList.remove('open'); langBtn.classList.remove('active'); }
+});
+
+// Load saved language
+try {
+  const saved = localStorage.getItem('modiamic_lang');
+  if (saved && TRANSLATIONS[saved]) applyLanguage(saved);
+} catch(e) {}
+</script>
+</body>
+</html>
+HTMLEOF
