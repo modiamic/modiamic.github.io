@@ -1,0 +1,2072 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050507">
+<title>Interior Design & Space — Modiamic Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,700;1,300;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Cinzel:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --silver:#c8cdd4;
+  --silver-bright:#e8ecf0;
+  --silver-dark:#8a8f96;
+  --gold:#b8a070;
+  --bg:#050507;
+  --bg2:#090910;
+  --text:#d8dde4;
+  --accent:#ffffff;
+}
+
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  overflow-x:hidden;
+  cursor:none;
+  -webkit-text-size-adjust:100%;
+}
+*,*::before,*::after{cursor:none!important;-webkit-tap-highlight-color:transparent}
+
+/* CURSOR */
+#cursor{
+  width:12px;height:12px;
+  border-radius:50%;
+  position:fixed;left:0;top:0;
+  pointer-events:none;z-index:9999;
+  will-change:transform;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle at 38% 36%,#ffffff 0%,#d8eeff 40%,#a0c8ff 70%,transparent 100%);
+  box-shadow:0 0 6px 2px rgba(180,220,255,0.9),0 0 18px 5px rgba(140,190,255,0.55),0 0 40px 10px rgba(100,160,255,0.22);
+  transition:width 0.3s cubic-bezier(0.22,1,0.36,1),height 0.3s,box-shadow 0.3s,background 0.3s;
+}
+#cursor.big{
+  width:20px;height:20px;
+  box-shadow:0 0 8px 3px rgba(220,200,255,0.95),0 0 28px 8px rgba(184,160,255,0.6);
+  background:radial-gradient(circle at 38% 36%,#ffffff 0%,#eeddff 40%,#c8a8ff 70%,transparent 100%);
+}
+
+/* SCROLL PROGRESS */
+#scroll-progress{
+  position:fixed;top:0;left:0;height:2px;width:0%;
+  background:linear-gradient(90deg,var(--gold),#e8d4a8,var(--gold));
+  z-index:9998;transition:width 0.1s linear;
+  box-shadow:0 0 8px var(--gold);
+}
+
+/* BACK TO TOP */
+#back-top{
+  position:fixed;bottom:32px;left:32px;
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(10,10,14,0.85);
+  border:1px solid rgba(184,160,112,0.35);
+  display:flex;align-items:center;justify-content:center;
+  z-index:200;opacity:0;pointer-events:none;
+  transition:opacity 0.4s,transform 0.4s,border-color 0.3s;
+  backdrop-filter:blur(12px);
+}
+#back-top.visible{opacity:1;pointer-events:auto}
+#back-top:hover{border-color:var(--gold);transform:translateY(-3px)}
+#back-top svg{width:16px;height:16px;stroke:var(--gold);stroke-width:1.5;fill:none}
+
+/* ═══ LANG SWITCHER ═══ */
+#lang-switcher{position:relative;display:flex;align-items:center}
+#lang-btn{
+  display:flex;align-items:center;gap:8px;
+  background:none;
+  border:1px solid rgba(184,160,112,0.25);
+  border-radius:28px;
+  padding:7px 14px 7px 10px;
+  cursor:pointer;
+  transition:all 0.35s cubic-bezier(0.22,1,0.36,1);
+  position:relative;
+}
+#lang-btn:hover{border-color:rgba(184,160,112,0.55);background:rgba(184,160,112,0.06)}
+.lang-globe{width:16px;height:16px;flex-shrink:0}
+.lang-current{font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--silver-bright)}
+.lang-chevron{width:10px;height:10px;stroke:var(--gold);stroke-width:1.5;fill:none;transition:transform 0.35s cubic-bezier(0.22,1,0.36,1)}
+#lang-btn.active .lang-chevron{transform:rotate(180deg)}
+#lang-dropdown{
+  position:absolute;top:calc(100% + 10px);right:0;min-width:210px;
+  background:rgba(8,8,12,0.97);
+  border:1px solid rgba(184,160,112,0.2);border-radius:8px;overflow:hidden;
+  opacity:0;pointer-events:none;
+  transform:translateY(-8px) scale(0.97);transform-origin:top right;
+  transition:opacity 0.3s,transform 0.35s;
+  z-index:500;backdrop-filter:blur(24px);
+  box-shadow:0 20px 60px rgba(0,0,0,0.7);
+}
+#lang-dropdown.open{opacity:1;pointer-events:auto;transform:translateY(0) scale(1)}
+.lang-option{
+  display:flex;align-items:center;gap:12px;padding:11px 16px;
+  cursor:pointer;transition:background 0.2s;
+  border-bottom:1px solid rgba(255,255,255,0.04);position:relative;
+}
+.lang-option:last-child{border-bottom:none}
+.lang-option::after{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,transparent,var(--gold),transparent);transform:scaleY(0);transition:transform 0.3s}
+.lang-option:hover::after,.lang-option.selected::after{transform:scaleY(1)}
+.lang-option:hover{background:rgba(184,160,112,0.07)}
+.lang-option.selected{background:rgba(184,160,112,0.1)}
+.lang-option.selected .lang-opt-name{color:var(--gold)}
+.lang-flag{font-size:16px;line-height:1;flex-shrink:0}
+.lang-opt-name{font-family:'DM Sans',sans-serif;font-size:12px;letter-spacing:0.1em;color:var(--silver-bright);flex:1}
+.lang-opt-native{font-size:11px;color:var(--silver-dark);letter-spacing:0.05em}
+.lang-check{width:12px;height:12px;stroke:var(--gold);stroke-width:2;fill:none;opacity:0;transition:opacity 0.2s}
+.lang-option.selected .lang-check{opacity:1}
+
+/* ═══ NAV ═══ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:linear-gradient(to bottom,rgba(5,5,7,0.95) 0%,transparent 100%);
+  transition:background 0.4s;
+}
+.nav-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:28px 60px;
+}
+.logo-nav{
+  font-family:'Cinzel',serif;font-size:18px;letter-spacing:0.35em;
+  color:var(--silver-bright);text-transform:uppercase;
+  text-decoration:none;display:flex;align-items:center;gap:10px;
+}
+.nav-links{display:flex;gap:48px;list-style:none}
+.nav-links a{
+  color:var(--silver-dark);text-decoration:none;
+  font-size:12px;letter-spacing:0.18em;text-transform:uppercase;
+  transition:color 0.3s;
+}
+.nav-links a:hover{color:white}
+
+/* Hamburger */
+#nav-toggle{
+  display:none;align-items:center;justify-content:center;
+  background:none;border:none;outline:none;padding:0;
+}
+#nav-overlay{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:fixed;inset:0;z-index:300;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.45s cubic-bezier(0.22,1,0.36,1);visibility:hidden;
+}
+#nav-overlay.open{opacity:1;pointer-events:auto;visibility:visible}
+
+/* ═══ HERO ═══ */
+.int-hero{
+  position:relative;height:100vh;height:100svh;
+  display:flex;align-items:flex-end;justify-content:flex-start;
+  overflow:hidden;
+  padding:0 60px 80px;
+}
+.int-hero-bg{
+  position:absolute;inset:0;
+  background:#050507;
+  overflow:hidden;
+}
+.int-hero-bg::before{
+  content:'';
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 40%, rgba(184,160,112,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 20% 80%, rgba(100,80,140,0.06) 0%, transparent 60%);
+}
+/* Animated interior line art */
+.hero-room-svg{
+  position:absolute;inset:0;width:100%;height:100%;
+  opacity:0.08;
+}
+.hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(5,5,7,0.85) 0%,rgba(5,5,7,0.4) 50%,rgba(5,5,7,0.6) 100%);
+}
+.int-hero-content{position:relative;z-index:5;max-width:700px}
+.int-hero-tag{
+  display:inline-flex;align-items:center;gap:12px;
+  font-size:10px;letter-spacing:0.45em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:32px;
+  opacity:0;animation:fadeUp 1s 0.2s both;
+}
+.int-hero-tag::before{content:'✦';font-size:8px;opacity:0.6}
+.int-hero-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(52px,7vw,100px);
+  font-weight:300;line-height:0.92;
+  letter-spacing:-0.02em;
+  color:transparent;
+  background:linear-gradient(135deg,#ffffff 0%,#c8cdd4 40%,#8a8f96 70%,#c8cdd4 100%);
+  -webkit-background-clip:text;background-clip:text;
+  margin-bottom:32px;
+  opacity:0;animation:fadeUp 1.2s 0.4s both;
+}
+.int-hero-sub{
+  font-size:14px;line-height:1.9;
+  color:var(--silver-dark);max-width:460px;
+  opacity:0;animation:fadeUp 1s 0.6s both;
+}
+.int-hero-cta{
+  display:inline-flex;align-items:center;gap:16px;
+  margin-top:40px;
+  font-size:11px;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--silver-bright);text-decoration:none;
+  border:1px solid rgba(200,205,212,0.25);
+  padding:16px 36px;
+  transition:all 0.4s;position:relative;overflow:hidden;
+  opacity:0;animation:fadeUp 1s 0.8s both;
+}
+.int-hero-cta::before{
+  content:'';position:absolute;inset:0;
+  background:rgba(255,255,255,0.06);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform 0.4s;
+}
+.int-hero-cta:hover::before{transform:scaleX(1)}
+.int-hero-cta::after{
+  content:'↓';font-size:14px;
+}
+.hero-scroll-line{
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:1px;height:80px;
+  background:linear-gradient(to bottom,transparent,rgba(184,160,112,0.5),transparent);
+  opacity:0;animation:fadeUp 1s 1.2s both;
+}
+
+/* Floating room accent stats */
+.hero-stats{
+  position:absolute;right:60px;bottom:80px;z-index:5;
+  display:flex;flex-direction:column;gap:24px;
+  opacity:0;animation:fadeUp 1s 1s both;
+}
+.hero-stat{text-align:right}
+.hero-stat-num{
+  font-family:'Playfair Display',serif;
+  font-size:40px;font-weight:300;
+  color:var(--silver-bright);display:block;line-height:1;
+}
+.hero-stat-label{
+  font-size:9px;letter-spacing:0.35em;text-transform:uppercase;
+  color:var(--gold);opacity:0.7;
+}
+
+/* ═══ SECTION COMMONS ═══ */
+section,.int-section{padding:140px 60px}
+.section-label{
+  font-size:10px;letter-spacing:0.45em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:80px;
+  display:flex;align-items:center;gap:20px;
+}
+.section-label::before{content:'✦';color:var(--gold);opacity:0.5;font-size:8px;margin-left:4px}
+.section-label::after{content:'';flex:1;max-width:60px;height:1px;background:var(--gold);opacity:0.4}
+
+/* ═══ PHILOSOPHY / APPROACH ═══ */
+.approach-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+}
+.approach-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(36px,4vw,60px);
+  font-weight:300;color:var(--silver-bright);
+  line-height:1.15;margin-bottom:28px;
+}
+.approach-title em{
+  font-style:italic;color:transparent;
+  background:linear-gradient(90deg,var(--gold),#e8d4a8);
+  -webkit-background-clip:text;background-clip:text;
+}
+.approach-text{
+  font-size:14px;line-height:2;color:var(--silver-dark);
+  margin-bottom:24px;
+}
+.approach-list{
+  list-style:none;display:flex;flex-direction:column;gap:16px;
+  margin-top:40px;
+}
+.approach-list li{
+  display:flex;align-items:center;gap:16px;
+  font-size:12px;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--silver-bright);
+}
+.approach-list li::before{
+  content:'';width:24px;height:1px;background:var(--gold);flex-shrink:0;
+}
+
+/* Approach visual */
+.approach-visual{
+  position:relative;aspect-ratio:4/5;background:var(--bg2);
+  overflow:hidden;
+}
+.approach-visual-inner{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.approach-visual::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 50%,rgba(5,5,7,0.4) 100%);
+}
+.approach-frame{
+  position:absolute;
+  border:1px solid rgba(184,160,112,0.25);
+  pointer-events:none;
+}
+.approach-frame-1{inset:20px}
+.approach-frame-2{inset:36px;border-color:rgba(184,160,112,0.12)}
+
+/* ═══ SERVICES / WHAT WE DO ═══ */
+.services-list{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
+}
+.svc-item{
+  padding:44px 36px;background:var(--bg2);
+  position:relative;overflow:hidden;
+  transition:background 0.4s;
+}
+.svc-item::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  transform:scaleX(0);transition:transform 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+.svc-item:hover{background:#0d0d16}
+.svc-item:hover::before{transform:scaleX(1)}
+.svc-num{
+  font-size:10px;letter-spacing:0.3em;color:var(--gold);opacity:0.5;
+  margin-bottom:28px;
+}
+.svc-icon{margin-bottom:24px}
+.svc-name{
+  font-family:'Playfair Display',serif;
+  font-size:22px;font-weight:300;
+  color:var(--silver-bright);margin-bottom:16px;line-height:1.2;
+}
+.svc-desc{
+  font-size:13px;line-height:1.85;color:var(--silver-dark);
+}
+
+/* ═══ PORTFOLIO GRID ═══ */
+.portfolio-intro{
+  display:grid;grid-template-columns:1fr 1fr;gap:120px;
+  align-items:end;margin-bottom:80px;
+}
+.portfolio-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(44px,5vw,68px);
+  font-weight:300;color:var(--silver-bright);line-height:1.1;
+}
+.portfolio-copy{
+  font-size:14px;line-height:2;color:var(--silver-dark);
+  padding-bottom:8px;
+}
+.portfolio-filter{
+  display:flex;gap:12px;flex-wrap:wrap;margin-bottom:60px;
+}
+.filter-btn{
+  background:none;border:1px solid rgba(255,255,255,0.08);
+  padding:8px 20px;
+  font-family:'DM Sans',sans-serif;font-size:11px;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--silver-dark);transition:all 0.3s;
+}
+.filter-btn:hover{border-color:rgba(184,160,112,0.4);color:var(--silver-bright)}
+.filter-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(184,160,112,0.06)}
+
+/* Portfolio masonry grid */
+.portfolio-grid{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  grid-auto-rows:80px;
+  gap:2px;
+}
+.proj{
+  position:relative;overflow:hidden;background:var(--bg2);
+  transition:transform 0.08s linear;
+  will-change:transform;
+}
+.proj-1{grid-column:1/8;grid-row:1/7}   /* large left */
+.proj-2{grid-column:8/13;grid-row:1/5}  /* top right */
+.proj-3{grid-column:8/13;grid-row:5/8}  /* mid right */
+.proj-4{grid-column:1/5;grid-row:7/12}  /* bottom left */
+.proj-5{grid-column:5/9;grid-row:7/12}  /* bottom mid */
+.proj-6{grid-column:9/13;grid-row:8/12} /* bottom right */
+
+.proj svg{
+  width:100%;height:100%;
+  display:block;
+  transition:transform 0.55s cubic-bezier(0.22,1,0.36,1);
+}
+.proj:hover svg{transform:scale(1.04)}
+
+/* Gold hover corners */
+.proj .p-corner{
+  position:absolute;width:18px;height:18px;
+  opacity:0;transition:opacity 0.4s,transform 0.45s cubic-bezier(0.22,1,0.36,1);
+  pointer-events:none;z-index:5;
+}
+.proj .p-tl{top:14px;left:14px;border-top:1px solid var(--gold);border-left:1px solid var(--gold);transform:translate(-4px,-4px)}
+.proj .p-tr{top:14px;right:14px;border-top:1px solid var(--gold);border-right:1px solid var(--gold);transform:translate(4px,-4px)}
+.proj .p-bl{bottom:72px;left:14px;border-bottom:1px solid var(--gold);border-left:1px solid var(--gold);transform:translate(-4px,4px)}
+.proj .p-br{bottom:72px;right:14px;border-bottom:1px solid var(--gold);border-right:1px solid var(--gold);transform:translate(4px,4px)}
+.proj:hover .p-corner{opacity:0.7;transform:translate(0,0)}
+
+/* Project label */
+.proj-label{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:24px 28px;
+  background:linear-gradient(to top,rgba(5,5,7,0.94) 0%,rgba(5,5,7,0.3) 70%,transparent 100%);
+  transform:translateY(100%);
+  transition:transform 0.5s cubic-bezier(0.22,1,0.36,1);
+  z-index:6;
+}
+.proj:hover .proj-label{transform:translateY(0)}
+.proj-cat{
+  font-size:9px;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:6px;
+  opacity:0;transform:translateY(8px);
+  transition:opacity 0.35s 0.1s,transform 0.35s 0.1s;
+}
+.proj:hover .proj-cat{opacity:1;transform:translateY(0)}
+.proj-name{
+  font-family:'Playfair Display',serif;font-size:20px;color:white;
+  opacity:0;transform:translateY(8px);
+  transition:opacity 0.35s 0.18s,transform 0.35s 0.18s;
+}
+.proj:hover .proj-name{opacity:1;transform:translateY(0)}
+.proj-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  margin-top:10px;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;
+  color:rgba(255,255,255,0.5);
+  opacity:0;transform:translateY(6px);
+  transition:opacity 0.35s 0.26s,transform 0.35s 0.26s;
+}
+.proj-cta::after{
+  content:'';display:block;width:22px;height:1px;
+  background:var(--gold);transform:scaleX(0);transform-origin:left;
+  transition:transform 0.35s 0.55s ease;
+}
+.proj:hover .proj-cta{opacity:1;transform:translateY(0)}
+.proj:hover .proj-cta::after{transform:scaleX(1)}
+
+/* ═══ PROCESS ═══ */
+#process{background:var(--bg2)}
+.process-steps{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:2px;
+  margin-top:0;
+}
+.step{
+  padding:48px 36px;background:var(--bg);
+  position:relative;overflow:hidden;
+  transition:transform 0.35s cubic-bezier(0.22,1,0.36,1),box-shadow 0.35s;
+}
+.step:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(184,160,112,0.08)}
+.step-num{
+  font-family:'Playfair Display',serif;
+  font-size:64px;font-weight:300;
+  color:rgba(255,255,255,0.04);
+  line-height:1;position:absolute;top:20px;
+  right:24px;pointer-events:none;
+}
+html[dir="ltr"] .step-num{right:auto;left:24px}
+.step-icon{
+  width:44px;height:44px;margin-bottom:24px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(184,160,112,0.2);
+  border-radius:50%;flex-shrink:0;
+}
+.step-title{
+  font-family:'Playfair Display',serif;
+  font-size:20px;font-weight:300;
+  color:var(--silver-bright);margin-bottom:16px;
+}
+.step-desc{font-size:13px;line-height:1.85;color:var(--silver-dark)}
+.step::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  transform:scaleX(0);transition:transform 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+.step:hover::after{transform:scaleX(1)}
+
+/* ═══ STATS ═══ */
+.int-stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:2px;
+  background:var(--bg);
+}
+.int-stat{
+  padding:56px 40px;background:var(--bg2);text-align:center;
+  position:relative;overflow:hidden;
+  transition:transform 0.35s cubic-bezier(0.22,1,0.36,1),box-shadow 0.35s;
+}
+.int-stat:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(184,160,112,0.08)}
+.int-stat-num{
+  font-family:'Playfair Display',serif;
+  font-size:64px;font-weight:300;
+  color:var(--silver-bright);display:block;line-height:1;margin-bottom:12px;
+}
+.int-stat-label{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--silver-dark)}
+.int-stat::after{
+  content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:30px;height:2px;background:var(--gold);
+}
+
+/* ═══ TESTIMONIALS ═══ */
+#testimonials{background:var(--bg2)}
+.testimonials-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
+}
+.testi{
+  padding:40px 36px;background:var(--bg);
+  position:relative;transition:background 0.4s;
+}
+.testi:hover{background:#0d0d16}
+.testi::before{
+  content:'"';
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:80px;line-height:0.6;
+  color:var(--gold);opacity:0.15;
+  display:block;margin-bottom:20px;
+}
+.testi-text{
+  font-size:14px;line-height:1.9;color:var(--silver-dark);
+  font-style:italic;margin-bottom:28px;
+}
+.testi-client{
+  display:flex;align-items:center;gap:14px;
+}
+.testi-avatar{
+  width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg,rgba(184,160,112,0.2),rgba(184,160,112,0.05));
+  border:1px solid rgba(184,160,112,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-size:16px;color:var(--gold);
+  flex-shrink:0;
+}
+.testi-name{font-size:13px;color:var(--silver-bright);letter-spacing:0.08em}
+.testi-role{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--silver-dark)}
+
+/* ═══ CTA ═══ */
+#cta-section{
+  background:var(--bg);padding:140px 60px;
+  display:grid;grid-template-columns:1fr 1fr;gap:120px;align-items:center;
+}
+.cta-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(44px,5vw,76px);
+  font-weight:300;color:var(--silver-bright);line-height:1;
+  margin-bottom:28px;
+}
+.cta-sub{
+  font-size:14px;line-height:2;color:var(--silver-dark);margin-bottom:48px;
+}
+.cta-link{
+  display:inline-block;padding:18px 48px;
+  border:1px solid rgba(200,205,212,0.3);
+  color:var(--silver-bright);text-decoration:none;
+  font-size:11px;letter-spacing:0.3em;text-transform:uppercase;
+  transition:all 0.4s;position:relative;overflow:hidden;
+}
+.cta-link::before{
+  content:'';position:absolute;inset:0;
+  background:rgba(255,255,255,0.06);
+  transform:scaleX(0);transform-origin:left;transition:transform 0.4s;
+}
+.cta-link:hover::before{transform:scaleX(1)}
+.cta-form{display:flex;flex-direction:column;gap:24px}
+.cta-field{
+  border:none;border-bottom:1px solid rgba(255,255,255,0.12);
+  background:transparent;color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:14px;
+  padding:16px 0;outline:none;transition:border-color 0.3s;
+}
+.cta-field::placeholder{color:var(--silver-dark)}
+.cta-field:focus{border-color:rgba(255,255,255,0.4)}
+.cta-submit{
+  align-self:flex-start;margin-top:8px;
+  padding:18px 48px;background:white;color:#050507;
+  border:none;font-family:'DM Sans',sans-serif;
+  font-size:11px;letter-spacing:0.3em;text-transform:uppercase;
+  transition:opacity 0.3s;
+}
+.cta-submit:hover{opacity:0.85}
+
+/* ═══ MARQUEE ═══ */
+.marquee-bar{
+  overflow:hidden;white-space:nowrap;
+  border-top:1px solid rgba(255,255,255,0.04);
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  padding:20px 0;background:var(--bg2);
+}
+.marquee-inner{display:inline-block;animation:marquee 22s linear infinite}
+.marquee-item{
+  display:inline-block;
+  font-family:'Playfair Display',serif;
+  font-size:13px;letter-spacing:0.3em;text-transform:uppercase;
+  color:rgba(255,255,255,0.2);margin:0 48px;
+}
+.marquee-item span{color:var(--gold);margin-left:8px;font-size:10px}
+
+/* ═══ FOOTER ═══ */
+footer{
+  background:var(--bg2);padding:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid rgba(255,255,255,0.05);
+}
+.footer-logo{
+  font-family:'Playfair Display',serif;
+  font-size:22px;letter-spacing:0.3em;
+  color:var(--silver-bright);text-transform:uppercase;
+}
+.footer-copy{font-size:11px;letter-spacing:0.15em;color:var(--silver-dark)}
+.footer-links{display:flex;gap:32px}
+.footer-links a{
+  font-size:11px;letter-spacing:0.2em;
+  color:var(--silver-dark);text-decoration:none;text-transform:uppercase;transition:color 0.3s;
+}
+.footer-links a:hover{color:white}
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(30px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes marquee{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+.reveal{
+  opacity:0;transform:translateY(40px);
+  transition:opacity 0.9s cubic-bezier(0.22,1,0.36,1),transform 0.9s cubic-bezier(0.22,1,0.36,1);
+}
+.reveal.visible{opacity:1;transform:none}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:900px){
+  .nav-inner{padding:20px 28px}
+  .nav-links{gap:24px}
+  section,.int-section{padding:90px 28px}
+  .int-hero{padding:0 28px 60px}
+  .hero-stats{right:28px}
+  .approach-grid,.portfolio-intro,.int-stats{grid-template-columns:1fr}
+  .approach-grid{gap:48px}
+  .portfolio-intro{gap:28px;margin-bottom:40px}
+  .services-list{grid-template-columns:1fr 1fr}
+  .process-steps{grid-template-columns:1fr 1fr}
+  .testimonials-grid{grid-template-columns:1fr}
+  #cta-section{grid-template-columns:1fr;gap:52px;padding:90px 28px}
+  footer{flex-direction:column;gap:20px;text-align:center;padding:40px 28px}
+  .footer-links{justify-content:center}
+  .portfolio-grid{
+    grid-template-columns:1fr 1fr;
+    grid-auto-rows:220px;
+  }
+  .proj-1,.proj-2,.proj-3,.proj-4,.proj-5,.proj-6{
+    grid-column:auto;grid-row:auto;
+  }
+  #back-top{bottom:24px;left:24px}
+}
+@media(max-width:600px){
+  *,*::before,*::after{cursor:auto!important}
+  #cursor{display:none}
+  section,.int-section{padding:60px 20px}
+  .nav-inner{padding:15px 20px}
+  #nav-toggle{display:flex!important}
+  .nav-links{display:none!important}
+  .int-hero{padding:0 20px 64px}
+  .int-hero-title{font-size:clamp(40px,12vw,60px)}
+  .hero-stats{display:none}
+  .services-list{grid-template-columns:1fr}
+  .process-steps{grid-template-columns:1fr}
+  .int-stats{grid-template-columns:1fr 1fr}
+  .portfolio-grid{grid-template-columns:1fr;grid-auto-rows:260px}
+  .proj-label{transform:translateY(0)}
+  .proj-cat,.proj-name,.proj-cta{opacity:1;transform:none}
+  .p-corner{display:none}
+  #cta-section{padding:60px 20px;gap:40px}
+  .cta-title{font-size:clamp(30px,10vw,48px)}
+  footer{flex-direction:column;gap:14px;text-align:center;padding:26px 20px}
+  .lang-current{font-size:10px}
+  #lang-dropdown{right:-8px;min-width:190px}
+  html[dir="rtl"] #lang-dropdown{right:auto;left:-8px}
+
+  /* hamburger */
+  #nav-toggle{
+    position:relative;width:48px;height:48px;
+    border:none;border-radius:50%;background:transparent;
+  }
+  #nav-toggle::before{
+    content:'';position:absolute;inset:-1px;border-radius:50%;
+    background:conic-gradient(from 0deg,rgba(184,160,112,0) 0deg,rgba(184,160,112,0.55) 90deg,rgba(232,212,168,0.85) 180deg,rgba(184,160,112,0.55) 270deg,rgba(184,160,112,0) 360deg);
+    -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 1.5px),#000 calc(100% - 1.5px));
+    mask:radial-gradient(farthest-side,transparent calc(100% - 1.5px),#000 calc(100% - 1.5px));
+    animation:ringRotate 6s linear infinite;opacity:0.7;
+  }
+  #nav-toggle::after{
+    content:'';position:absolute;inset:3px;border-radius:50%;
+    background:radial-gradient(circle at 38% 36%,rgba(30,28,22,0.98) 0%,rgba(14,13,10,0.97) 100%);
+  }
+  #nav-toggle span{
+    position:absolute;left:50%;z-index:2;
+    transform-origin:center;transform:translateX(-50%);
+    height:1.5px;border-radius:2px;
+    background:linear-gradient(90deg,var(--silver-dark),var(--silver-bright));
+    transition:transform 0.5s cubic-bezier(0.22,1,0.36,1),opacity 0.3s,width 0.4s;
+  }
+  #nav-toggle span:nth-child(1){top:15px;width:20px}
+  #nav-toggle span:nth-child(2){top:22.5px;width:14px;margin-left:3px}
+  #nav-toggle span:nth-child(3){top:30px;width:20px}
+  #nav-toggle.open span{background:linear-gradient(90deg,var(--gold),#e8d4a8);width:18px!important;margin-left:0!important}
+  #nav-toggle.open span:nth-child(1){transform:translateX(-50%) translateY(7.5px) rotate(45deg)}
+  #nav-toggle.open span:nth-child(2){opacity:0;transform:translateX(-50%) scaleX(0)}
+  #nav-toggle.open span:nth-child(3){transform:translateX(-50%) translateY(-7.5px) rotate(-45deg)}
+  @keyframes ringRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+  #nav-overlay{background:rgba(3,3,5,0.98);backdrop-filter:blur(32px)}
+  #nav-overlay ul{gap:0;padding:0;position:relative;z-index:2}
+  #nav-overlay ul li{overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.04);width:100vw;text-align:center}
+  #nav-overlay ul li:first-child{border-top:1px solid rgba(255,255,255,0.04)}
+  #nav-overlay ul li a{
+    font-family:'Cinzel',serif;font-size:clamp(26px,8vw,40px);font-weight:300;
+    letter-spacing:0.22em;color:rgba(200,205,212,0.5);text-decoration:none;text-transform:uppercase;
+    display:flex;align-items:center;justify-content:center;gap:16px;padding:22px 32px;
+    transform:translateX(-60px) skewX(-6deg);opacity:0;
+    transition:color 0.4s,transform 0.6s cubic-bezier(0.22,1,0.36,1),opacity 0.5s;
+  }
+  #nav-overlay.open ul li a{transform:translateX(0) skewX(0deg);opacity:1}
+  #nav-overlay.open ul li:nth-child(1) a{transition-delay:0.08s}
+  #nav-overlay.open ul li:nth-child(2) a{transition-delay:0.15s}
+  #nav-overlay.open ul li:nth-child(3) a{transition-delay:0.22s}
+  #nav-overlay.open ul li:nth-child(4) a{transition-delay:0.29s}
+  #nav-overlay ul li a:hover{color:white}
+}
+
+/* ─── BREADCRUMB ─── */
+.breadcrumb{
+  padding:120px 60px 0;
+  display:flex;align-items:center;gap:12px;
+  font-size:10px;letter-spacing:0.3em;text-transform:uppercase;
+}
+.breadcrumb a{color:var(--silver-dark);text-decoration:none;transition:color 0.3s}
+.breadcrumb a:hover{color:var(--gold)}
+.breadcrumb-sep{color:var(--gold);opacity:0.4}
+.breadcrumb-current{color:var(--gold)}
+@media(max-width:600px){.breadcrumb{padding:100px 20px 0}}
+</style>
+</head>
+<body>
+
+<div id="scroll-progress"></div>
+<div id="cursor"></div>
+
+<button id="back-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg viewBox="0 0 16 16"><polyline points="3,10 8,5 13,10"/></svg>
+</button>
+
+<!-- Mobile nav overlay -->
+<div id="nav-overlay">
+  <ul>
+    <li><a href="index.html#services" onclick="closeNav()"><span data-i18n="nav_services">خدمات</span></a></li>
+    <li><a href="index.html#works" onclick="closeNav()"><span data-i18n="nav_works">کارها</span></a></li>
+    <li><a href="index.html#philosophy" onclick="closeNav()"><span data-i18n="nav_studio">استودیو</span></a></li>
+    <li><a href="index.html#contact" onclick="closeNav()"><span data-i18n="nav_contact">تماس</span></a></li>
+  </ul>
+</div>
+
+<nav id="main-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo-nav">
+      <span>Modiamic</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html#services" data-i18n="nav_services">خدمات</a></li>
+      <li><a href="index.html#works" data-i18n="nav_works">کارها</a></li>
+      <li><a href="index.html#philosophy" data-i18n="nav_studio">استودیو</a></li>
+      <li><a href="index.html#contact" data-i18n="nav_contact">تماس</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:16px">
+      <div id="lang-switcher">
+        <button id="lang-btn" aria-label="Change language">
+          <svg class="lang-globe" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="6.5" stroke="#b8a070" stroke-width="1"/>
+            <ellipse cx="8" cy="8" rx="2.8" ry="6.5" stroke="#b8a070" stroke-width="0.8"/>
+            <line x1="1.5" y1="6" x2="14.5" y2="6" stroke="#b8a070" stroke-width="0.8"/>
+            <line x1="1.5" y1="10" x2="14.5" y2="10" stroke="#b8a070" stroke-width="0.8"/>
+          </svg>
+          <span class="lang-current" id="lang-current-label">FA</span>
+          <svg class="lang-chevron" viewBox="0 0 10 10"><polyline points="2,3 5,7 8,3"/></svg>
+        </button>
+        <div id="lang-dropdown">
+          <div class="lang-option selected" data-lang="fa"><span class="lang-flag">🇮🇷</span><span class="lang-opt-name">فارسی</span><span class="lang-opt-native">FA</span><svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div class="lang-option" data-lang="en"><span class="lang-flag">🇬🇧</span><span class="lang-opt-name">English</span><span class="lang-opt-native">EN</span><svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div class="lang-option" data-lang="tr"><span class="lang-flag">🇹🇷</span><span class="lang-opt-name">Türkçe</span><span class="lang-opt-native">TR</span><svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div class="lang-option" data-lang="de"><span class="lang-flag">🇩🇪</span><span class="lang-opt-name">Deutsch</span><span class="lang-opt-native">DE</span><svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div class="lang-option" data-lang="fr"><span class="lang-flag">🇫🇷</span><span class="lang-opt-name">Français</span><span class="lang-opt-native">FR</span><svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div class="lang-option" data-lang="it"><span class="lang-flag">🇮🇹</span><span class="lang-opt-name">Italiano</span><span class="lang-opt-native">IT</span><svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div class="lang-option" data-lang="es"><span class="lang-flag">🇪🇸</span><span class="lang-opt-name">Español</span><span class="lang-opt-native">ES</span><svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div class="lang-option" data-lang="el"><span class="lang-flag">🇬🇷</span><span class="lang-opt-name">Ελληνικά</span><span class="lang-opt-native">EL</span><svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        </div>
+      </div>
+      <button id="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<div class="int-hero">
+  <div class="int-hero-bg">
+    <!-- Animated architectural line art SVG -->
+    <svg class="hero-room-svg" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Perspective room lines -->
+      <line x1="700" y1="450" x2="0" y2="0" stroke="#b8a070" stroke-width="0.5"/>
+      <line x1="700" y1="450" x2="1400" y2="0" stroke="#b8a070" stroke-width="0.5"/>
+      <line x1="700" y1="450" x2="0" y2="900" stroke="#b8a070" stroke-width="0.5"/>
+      <line x1="700" y1="450" x2="1400" y2="900" stroke="#b8a070" stroke-width="0.5"/>
+      <!-- Horizon line -->
+      <line x1="0" y1="450" x2="1400" y2="450" stroke="#b8a070" stroke-width="0.3" opacity="0.5"/>
+      <!-- Grid lines vertical -->
+      <line x1="350" y1="225" x2="350" y2="675" stroke="#c8cdd4" stroke-width="0.3" opacity="0.4"/>
+      <line x1="700" y1="0" x2="700" y2="900" stroke="#c8cdd4" stroke-width="0.3" opacity="0.4"/>
+      <line x1="1050" y1="225" x2="1050" y2="675" stroke="#c8cdd4" stroke-width="0.3" opacity="0.4"/>
+      <!-- Horizontal grid -->
+      <line x1="175" y1="337" x2="1225" y2="337" stroke="#c8cdd4" stroke-width="0.3" opacity="0.3"/>
+      <line x1="175" y1="562" x2="1225" y2="562" stroke="#c8cdd4" stroke-width="0.3" opacity="0.3"/>
+      <!-- Floor plan rectangle -->
+      <rect x="200" y="550" width="1000" height="300" stroke="#b8a070" stroke-width="0.8" fill="none" opacity="0.4"/>
+      <!-- Furniture outlines (floor plan) -->
+      <rect x="560" y="600" width="280" height="160" rx="4" stroke="#c8cdd4" stroke-width="0.6" fill="none" opacity="0.5"/>
+      <rect x="320" y="620" width="80" height="60" rx="2" stroke="#c8cdd4" stroke-width="0.5" fill="none" opacity="0.4"/>
+      <circle cx="1000" cy="680" r="40" stroke="#b8a070" stroke-width="0.6" fill="none" opacity="0.45"/>
+      <!-- Ceiling detail -->
+      <rect x="400" y="100" width="600" height="300" stroke="#c8cdd4" stroke-width="0.4" fill="none" opacity="0.25"/>
+      <circle cx="700" cy="250" r="80" stroke="#b8a070" stroke-width="0.5" fill="none" opacity="0.3"/>
+      <!-- Corner accent marks -->
+      <path d="M200 550 L200 570 M200 550 L220 550" stroke="#b8a070" stroke-width="1" opacity="0.6"/>
+      <path d="M1200 550 L1200 570 M1200 550 L1180 550" stroke="#b8a070" stroke-width="1" opacity="0.6"/>
+    </svg>
+    <div class="hero-overlay"></div>
+  </div>
+
+  <div class="int-hero-content">
+    <div class="int-hero-tag" data-i18n="hero_tag">دیزاین داخلی & فضاسازی</div>
+    <h1 class="int-hero-title" data-i18n="hero_title">طراحی<br>فضاهای<br><em style="font-style:italic;color:var(--gold)">ماندگار</em></h1>
+    <p class="int-hero-sub" data-i18n="hero_sub">هر فضا داستانی دارد. ما آن داستان را با نور، بافت، تناسب و جزئیات روایت می‌کنیم — در سطحی که لوکس معنا پیدا می‌کند.</p>
+    <a href="#portfolio" class="int-hero-cta" data-i18n="hero_cta">مشاهده نمونه کارها</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="hero-stat-num">48+</span>
+      <span class="hero-stat-label" data-i18n="stat_projects">پروژه داخلی</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">12</span>
+      <span class="hero-stat-label" data-i18n="stat_awards">جایزه طراحی</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">7</span>
+      <span class="hero-stat-label" data-i18n="stat_countries">کشور</span>
+    </div>
+  </div>
+
+  <div class="hero-scroll-line"></div>
+</div>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb reveal">
+  <a href="index.html" data-i18n="bc_home">خانه</a>
+  <span class="breadcrumb-sep">✦</span>
+  <a href="index.html#services" data-i18n="bc_services">خدمات</a>
+  <span class="breadcrumb-sep">✦</span>
+  <span class="breadcrumb-current" data-i18n="bc_current">دیزاین داخلی</span>
+</div>
+
+<!-- ═══ APPROACH ═══ -->
+<section id="approach" style="background:var(--bg2)">
+  <div class="section-label reveal" data-i18n="sec_approach">رویکرد ما</div>
+  <div class="approach-grid">
+    <div>
+      <h2 class="approach-title reveal">
+        <span data-i18n="approach_title">فضایی که با آن <em data-i18n="approach_title_em">زندگی می‌کنید</em>، شما را شکل می‌دهد</span>
+      </h2>
+      <p class="approach-text reveal" data-i18n="approach_p1">در Modiamic باور داریم طراحی داخلی چیزی فراتر از چیدمان مبلمان است. هر پروژه یک سفر حسی است — از مفهوم‌پردازی اولیه تا لحظه‌ای که برای اولین بار پا درون فضا می‌گذارید.</p>
+      <p class="approach-text reveal" data-i18n="approach_p2">با ترکیب ویژوالیزیشن ۳۶۰ درجه، متریال‌شناسی دقیق و روشنایی هنرمندانه، فضاهایی می‌سازیم که هم کارکرد دارند هم احساس برمی‌انگیزند.</p>
+      <ul class="approach-list reveal">
+        <li data-i18n="app_li1">طراحی مفهومی و ماکت‌سازی ۳D</li>
+        <li data-i18n="app_li2">انتخاب متریال و پالت رنگ</li>
+        <li data-i18n="app_li3">طراحی نورپردازی هنری</li>
+        <li data-i18n="app_li4">نظارت بر اجرا و مدیریت پروژه</li>
+        <li data-i18n="app_li5">ویژوالیزیشن واقعیت افزوده</li>
+      </ul>
+    </div>
+    <div class="approach-visual reveal">
+      <div class="approach-visual-inner">
+        <!-- Large interior illustration SVG -->
+        <svg viewBox="0 0 500 620" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;object-fit:cover">
+          <defs>
+            <linearGradient id="bg_app" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#080610"/><stop offset="100%" stop-color="#120e08"/></linearGradient>
+            <radialGradient id="win_glow" cx="50%" cy="30%" r="40%"><stop offset="0%" stop-color="#b8a070" stop-opacity="0.25"/><stop offset="100%" stop-color="#b8a070" stop-opacity="0"/></radialGradient>
+            <radialGradient id="lamp_glow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#d06020" stop-opacity="0.4"/><stop offset="100%" stop-color="#d06020" stop-opacity="0"/></radialGradient>
+            <filter id="blur4"><feGaussianBlur stdDeviation="4"/></filter>
+            <filter id="blur2"><feGaussianBlur stdDeviation="2"/></filter>
+          </defs>
+          <rect width="500" height="620" fill="url(#bg_app)"/>
+          <!-- Back wall -->
+          <rect x="60" y="60" width="380" height="380" fill="#0e0a08" opacity="0.9"/>
+          <!-- Floor -->
+          <path d="M0 440 L500 440 L500 620 L0 620 Z" fill="#0a0806" opacity="0.95"/>
+          <!-- Large arched window -->
+          <path d="M160 80 Q250 40 340 80 L340 300 L160 300 Z" fill="#100c06" stroke="#b8a070" stroke-width="1"/>
+          <path d="M170 85 Q250 48 330 85 L330 290 L170 290 Z" fill="#08060400" stroke="#c8cdd4" stroke-width="0.4" opacity="0.3"/>
+          <!-- Window glow -->
+          <ellipse cx="250" cy="190" rx="70" ry="100" fill="url(#win_glow)" filter="url(#blur4)"/>
+          <!-- Parquet floor lines -->
+          <line x1="0" y1="500" x2="500" y2="500" stroke="#2a1e10" stroke-width="0.5" opacity="0.6"/>
+          <line x1="0" y1="540" x2="500" y2="540" stroke="#2a1e10" stroke-width="0.5" opacity="0.5"/>
+          <line x1="0" y1="580" x2="500" y2="580" stroke="#2a1e10" stroke-width="0.4" opacity="0.4"/>
+          <line x1="100" y1="440" x2="100" y2="620" stroke="#2a1e10" stroke-width="0.5" opacity="0.4"/>
+          <line x1="200" y1="440" x2="200" y2="620" stroke="#2a1e10" stroke-width="0.5" opacity="0.4"/>
+          <line x1="300" y1="440" x2="300" y2="620" stroke="#2a1e10" stroke-width="0.5" opacity="0.4"/>
+          <line x1="400" y1="440" x2="400" y2="620" stroke="#2a1e10" stroke-width="0.5" opacity="0.4"/>
+          <!-- Sofa -->
+          <rect x="80" y="390" width="260" height="70" rx="10" fill="#1e1408" opacity="0.95"/>
+          <rect x="72" y="368" width="276" height="30" rx="8" fill="#2a1c0a" opacity="0.95"/>
+          <rect x="76" y="358" width="28" height="42" rx="5" fill="#1e1408" opacity="0.95"/>
+          <rect x="320" y="358" width="28" height="42" rx="5" fill="#1e1408" opacity="0.95"/>
+          <!-- Cushions -->
+          <rect x="88" y="370" width="60" height="24" rx="8" fill="#2a2010" opacity="0.8"/>
+          <rect x="158" y="370" width="60" height="24" rx="8" fill="#241c0e" opacity="0.8"/>
+          <rect x="228" y="370" width="60" height="24" rx="8" fill="#2a2010" opacity="0.8"/>
+          <!-- Coffee table -->
+          <rect x="130" y="460" width="180" height="60" rx="2" fill="#18120a" stroke="#b8a070" stroke-width="0.6" opacity="0.85"/>
+          <line x1="130" y1="460" x2="310" y2="460" stroke="#b8a070" stroke-width="0.4" opacity="0.4"/>
+          <!-- Vase on table -->
+          <path d="M220 430 Q216 445 214 460 L230 460 Q228 445 224 430 Z" fill="#3a2810" opacity="0.9"/>
+          <ellipse cx="222" cy="430" rx="6" ry="3" fill="#b8a070" opacity="0.4"/>
+          <!-- Floor lamp -->
+          <line x1="390" y1="355" x2="390" y2="540" stroke="#2a1e10" stroke-width="3" opacity="0.9"/>
+          <path d="M366 355 Q390 340 414 355 L410 390 L370 390 Z" fill="#1e1408" stroke="#b8a070" stroke-width="0.6" opacity="0.8"/>
+          <ellipse cx="390" cy="365" rx="12" ry="5" fill="#b8a070" opacity="0.1" filter="url(#blur2)"/>
+          <!-- Lamp glow on ceiling/wall -->
+          <ellipse cx="390" cy="330" rx="45" ry="30" fill="#b8a070" opacity="0.05" filter="url(#blur4)"/>
+          <!-- Side table + lamp -->
+          <rect x="60" y="408" width="65" height="30" rx="2" fill="#160e06" opacity="0.9"/>
+          <rect x="75" y="390" width="10" height="18" rx="2" fill="#2a1a08" opacity="0.9"/>
+          <path d="M68 390 Q80 380 92 390 L90 404 L70 404 Z" fill="#3a2810" stroke="#b8a070" stroke-width="0.5" opacity="0.8"/>
+          <circle cx="80" cy="385" r="18" fill="#d08020" opacity="0.07" filter="url(#blur4)"/>
+          <!-- Rug -->
+          <ellipse cx="215" cy="510" rx="160" ry="28" fill="#180e04" stroke="#b8a070" stroke-width="0.7" opacity="0.65"/>
+          <ellipse cx="215" cy="510" rx="140" ry="22" stroke="#b8a070" stroke-width="0.3" fill="none" opacity="0.3"/>
+          <ellipse cx="215" cy="510" rx="100" ry="16" stroke="#b8a070" stroke-width="0.2" fill="none" opacity="0.2"/>
+          <!-- Wall art frame -->
+          <rect x="370" y="100" width="90" height="120" fill="#10080400" stroke="#b8a070" stroke-width="0.8" opacity="0.5"/>
+          <rect x="378" y="108" width="74" height="104" fill="#080402" opacity="0.6"/>
+          <line x1="378" y1="108" x2="452" y2="212" stroke="#b8a070" stroke-width="0.3" opacity="0.2"/>
+          <line x1="452" y1="108" x2="378" y2="212" stroke="#b8a070" stroke-width="0.3" opacity="0.2"/>
+          <!-- Bookcase left -->
+          <rect x="60" y="60" width="80" height="320" fill="#0e0806" opacity="0.9"/>
+          <line x1="60" y1="140" x2="140" y2="140" stroke="#b8a070" stroke-width="0.4" opacity="0.3"/>
+          <line x1="60" y1="220" x2="140" y2="220" stroke="#b8a070" stroke-width="0.4" opacity="0.3"/>
+          <line x1="60" y1="300" x2="140" y2="300" stroke="#b8a070" stroke-width="0.4" opacity="0.3"/>
+          <!-- Book spines -->
+          <rect x="66" y="150" width="6" height="65" rx="1" fill="#3a2010" opacity="0.7"/>
+          <rect x="75" y="148" width="8" height="68" rx="1" fill="#2a1808" opacity="0.6"/>
+          <rect x="86" y="152" width="7" height="62" rx="1" fill="#482808" opacity="0.7"/>
+          <rect x="96" y="150" width="5" height="66" rx="1" fill="#302010" opacity="0.6"/>
+          <rect x="104" y="148" width="9" height="68" rx="1" fill="#381c08" opacity="0.7"/>
+          <rect x="66" y="230" width="10" height="60" rx="1" fill="#2a1808" opacity="0.6"/>
+          <rect x="79" y="232" width="7" height="56" rx="1" fill="#3a2010" opacity="0.7"/>
+          <rect x="89" y="228" width="8" height="64" rx="1" fill="#482808" opacity="0.7"/>
+          <rect x="100" y="232" width="6" height="56" rx="1" fill="#302010" opacity="0.5"/>
+          <!-- Warm ambient floor glow -->
+          <ellipse cx="215" cy="580" rx="220" ry="25" fill="#b8600800" opacity="0.04" filter="url(#blur4)"/>
+          <!-- Gold accent line at top -->
+          <line x1="60" y1="60" x2="440" y2="60" stroke="#b8a070" stroke-width="0.5" opacity="0.3"/>
+          <line x1="60" y1="60" x2="60" y2="440" stroke="#b8a070" stroke-width="0.5" opacity="0.3"/>
+          <line x1="440" y1="60" x2="440" y2="440" stroke="#b8a070" stroke-width="0.5" opacity="0.3"/>
+          <line x1="60" y1="440" x2="440" y2="440" stroke="#b8a070" stroke-width="0.5" opacity="0.3"/>
+        </svg>
+      </div>
+      <div class="approach-frame approach-frame-1"></div>
+      <div class="approach-frame approach-frame-2"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SERVICES WE OFFER ═══ -->
+<section id="what-we-do" style="background:var(--bg)">
+  <div class="section-label reveal" data-i18n="sec_services">خدمات ما</div>
+  <div class="services-list">
+
+    <div class="svc-item reveal">
+      <div class="svc-num">01</div>
+      <div class="svc-icon">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="4" y="4" width="32" height="32" stroke="#b8a070" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <rect x="8" y="16" width="14" height="16" stroke="#c8cdd4" stroke-width="0.6" fill="none" opacity="0.6"/>
+          <rect x="24" y="20" width="8" height="12" stroke="#c8cdd4" stroke-width="0.6" fill="none" opacity="0.5"/>
+          <line x1="4" y1="32" x2="36" y2="32" stroke="#b8a070" stroke-width="0.6" opacity="0.5"/>
+          <line x1="20" y1="4" x2="20" y2="16" stroke="#b8a070" stroke-width="0.5" opacity="0.4"/>
+        </svg>
+      </div>
+      <h3 class="svc-name" data-i18n="svc_space_title">طراحی فضای داخلی</h3>
+      <p class="svc-desc" data-i18n="svc_space_desc">از مفهوم‌پردازی تا اجرا — طراحی کامل فضاهای مسکونی، تجاری و هاسپیتالیتی با رویکردی لوکس و پایدار.</p>
+    </div>
+
+    <div class="svc-item reveal">
+      <div class="svc-num">02</div>
+      <div class="svc-icon">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="20" r="14" stroke="#b8a070" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <circle cx="20" cy="20" r="8" stroke="#c8cdd4" stroke-width="0.6" fill="none" opacity="0.5"/>
+          <line x1="6" y1="20" x2="34" y2="20" stroke="#b8a070" stroke-width="0.5" opacity="0.4"/>
+          <line x1="20" y1="6" x2="20" y2="34" stroke="#b8a070" stroke-width="0.5" opacity="0.4"/>
+          <circle cx="20" cy="20" r="2" fill="#b8a070" opacity="0.8"/>
+        </svg>
+      </div>
+      <h3 class="svc-name" data-i18n="svc_360_title">ویژوالیزیشن ۳۶۰°</h3>
+      <p class="svc-desc" data-i18n="svc_360_desc">تجربه کامل فضا پیش از ساخت — رندرهای فوتورئالیستیک، تورهای مجازی و ارائه VR برای تصمیم‌گیری آگاهانه.</p>
+    </div>
+
+    <div class="svc-item reveal">
+      <div class="svc-num">03</div>
+      <div class="svc-icon">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <path d="M8 32 L20 8 L32 32 Z" stroke="#b8a070" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <line x1="12" y1="24" x2="28" y2="24" stroke="#c8cdd4" stroke-width="0.6" opacity="0.5"/>
+          <circle cx="20" cy="14" r="3" stroke="#b8a070" stroke-width="0.6" fill="none" opacity="0.6"/>
+          <line x1="20" y1="4" x2="20" y2="8" stroke="#b8a070" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+        </svg>
+      </div>
+      <h3 class="svc-name" data-i18n="svc_light_title">طراحی نورپردازی</h3>
+      <p class="svc-desc" data-i18n="svc_light_desc">نور درام‌آفرین، لایه‌بندی هوشمند نور محیطی و تاکیدی — معماری نور که فضا را زنده می‌کند.</p>
+    </div>
+
+    <div class="svc-item reveal">
+      <div class="svc-num">04</div>
+      <div class="svc-icon">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="6" y="18" width="28" height="14" rx="2" stroke="#b8a070" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <rect x="10" y="14" width="20" height="6" rx="2" stroke="#c8cdd4" stroke-width="0.6" fill="none" opacity="0.5"/>
+          <rect x="14" y="10" width="12" height="6" rx="2" stroke="#c8cdd4" stroke-width="0.5" fill="none" opacity="0.4"/>
+          <line x1="10" y1="32" x2="10" y2="36" stroke="#b8a070" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+          <line x1="30" y1="32" x2="30" y2="36" stroke="#b8a070" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+        </svg>
+      </div>
+      <h3 class="svc-name" data-i18n="svc_furn_title">انتخاب مبلمان & متریال</h3>
+      <p class="svc-desc" data-i18n="svc_furn_desc">کیوریشن دقیق مبلمان، پارچه، سنگ و سطوح از برندهای برتر جهانی — هماهنگ با فلسفه بصری پروژه.</p>
+    </div>
+
+    <div class="svc-item reveal">
+      <div class="svc-num">05</div>
+      <div class="svc-icon">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="4" y="4" width="32" height="32" rx="2" stroke="#b8a070" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <line x1="4" y1="14" x2="36" y2="14" stroke="#c8cdd4" stroke-width="0.5" opacity="0.4"/>
+          <line x1="14" y1="4" x2="14" y2="36" stroke="#c8cdd4" stroke-width="0.5" opacity="0.4"/>
+          <rect x="18" y="18" width="14" height="14" fill="#b8a070" fill-opacity="0.12" stroke="#b8a070" stroke-width="0.5" opacity="0.6"/>
+        </svg>
+      </div>
+      <h3 class="svc-name" data-i18n="svc_plan_title">برنامه‌ریزی فضا & پلان</h3>
+      <p class="svc-desc" data-i18n="svc_plan_desc">تحلیل جریان، چیدمان بهینه و طراحی پلان‌های کارکردی که از هر متر مربع بیشترین ارزش را بیرون می‌کشند.</p>
+    </div>
+
+    <div class="svc-item reveal">
+      <div class="svc-num">06</div>
+      <div class="svc-icon">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <path d="M20 6 L34 14 L34 26 L20 34 L6 26 L6 14 Z" stroke="#b8a070" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <path d="M20 12 L28 17 L28 23 L20 28 L12 23 L12 17 Z" stroke="#c8cdd4" stroke-width="0.5" fill="none" opacity="0.5"/>
+          <circle cx="20" cy="20" r="3" fill="#b8a070" opacity="0.6"/>
+        </svg>
+      </div>
+      <h3 class="svc-name" data-i18n="svc_art_title">هنر & دکور</h3>
+      <p class="svc-desc" data-i18n="svc_art_desc">کیوریشن آثار هنری، مجسمه و قطعات دکوراتیو که روح فضا را کامل می‌کنند و روایت بصری منسجمی می‌سازند.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ PORTFOLIO ═══ -->
+<section id="portfolio" style="background:var(--bg2)">
+  <div class="portfolio-intro">
+    <div>
+      <div class="section-label reveal" data-i18n="sec_portfolio">نمونه کارها</div>
+      <h2 class="portfolio-title reveal" data-i18n="portfolio_title">فضاهایی که<br>داستان<br>می‌گویند</h2>
+    </div>
+    <p class="portfolio-copy reveal" data-i18n="portfolio_copy">هر پروژه رویکرد منحصربه‌فردی دارد — از پنت‌هاوس‌های اقیانوس‌رو تا ویلاهای کوهستانی، از لابی‌های هتل‌های پنج ستاره تا فضاهای مدیتیشن خصوصی.</p>
+  </div>
+
+  <div class="portfolio-filter reveal">
+    <button class="filter-btn active" data-filter="all" data-i18n="filter_all">همه</button>
+    <button class="filter-btn" data-filter="residential" data-i18n="filter_res">مسکونی</button>
+    <button class="filter-btn" data-filter="hospitality" data-i18n="filter_hosp">هاسپیتالیتی</button>
+    <button class="filter-btn" data-filter="commercial" data-i18n="filter_com">تجاری</button>
+    <button class="filter-btn" data-filter="private" data-i18n="filter_priv">خصوصی</button>
+  </div>
+
+  <div class="portfolio-grid reveal">
+
+    <!-- Project 1 - Large -->
+    <div class="proj proj-1" data-category="residential">
+      <svg viewBox="0 0 700 520" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="p1bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#060410"/><stop offset="100%" stop-color="#0e0a06"/></linearGradient>
+          <radialGradient id="p1win" cx="65%" cy="25%" r="35%"><stop offset="0%" stop-color="#b8a070" stop-opacity="0.3"/><stop offset="100%" stop-color="#b8a070" stop-opacity="0"/></radialGradient>
+          <filter id="p1blur"><feGaussianBlur stdDeviation="6"/></filter>
+          <filter id="p1blur2"><feGaussianBlur stdDeviation="2"/></filter>
+        </defs>
+        <rect width="700" height="520" fill="url(#p1bg)"/>
+        <!-- Floor lines -->
+        <line x1="0" y1="360" x2="700" y2="360" stroke="#1a1206" stroke-width="0.8" opacity="0.6"/>
+        <line x1="0" y1="400" x2="700" y2="400" stroke="#1a1206" stroke-width="0.6" opacity="0.4"/>
+        <line x1="0" y1="440" x2="700" y2="440" stroke="#1a1206" stroke-width="0.5" opacity="0.3"/>
+        <line x1="0" y1="480" x2="700" y2="480" stroke="#1a1206" stroke-width="0.4" opacity="0.25"/>
+        <!-- Wall back -->
+        <rect x="0" y="0" width="700" height="360" fill="#090706" opacity="0.95"/>
+        <!-- Large floor-to-ceiling windows -->
+        <rect x="420" y="0" width="120" height="360" fill="#120c04" stroke="#b8a070" stroke-width="0.8" opacity="0.7"/>
+        <rect x="550" y="0" width="150" height="360" fill="#140e06" stroke="#b8a070" stroke-width="0.8" opacity="0.7"/>
+        <!-- Window glow -->
+        <rect x="420" y="0" width="120" height="360" fill="url(#p1win)" filter="url(#p1blur)" opacity="0.8"/>
+        <rect x="550" y="0" width="150" height="360" fill="url(#p1win)" filter="url(#p1blur)" opacity="0.6"/>
+        <!-- Minimalist sofa — floating off floor -->
+        <rect x="60" y="280" width="340" height="70" rx="4" fill="#16100800" stroke="#b8a070" stroke-width="0" opacity="0"/>
+        <rect x="60" y="280" width="340" height="70" rx="4" fill="#1c1408" opacity="0.95"/>
+        <rect x="60" y="268" width="340" height="18" rx="4" fill="#241c0e" opacity="0.95"/>
+        <!-- Sofa legs -->
+        <line x1="80" y1="350" x2="80" y2="360" stroke="#b8a070" stroke-width="2" opacity="0.4"/>
+        <line x1="380" y1="350" x2="380" y2="360" stroke="#b8a070" stroke-width="2" opacity="0.4"/>
+        <!-- Low coffee table — marble top -->
+        <rect x="130" y="340" width="200" height="32" rx="1" fill="#1a1408" stroke="#b8a070" stroke-width="0.5" opacity="0.8"/>
+        <line x1="130" y1="340" x2="330" y2="340" stroke="#c8cdd4" stroke-width="0.3" opacity="0.2"/>
+        <!-- Object on table -->
+        <circle cx="200" cy="336" r="8" fill="#2a1e10" stroke="#b8a070" stroke-width="0.5" opacity="0.7"/>
+        <rect x="240" y="328" width="3" height="16" fill="#b8a070" opacity="0.3"/>
+        <!-- Rug -->
+        <ellipse cx="250" cy="385" rx="200" ry="18" fill="#140e04" stroke="#b8a070" stroke-width="0.7" opacity="0.6"/>
+        <!-- Floor lamp -->
+        <line x1="390" y1="200" x2="395" y2="360" stroke="#2a2010" stroke-width="2.5" opacity="0.9"/>
+        <path d="M372 200 Q390 188 408 200 L405 228 L375 228 Z" fill="#1e1808" stroke="#b8a070" stroke-width="0.6" opacity="0.8"/>
+        <ellipse cx="390" cy="208" rx="16" ry="7" fill="#b8a070" opacity="0.08" filter="url(#p1blur2)"/>
+        <!-- Art on wall -->
+        <rect x="80" y="60" width="140" height="180" fill="#0c0806" stroke="#b8a070" stroke-width="0.8" opacity="0.6"/>
+        <rect x="88" y="68" width="124" height="164" fill="#060402" opacity="0.7"/>
+        <!-- Abstract art inside frame -->
+        <circle cx="150" cy="150" r="40" stroke="#b8a070" stroke-width="0.5" fill="none" opacity="0.4"/>
+        <line x1="110" y1="110" x2="190" y2="190" stroke="#c8cdd4" stroke-width="0.4" opacity="0.3"/>
+        <circle cx="150" cy="150" r="10" fill="#b8a070" fill-opacity="0.15" opacity="0.6"/>
+        <!-- Plant in corner -->
+        <path d="M570 260 Q565 240 580 235 Q570 220 588 215 Q578 200 595 195 Q585 180 605 178 Q598 165 615 162" stroke="#2a3010" stroke-width="2" fill="none" opacity="0.8"/>
+        <path d="M570 260 Q590 248 600 235 Q612 220 618 215 Q625 200 618 190" stroke="#2a3010" stroke-width="1.5" fill="none" opacity="0.6"/>
+        <circle cx="570" cy="262" r="12" fill="#16120a" stroke="#b8a070" stroke-width="0.5" opacity="0.7"/>
+        <!-- Ceiling detail -->
+        <rect x="180" y="0" width="250" height="8" fill="#b8a070" opacity="0.05"/>
+        <!-- Subtle warm ambient -->
+        <ellipse cx="350" cy="420" rx="280" ry="20" fill="#b86008" opacity="0.02" filter="url(#p1blur)"/>
+      </svg>
+      <div class="p-corner p-tl"></div><div class="p-corner p-tr"></div>
+      <div class="p-corner p-bl"></div><div class="p-corner p-br"></div>
+      <div class="proj-label">
+        <div class="proj-cat" data-i18n="p1_cat">مسکونی · ۲۰۲۴</div>
+        <div class="proj-name" data-i18n="p1_name">Obsidian Penthouse</div>
+        <div class="proj-cta" data-i18n="view_proj">مشاهده پروژه</div>
+      </div>
+    </div>
+
+    <!-- Project 2 -->
+    <div class="proj proj-2" data-category="hospitality">
+      <svg viewBox="0 0 500 380" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="p2bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#080410"/><stop offset="100%" stop-color="#0c0808"/></linearGradient>
+          <radialGradient id="p2glow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b8a070" stop-opacity="0.25"/><stop offset="100%" stop-color="#b8a070" stop-opacity="0"/></radialGradient>
+          <filter id="p2blur"><feGaussianBlur stdDeviation="5"/></filter>
+        </defs>
+        <rect width="500" height="380" fill="url(#p2bg)"/>
+        <!-- Hotel lobby arch -->
+        <path d="M100 0 Q250 -20 400 0 L400 250 L100 250 Z" fill="#0a0608" opacity="0.9"/>
+        <path d="M120 0 Q250 -10 380 0 L380 238 L120 238 Z" stroke="#b8a070" stroke-width="0.8" fill="none" opacity="0.5"/>
+        <!-- Chandelier -->
+        <circle cx="250" cy="80" r="55" fill="none" stroke="#b8a070" stroke-width="0.6" opacity="0.3" stroke-dasharray="4,6"/>
+        <circle cx="250" cy="80" r="35" fill="none" stroke="#c8cdd4" stroke-width="0.5" opacity="0.25"/>
+        <circle cx="250" cy="80" r="8" fill="#b8a070" opacity="0.2"/>
+        <!-- Crystal drops -->
+        <line x1="210" y1="80" x2="210" y2="110" stroke="#c8cdd4" stroke-width="0.5" opacity="0.4"/>
+        <diamond x="208" y="108" width="4" height="6" fill="#c8cdd4" opacity="0.5"/>
+        <line x1="250" y1="80" x2="250" y2="120" stroke="#c8cdd4" stroke-width="0.5" opacity="0.4"/>
+        <line x1="290" y1="80" x2="290" y2="110" stroke="#c8cdd4" stroke-width="0.5" opacity="0.4"/>
+        <line x1="232" y1="78" x2="224" y2="106" stroke="#c8cdd4" stroke-width="0.4" opacity="0.35"/>
+        <line x1="268" y1="78" x2="276" y2="106" stroke="#c8cdd4" stroke-width="0.4" opacity="0.35"/>
+        <!-- Glow from chandelier -->
+        <ellipse cx="250" cy="100" rx="60" ry="40" fill="url(#p2glow)" filter="url(#p2blur)" opacity="0.6"/>
+        <!-- Reception desk -->
+        <rect x="80" y="210" width="340" height="50" rx="2" fill="#140e08" stroke="#b8a070" stroke-width="0.8" opacity="0.85"/>
+        <line x1="80" y1="220" x2="420" y2="220" stroke="#b8a070" stroke-width="0.4" opacity="0.3"/>
+        <!-- Marble pattern on desk -->
+        <path d="M100 215 Q150 213 200 216 Q250 219 300 215 Q350 211 400 215" stroke="#c8cdd4" stroke-width="0.3" fill="none" opacity="0.2"/>
+        <path d="M120 218 Q170 216 220 219 Q270 222 320 218 Q370 214 410 218" stroke="#c8cdd4" stroke-width="0.2" fill="none" opacity="0.15"/>
+        <!-- Floor marble -->
+        <line x1="0" y1="280" x2="500" y2="280" stroke="#1a1406" stroke-width="0.6" opacity="0.5"/>
+        <line x1="0" y1="320" x2="500" y2="320" stroke="#1a1406" stroke-width="0.5" opacity="0.4"/>
+        <line x1="0" y1="360" x2="500" y2="360" stroke="#1a1406" stroke-width="0.4" opacity="0.3"/>
+        <line x1="100" y1="260" x2="100" y2="380" stroke="#1a1406" stroke-width="0.5" opacity="0.35"/>
+        <line x1="200" y1="260" x2="200" y2="380" stroke="#1a1406" stroke-width="0.5" opacity="0.35"/>
+        <line x1="300" y1="260" x2="300" y2="380" stroke="#1a1406" stroke-width="0.5" opacity="0.35"/>
+        <line x1="400" y1="260" x2="400" y2="380" stroke="#1a1406" stroke-width="0.5" opacity="0.35"/>
+        <!-- Pillars -->
+        <rect x="100" y="0" width="20" height="260" fill="#0c0806" stroke="#b8a070" stroke-width="0.5" opacity="0.6"/>
+        <rect x="380" y="0" width="20" height="260" fill="#0c0806" stroke="#b8a070" stroke-width="0.5" opacity="0.6"/>
+      </svg>
+      <div class="p-corner p-tl"></div><div class="p-corner p-tr"></div>
+      <div class="p-corner p-bl"></div><div class="p-corner p-br"></div>
+      <div class="proj-label">
+        <div class="proj-cat" data-i18n="p2_cat">هاسپیتالیتی · ۲۰۲۴</div>
+        <div class="proj-name" data-i18n="p2_name">Aurum Grand Hotel Lobby</div>
+        <div class="proj-cta" data-i18n="view_proj">مشاهده پروژه</div>
+      </div>
+    </div>
+
+    <!-- Project 3 -->
+    <div class="proj proj-3" data-category="private">
+      <svg viewBox="0 0 500 280" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="p3bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#050308"/><stop offset="100%" stop-color="#0a0810"/></linearGradient>
+          <radialGradient id="p3glow" cx="50%" cy="60%" r="50%"><stop offset="0%" stop-color="#6040b0" stop-opacity="0.2"/><stop offset="100%" stop-color="#6040b0" stop-opacity="0"/></radialGradient>
+          <filter id="p3blur"><feGaussianBlur stdDeviation="4"/></filter>
+        </defs>
+        <rect width="500" height="280" fill="url(#p3bg)"/>
+        <!-- Meditation room - circular space -->
+        <ellipse cx="250" cy="140" rx="180" ry="120" fill="none" stroke="#b8a070" stroke-width="0.6" opacity="0.3" stroke-dasharray="6,8"/>
+        <ellipse cx="250" cy="140" rx="120" ry="80" fill="none" stroke="#c8cdd4" stroke-width="0.4" opacity="0.2" stroke-dasharray="4,6"/>
+        <ellipse cx="250" cy="140" rx="60" ry="40" fill="none" stroke="#b8a070" stroke-width="0.4" opacity="0.25"/>
+        <!-- Center platform -->
+        <ellipse cx="250" cy="160" rx="50" ry="18" fill="#100c14" stroke="#b8a070" stroke-width="0.7" opacity="0.7"/>
+        <ellipse cx="250" cy="155" rx="44" ry="14" fill="#0e0a12" opacity="0.8"/>
+        <!-- Meditation figure (abstract) -->
+        <circle cx="250" cy="143" r="8" fill="none" stroke="#c8cdd4" stroke-width="0.5" opacity="0.3"/>
+        <path d="M242 150 Q250 155 258 150" stroke="#c8cdd4" stroke-width="0.5" fill="none" opacity="0.3"/>
+        <!-- Ambient glow -->
+        <ellipse cx="250" cy="150" rx="100" ry="70" fill="url(#p3glow)" filter="url(#p3blur)" opacity="0.7"/>
+        <!-- Floating candles around -->
+        <circle cx="130" cy="120" r="4" fill="#b8a070" opacity="0.15" filter="url(#p3blur)"/>
+        <circle cx="130" cy="120" r="2" fill="#ffa040" opacity="0.5"/>
+        <line x1="130" y1="118" x2="130" y2="140" stroke="#2a1e10" stroke-width="1.5" opacity="0.7"/>
+        <circle cx="370" cy="130" r="4" fill="#b8a070" opacity="0.15" filter="url(#p3blur)"/>
+        <circle cx="370" cy="130" r="2" fill="#ffa040" opacity="0.5"/>
+        <line x1="370" y1="128" x2="370" y2="150" stroke="#2a1e10" stroke-width="1.5" opacity="0.7"/>
+        <circle cx="200" cy="80" r="3" fill="#b8a070" opacity="0.12" filter="url(#p3blur)"/>
+        <circle cx="200" cy="80" r="1.5" fill="#ffa040" opacity="0.5"/>
+        <circle cx="310" cy="75" r="3" fill="#b8a070" opacity="0.12" filter="url(#p3blur)"/>
+        <circle cx="310" cy="75" r="1.5" fill="#ffa040" opacity="0.4"/>
+        <!-- Sky - star points -->
+        <circle cx="60" cy="30" r="0.8" fill="#c8cdd4" opacity="0.6"/>
+        <circle cx="440" cy="20" r="0.8" fill="#c8cdd4" opacity="0.5"/>
+        <circle cx="180" cy="15" r="0.7" fill="#c8cdd4" opacity="0.4"/>
+        <circle cx="360" cy="35" r="0.7" fill="#c8cdd4" opacity="0.5"/>
+        <circle cx="90" cy="55" r="0.6" fill="#c8cdd4" opacity="0.3"/>
+        <circle cx="420" cy="60" r="0.6" fill="#c8cdd4" opacity="0.3"/>
+        <!-- Curtain drapes -->
+        <path d="M0 0 Q20 70 10 140 Q5 200 0 280" stroke="#1a1208" stroke-width="8" fill="none" opacity="0.8"/>
+        <path d="M500 0 Q480 70 490 140 Q495 200 500 280" stroke="#1a1208" stroke-width="8" fill="none" opacity="0.8"/>
+      </svg>
+      <div class="p-corner p-tl"></div><div class="p-corner p-tr"></div>
+      <div class="p-corner p-bl"></div><div class="p-corner p-br"></div>
+      <div class="proj-label">
+        <div class="proj-cat" data-i18n="p3_cat">خصوصی · ۲۰۲۳</div>
+        <div class="proj-name" data-i18n="p3_name">Zenith Sanctuary</div>
+        <div class="proj-cta" data-i18n="view_proj">مشاهده پروژه</div>
+      </div>
+    </div>
+
+    <!-- Project 4 -->
+    <div class="proj proj-4" data-category="residential">
+      <svg viewBox="0 0 400 380" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="p4bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#060a06"/><stop offset="100%" stop-color="#0c0e08"/></linearGradient>
+          <radialGradient id="p4glow" cx="40%" cy="30%" r="50%"><stop offset="0%" stop-color="#40a840" stop-opacity="0.08"/><stop offset="100%" stop-color="#40a840" stop-opacity="0"/></radialGradient>
+          <filter id="p4blur"><feGaussianBlur stdDeviation="5"/></filter>
+        </defs>
+        <rect width="400" height="380" fill="url(#p4bg)"/>
+        <!-- Natural light — large skylight -->
+        <rect x="100" y="0" width="200" height="80" fill="#0a0c06" stroke="#b8a070" stroke-width="0.7" opacity="0.6"/>
+        <rect x="108" y="6" width="184" height="68" fill="#0c1008" opacity="0.5"/>
+        <!-- Light rays from skylight -->
+        <path d="M108 74 L40 200" stroke="#b8a070" stroke-width="0.3" opacity="0.15"/>
+        <path d="M200 80 L200 220" stroke="#b8a070" stroke-width="0.3" opacity="0.2"/>
+        <path d="M292 74 L360 200" stroke="#b8a070" stroke-width="0.3" opacity="0.15"/>
+        <!-- Biophilic wall — vertical garden -->
+        <rect x="0" y="60" width="70" height="300" fill="#08100600" opacity="0.9"/>
+        <!-- Plant masses -->
+        <ellipse cx="28" cy="100" rx="22" ry="28" fill="#0e1a08" opacity="0.9"/>
+        <ellipse cx="38" cy="140" rx="26" ry="24" fill="#0c1806" opacity="0.9"/>
+        <ellipse cx="22" cy="180" rx="20" ry="26" fill="#101e0a" opacity="0.9"/>
+        <ellipse cx="35" cy="220" rx="24" ry="22" fill="#0e1a08" opacity="0.9"/>
+        <ellipse cx="25" cy="260" rx="22" ry="24" fill="#0c1806" opacity="0.9"/>
+        <ellipse cx="38" cy="300" rx="26" ry="22" fill="#101e0a" opacity="0.85"/>
+        <!-- Leaf details -->
+        <path d="M20 90 Q30 78 40 86" stroke="#2a3a14" stroke-width="0.8" fill="none" opacity="0.7"/>
+        <path d="M30 130 Q42 118 52 130" stroke="#2a3a14" stroke-width="0.8" fill="none" opacity="0.7"/>
+        <path d="M18 170 Q28 158 38 170" stroke="#2a3a14" stroke-width="0.8" fill="none" opacity="0.7"/>
+        <!-- Dining table — travertine -->
+        <ellipse cx="240" cy="240" rx="110" ry="60" fill="#141008" stroke="#b8a070" stroke-width="0.8" opacity="0.85"/>
+        <ellipse cx="240" cy="235" rx="104" ry="55" fill="#100c06" opacity="0.6"/>
+        <!-- Table marble grain -->
+        <path d="M140 235 Q190 230 240 235 Q290 240 340 232" stroke="#c8cdd4" stroke-width="0.3" fill="none" opacity="0.15"/>
+        <!-- Chairs around table -->
+        <ellipse cx="200" cy="188" rx="22" ry="16" fill="#1a1208" stroke="#b8a070" stroke-width="0.5" opacity="0.7"/>
+        <ellipse cx="240" cy="178" rx="22" ry="16" fill="#1a1208" stroke="#b8a070" stroke-width="0.5" opacity="0.7"/>
+        <ellipse cx="280" cy="188" rx="22" ry="16" fill="#1a1208" stroke="#b8a070" stroke-width="0.5" opacity="0.7"/>
+        <ellipse cx="200" cy="288" rx="22" ry="16" fill="#1a1208" stroke="#b8a070" stroke-width="0.5" opacity="0.65"/>
+        <ellipse cx="280" cy="288" rx="22" ry="16" fill="#1a1208" stroke="#b8a070" stroke-width="0.5" opacity="0.65"/>
+        <!-- Center piece -->
+        <ellipse cx="240" cy="238" rx="20" ry="12" fill="#2a1e0a" stroke="#b8a070" stroke-width="0.5" opacity="0.7"/>
+        <rect x="236" y="222" width="4" height="18" fill="#b8a070" opacity="0.25"/>
+        <ellipse cx="238" cy="220" rx="6" ry="4" fill="#b8a070" opacity="0.2"/>
+        <!-- Pendant lights above table -->
+        <line x1="200" y1="0" x2="200" y2="165" stroke="#2a1e10" stroke-width="1" opacity="0.6"/>
+        <circle cx="200" cy="170" r="8" fill="#201808" stroke="#b8a070" stroke-width="0.5" opacity="0.8"/>
+        <circle cx="200" cy="165" r="14" fill="#b8a070" opacity="0.04" filter="url(#p4blur)"/>
+        <line x1="240" y1="0" x2="240" y2="155" stroke="#2a1e10" stroke-width="1" opacity="0.6"/>
+        <circle cx="240" cy="160" r="8" fill="#201808" stroke="#b8a070" stroke-width="0.5" opacity="0.8"/>
+        <line x1="280" y1="0" x2="280" y2="165" stroke="#2a1e10" stroke-width="1" opacity="0.6"/>
+        <circle cx="280" cy="170" r="8" fill="#201808" stroke="#b8a070" stroke-width="0.5" opacity="0.8"/>
+        <!-- Plant glow -->
+        <rect x="0" y="60" width="80" height="300" fill="url(#p4glow)" filter="url(#p4blur)" opacity="0.5"/>
+      </svg>
+      <div class="p-corner p-tl"></div><div class="p-corner p-tr"></div>
+      <div class="p-corner p-bl"></div><div class="p-corner p-br"></div>
+      <div class="proj-label">
+        <div class="proj-cat" data-i18n="p4_cat">مسکونی · ۲۰۲۴</div>
+        <div class="proj-name" data-i18n="p4_name">Verdure Villa Dining</div>
+        <div class="proj-cta" data-i18n="view_proj">مشاهده پروژه</div>
+      </div>
+    </div>
+
+    <!-- Project 5 -->
+    <div class="proj proj-5" data-category="commercial">
+      <svg viewBox="0 0 400 380" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="p5bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#080810"/><stop offset="100%" stop-color="#060408"/></linearGradient>
+          <radialGradient id="p5glow" cx="50%" cy="40%" r="50%"><stop offset="0%" stop-color="#4060d0" stop-opacity="0.12"/><stop offset="100%" stop-color="#4060d0" stop-opacity="0"/></radialGradient>
+          <filter id="p5blur"><feGaussianBlur stdDeviation="4"/></filter>
+        </defs>
+        <rect width="400" height="380" fill="url(#p5bg)"/>
+        <!-- Executive office — glass walls -->
+        <rect x="40" y="40" width="320" height="220" fill="none" stroke="#b8a070" stroke-width="0.7" opacity="0.4"/>
+        <!-- Glass wall grid -->
+        <line x1="120" y1="40" x2="120" y2="260" stroke="#c8cdd4" stroke-width="0.4" opacity="0.2"/>
+        <line x1="200" y1="40" x2="200" y2="260" stroke="#c8cdd4" stroke-width="0.4" opacity="0.2"/>
+        <line x1="280" y1="40" x2="280" y2="260" stroke="#c8cdd4" stroke-width="0.4" opacity="0.2"/>
+        <line x1="40" y1="120" x2="360" y2="120" stroke="#c8cdd4" stroke-width="0.4" opacity="0.2"/>
+        <line x1="40" y1="200" x2="360" y2="200" stroke="#c8cdd4" stroke-width="0.4" opacity="0.2"/>
+        <!-- Desk — floating dark surface -->
+        <rect x="90" y="160" width="220" height="80" rx="2" fill="#0e0c14" stroke="#b8a070" stroke-width="0.7" opacity="0.85"/>
+        <rect x="90" y="160" width="220" height="4" rx="1" fill="#b8a070" opacity="0.12"/>
+        <!-- Monitor (silhouette) -->
+        <rect x="170" y="140" width="60" height="40" rx="2" fill="#0c0a10" stroke="#4060d0" stroke-width="0.5" opacity="0.6"/>
+        <rect x="196" y="178" width="8" height="8" fill="#1a1820" opacity="0.8"/>
+        <rect x="190" y="185" width="20" height="2" fill="#b8a070" opacity="0.3"/>
+        <!-- Screen glow -->
+        <rect x="172" y="142" width="56" height="36" fill="url(#p5glow)" filter="url(#p5blur)" opacity="0.8"/>
+        <!-- Chair -->
+        <ellipse cx="200" cy="280" rx="30" ry="20" fill="#100e18" stroke="#b8a070" stroke-width="0.5" opacity="0.7"/>
+        <rect x="186" y="240" width="28" height="44" rx="10" fill="#100e18" stroke="#b8a070" stroke-width="0.5" opacity="0.7"/>
+        <!-- Books on desk -->
+        <rect x="310" y="150" width="6" height="50" rx="1" fill="#2a1808" opacity="0.7"/>
+        <rect x="320" y="152" width="8" height="48" rx="1" fill="#3a2010" opacity="0.7"/>
+        <rect x="332" y="154" width="7" height="46" rx="1" fill="#281808" opacity="0.7"/>
+        <!-- Abstract art panel wall -->
+        <rect x="40" y="40" width="50" height="220" fill="#0c0a14" opacity="0.8"/>
+        <circle cx="65" cy="110" r="20" stroke="#b8a070" stroke-width="0.5" fill="none" opacity="0.5"/>
+        <circle cx="65" cy="160" r="15" stroke="#c8cdd4" stroke-width="0.4" fill="none" opacity="0.35"/>
+        <!-- Floor gradient -->
+        <rect x="0" y="260" width="400" height="120" fill="#060408" opacity="0.9"/>
+        <line x1="0" y1="300" x2="400" y2="300" stroke="#1a1406" stroke-width="0.5" opacity="0.4"/>
+        <line x1="0" y1="340" x2="400" y2="340" stroke="#1a1406" stroke-width="0.4" opacity="0.3"/>
+        <!-- Window city view suggestion -->
+        <rect x="310" y="40" width="50" height="220" fill="#0a0c14" opacity="0.7"/>
+        <!-- City lights (dots) -->
+        <circle cx="320" cy="80" r="0.8" fill="#c8cdd4" opacity="0.4"/>
+        <circle cx="340" cy="100" r="0.7" fill="#c8cdd4" opacity="0.3"/>
+        <circle cx="325" cy="130" r="0.8" fill="#c8cdd4" opacity="0.4"/>
+        <circle cx="350" cy="150" r="0.7" fill="#c8cdd4" opacity="0.35"/>
+        <circle cx="330" cy="180" r="0.8" fill="#c8cdd4" opacity="0.4"/>
+        <circle cx="345" cy="210" r="0.7" fill="#c8cdd4" opacity="0.3"/>
+      </svg>
+      <div class="p-corner p-tl"></div><div class="p-corner p-tr"></div>
+      <div class="p-corner p-bl"></div><div class="p-corner p-br"></div>
+      <div class="proj-label">
+        <div class="proj-cat" data-i18n="p5_cat">تجاری · ۲۰۲۳</div>
+        <div class="proj-name" data-i18n="p5_name">Apex Executive Suite</div>
+        <div class="proj-cta" data-i18n="view_proj">مشاهده پروژه</div>
+      </div>
+    </div>
+
+    <!-- Project 6 -->
+    <div class="proj proj-6" data-category="hospitality">
+      <svg viewBox="0 0 400 320" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="p6bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#060808"/><stop offset="100%" stop-color="#0c0e0a"/></linearGradient>
+          <radialGradient id="p6glow" cx="50%" cy="80%" r="50%"><stop offset="0%" stop-color="#4080a0" stop-opacity="0.2"/><stop offset="100%" stop-color="#4080a0" stop-opacity="0"/></radialGradient>
+          <filter id="p6blur"><feGaussianBlur stdDeviation="6"/></filter>
+          <filter id="p6blur2"><feGaussianBlur stdDeviation="2"/></filter>
+        </defs>
+        <rect width="400" height="320" fill="url(#p6bg)"/>
+        <!-- Infinity pool edge -->
+        <rect x="20" y="160" width="360" height="100" rx="2" fill="#0a1214" stroke="#4080a0" stroke-width="0.8" opacity="0.7"/>
+        <!-- Water surface -->
+        <rect x="22" y="162" width="356" height="96" fill="#0c1618" opacity="0.8"/>
+        <!-- Water shimmer -->
+        <path d="M30 185 Q80 181 130 186 Q180 191 230 185 Q280 179 330 185 Q365 190 390 184" stroke="#4080a0" stroke-width="0.6" fill="none" opacity="0.25"/>
+        <path d="M30 200 Q90 196 140 202 Q190 208 240 200 Q290 192 340 199 Q375 204 390 198" stroke="#4080a0" stroke-width="0.5" fill="none" opacity="0.2"/>
+        <path d="M30 215 Q70 212 120 218 Q170 224 220 215 Q270 206 320 213 Q365 218 390 212" stroke="#4080a0" stroke-width="0.4" fill="none" opacity="0.15"/>
+        <!-- Pool glow (reflection of sky) -->
+        <rect x="22" y="162" width="356" height="96" fill="url(#p6glow)" filter="url(#p6blur)" opacity="0.6"/>
+        <!-- Night sky reflection in water -->
+        <circle cx="100" cy="210" r="0.8" fill="#c8cdd4" opacity="0.3"/>
+        <circle cx="200" cy="195" r="0.7" fill="#c8cdd4" opacity="0.25"/>
+        <circle cx="300" cy="205" r="0.8" fill="#c8cdd4" opacity="0.3"/>
+        <!-- Deck -->
+        <rect x="0" y="260" width="400" height="60" fill="#0c0a06" opacity="0.95"/>
+        <line x1="0" y1="270" x2="400" y2="270" stroke="#1a1206" stroke-width="0.6" opacity="0.5"/>
+        <!-- Deck lights (flush) -->
+        <circle cx="80" cy="264" r="3" fill="#b8a070" opacity="0.3"/>
+        <circle cx="80" cy="264" r="8" fill="#b8a070" opacity="0.05" filter="url(#p6blur2)"/>
+        <circle cx="200" cy="264" r="3" fill="#b8a070" opacity="0.3"/>
+        <circle cx="200" cy="264" r="8" fill="#b8a070" opacity="0.05" filter="url(#p6blur2)"/>
+        <circle cx="320" cy="264" r="3" fill="#b8a070" opacity="0.3"/>
+        <circle cx="320" cy="264" r="8" fill="#b8a070" opacity="0.05" filter="url(#p6blur2)"/>
+        <!-- Pool loungers -->
+        <rect x="50" y="120" width="80" height="32" rx="8" fill="#100e08" stroke="#b8a070" stroke-width="0.5" opacity="0.7"/>
+        <rect x="50" y="108" width="80" height="16" rx="6" fill="#181408" stroke="#b8a070" stroke-width="0.4" opacity="0.6"/>
+        <rect x="270" y="120" width="80" height="32" rx="8" fill="#100e08" stroke="#b8a070" stroke-width="0.5" opacity="0.7"/>
+        <rect x="270" y="108" width="80" height="16" rx="6" fill="#181408" stroke="#b8a070" stroke-width="0.4" opacity="0.6"/>
+        <!-- Night sky above -->
+        <rect x="0" y="0" width="400" height="160" fill="#040608" opacity="0.95"/>
+        <circle cx="50" cy="30" r="0.8" fill="#c8cdd4" opacity="0.6"/>
+        <circle cx="150" cy="20" r="0.7" fill="#c8cdd4" opacity="0.5"/>
+        <circle cx="250" cy="40" r="0.9" fill="#c8cdd4" opacity="0.5"/>
+        <circle cx="350" cy="25" r="0.7" fill="#c8cdd4" opacity="0.6"/>
+        <circle cx="80" cy="70" r="0.6" fill="#c8cdd4" opacity="0.4"/>
+        <circle cx="200" cy="55" r="0.8" fill="#c8cdd4" opacity="0.4"/>
+        <circle cx="320" cy="65" r="0.7" fill="#c8cdd4" opacity="0.4"/>
+        <!-- Moon -->
+        <circle cx="340" cy="45" r="14" fill="#1a1808" stroke="#c8cdd4" stroke-width="0.5" opacity="0.4"/>
+        <circle cx="347" cy="41" r="12" fill="#040608" opacity="0.7"/>
+        <!-- Palm shadow -->
+        <path d="M180 0 Q185 40 182 160" stroke="#0e1008" stroke-width="4" fill="none" opacity="0.8"/>
+        <path d="M182 60 Q200 48 218 60 Q208 48 212 32" stroke="#0e1008" stroke-width="2" fill="none" opacity="0.7"/>
+        <path d="M182 60 Q165 44 158 28" stroke="#0e1008" stroke-width="2" fill="none" opacity="0.6"/>
+      </svg>
+      <div class="p-corner p-tl"></div><div class="p-corner p-tr"></div>
+      <div class="p-corner p-bl"></div><div class="p-corner p-br"></div>
+      <div class="proj-label">
+        <div class="proj-cat" data-i18n="p6_cat">هاسپیتالیتی · ۲۰۲۴</div>
+        <div class="proj-name" data-i18n="p6_name">Nocturne Resort Pool</div>
+        <div class="proj-cta" data-i18n="view_proj">مشاهده پروژه</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-bar">
+  <div class="marquee-inner">
+    <span class="marquee-item">Interior Design<span>✦</span></span>
+    <span class="marquee-item">Luxury Spaces<span>✦</span></span>
+    <span class="marquee-item">360° Visualization<span>✦</span></span>
+    <span class="marquee-item">Lighting Design<span>✦</span></span>
+    <span class="marquee-item">Material Curation<span>✦</span></span>
+    <span class="marquee-item">Space Planning<span>✦</span></span>
+    <span class="marquee-item">Hospitality Design<span>✦</span></span>
+    <span class="marquee-item">Interior Design<span>✦</span></span>
+    <span class="marquee-item">Luxury Spaces<span>✦</span></span>
+    <span class="marquee-item">360° Visualization<span>✦</span></span>
+    <span class="marquee-item">Lighting Design<span>✦</span></span>
+    <span class="marquee-item">Material Curation<span>✦</span></span>
+  </div>
+</div>
+
+<!-- ═══ PROCESS ═══ -->
+<section id="process">
+  <div class="section-label reveal" data-i18n="sec_process">فرآیند کار</div>
+  <div class="process-steps">
+
+    <div class="step reveal">
+      <div class="step-num">01</div>
+      <div class="step-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <circle cx="11" cy="11" r="9" stroke="#b8a070" stroke-width="1"/>
+          <path d="M7 11 Q11 7 15 11 Q11 15 7 11Z" stroke="#b8a070" stroke-width="0.6" fill="none" opacity="0.5"/>
+        </svg>
+      </div>
+      <h3 class="step-title" data-i18n="step1_title">کشف & مفهوم</h3>
+      <p class="step-desc" data-i18n="step1_desc">جلسه عمیق با کارفرما برای درک سبک زندگی، ارزش‌ها و آرزوهای فضایی. تحلیل موقعیت، نور طبیعی و پتانسیل‌های معمارانه.</p>
+    </div>
+
+    <div class="step reveal">
+      <div class="step-num">02</div>
+      <div class="step-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <rect x="3" y="3" width="16" height="16" stroke="#b8a070" stroke-width="1"/>
+          <line x1="3" y1="11" x2="19" y2="11" stroke="#b8a070" stroke-width="0.6" opacity="0.5"/>
+          <line x1="11" y1="3" x2="11" y2="19" stroke="#b8a070" stroke-width="0.6" opacity="0.5"/>
+        </svg>
+      </div>
+      <h3 class="step-title" data-i18n="step2_title">طراحی & ویژوالیزیشن</h3>
+      <p class="step-desc" data-i18n="step2_desc">پلان‌های دقیق، مودبورد و رندرهای فوتورئالیستیک ۳D. شما پیش از هر تغییری، نتیجه نهایی را می‌بینید.</p>
+    </div>
+
+    <div class="step reveal">
+      <div class="step-num">03</div>
+      <div class="step-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <path d="M4 18 L11 4 L18 18 Z" stroke="#b8a070" stroke-width="1" fill="none"/>
+          <line x1="7" y1="13" x2="15" y2="13" stroke="#b8a070" stroke-width="0.6" opacity="0.5"/>
+        </svg>
+      </div>
+      <h3 class="step-title" data-i18n="step3_title">انتخاب & تدارک</h3>
+      <p class="step-desc" data-i18n="step3_desc">کیوریشن تمام متریال‌ها، مبلمان و تجهیزات از تامین‌کنندگان ممتاز. مدیریت زنجیره تدارک با دقت ساعت‌سازی.</p>
+    </div>
+
+    <div class="step reveal">
+      <div class="step-num">04</div>
+      <div class="step-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <circle cx="11" cy="11" r="9" stroke="#b8a070" stroke-width="1"/>
+          <polyline points="7,11 10,14 15,8" stroke="#b8a070" stroke-width="1.2" fill="none"/>
+        </svg>
+      </div>
+      <h3 class="step-title" data-i18n="step4_title">اجرا & تحویل</h3>
+      <p class="step-desc" data-i18n="step4_desc">نظارت حرفه‌ای بر اجرا، هماهنگی پیمانکاران و استایلینگ نهایی. تحویل فضایی که دقیقاً مطابق رویا است.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ STATS ═══ -->
+<div class="int-stats">
+  <div class="int-stat reveal">
+    <span class="int-stat-num" data-target="48">0</span>
+    <span class="int-stat-label" data-i18n="stat_int1">پروژه داخلی</span>
+  </div>
+  <div class="int-stat reveal">
+    <span class="int-stat-num" data-target="7">0</span>
+    <span class="int-stat-label" data-i18n="stat_int2">کشور</span>
+  </div>
+  <div class="int-stat reveal">
+    <span class="int-stat-num" data-target="12">0</span>
+    <span class="int-stat-label" data-i18n="stat_int3">جایزه طراحی</span>
+  </div>
+  <div class="int-stat reveal">
+    <span class="int-stat-num" data-target="100">0</span>
+    <span class="int-stat-label" data-i18n="stat_int4">رضایت مشتری %</span>
+  </div>
+</div>
+
+<!-- ═══ TESTIMONIALS ═══ -->
+<section id="testimonials">
+  <div class="section-label reveal" data-i18n="sec_testi">نظر مشتریان</div>
+  <div class="testimonials-grid">
+
+    <div class="testi reveal">
+      <p class="testi-text" data-i18n="testi1_text">Modiamic فراتر از یک شرکت طراحی است. آن‌ها روح فضای من را فهمیدند و چیزی ساختند که هر بار که وارد می‌شوم نفسم را می‌برد.</p>
+      <div class="testi-client">
+        <div class="testi-avatar">A</div>
+        <div>
+          <div class="testi-name" data-i18n="testi1_name">آریا صالحی</div>
+          <div class="testi-role" data-i18n="testi1_role">کارفرمای Obsidian Penthouse</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi reveal">
+      <p class="testi-text" data-i18n="testi2_text">The attention to light and texture in our hotel lobby exceeded all expectations. Guests consistently comment on the atmosphere — it's become a destination in itself.</p>
+      <div class="testi-client">
+        <div class="testi-avatar">M</div>
+        <div>
+          <div class="testi-name" data-i18n="testi2_name">Marcus Levi</div>
+          <div class="testi-role" data-i18n="testi2_role">Director, Aurum Hotels Group</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi reveal">
+      <p class="testi-text" data-i18n="testi3_text">Die Visualisierungen waren so präzise, dass das fertige Projekt haargenau dem entsprach, was wir in der Präsentation gesehen hatten. Außergewöhnliche Professionalität.</p>
+      <div class="testi-client">
+        <div class="testi-avatar">S</div>
+        <div>
+          <div class="testi-name" data-i18n="testi3_name">Sophie Wenger</div>
+          <div class="testi-role" data-i18n="testi3_role">Verdure Villa, Geneva</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section id="cta-section">
+  <div>
+    <h2 class="cta-title reveal" data-i18n="cta_title">فضایی<br>که همیشه<br>آرزویش را داشتید</h2>
+    <p class="cta-sub reveal" data-i18n="cta_sub">با یک جلسه اکتشافی رایگان شروع کنیم. بگویید چه فضایی رویایتان است — ما آن را به واقعیت تبدیل می‌کنیم.</p>
+    <a href="index.html#contact" class="cta-link reveal" data-i18n="cta_btn">شروع همکاری</a>
+  </div>
+  <div>
+    <form class="cta-form reveal" onsubmit="return false">
+      <input type="text" class="cta-field" data-i18n-placeholder="form_name" placeholder="نام شما">
+      <input type="email" class="cta-field" data-i18n-placeholder="form_email" placeholder="ایمیل">
+      <select class="cta-field" style="appearance:none;-webkit-appearance:none">
+        <option value="" data-i18n="form_type">نوع پروژه</option>
+        <option data-i18n="type_res">مسکونی</option>
+        <option data-i18n="type_hosp">هاسپیتالیتی</option>
+        <option data-i18n="type_com">تجاری</option>
+        <option data-i18n="type_priv">خصوصی</option>
+      </select>
+      <textarea class="cta-field" rows="4" style="resize:none" data-i18n-placeholder="form_message" placeholder="درباره فضایتان بگویید..."></textarea>
+      <button class="cta-submit" data-i18n="form_submit">ارسال پیام</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Modiamic Studio</div>
+  <div class="footer-copy" data-i18n="footer_copy">© 2024 All rights reserved</div>
+  <div class="footer-links">
+    <a href="https://www.instagram.com/modiamic" target="_blank">Instagram</a>
+    <a href="https://wa.me/905391377686" target="_blank">WhatsApp</a>
+    <a href="index.html#contact" data-i18n="nav_contact">تماس</a>
+    <a href="index.html" data-i18n="bc_home">خانه</a>
+  </div>
+</footer>
+
+<script>
+/* ═══════════════════════════════════
+   i18n TRANSLATIONS
+═══════════════════════════════════ */
+const T = {
+  fa: {
+    dir:'rtl', code:'FA',
+    nav_services:'خدمات', nav_works:'کارها', nav_studio:'استودیو', nav_contact:'تماس',
+    bc_home:'خانه', bc_services:'خدمات', bc_current:'دیزاین داخلی',
+    hero_tag:'دیزاین داخلی & فضاسازی',
+    hero_title:'طراحی<br>فضاهای<br><em style="font-style:italic;color:var(--gold)">ماندگار</em>',
+    hero_sub:'هر فضا داستانی دارد. ما آن داستان را با نور، بافت، تناسب و جزئیات روایت می‌کنیم — در سطحی که لوکس معنا پیدا می‌کند.',
+    hero_cta:'مشاهده نمونه کارها',
+    stat_projects:'پروژه داخلی', stat_awards:'جایزه طراحی', stat_countries:'کشور',
+    sec_approach:'رویکرد ما',
+    approach_title:'فضایی که با آن <em>زندگی می‌کنید</em>، شما را شکل می‌دهد',
+    approach_title_em:'زندگی می‌کنید',
+    approach_p1:'در Modiamic باور داریم طراحی داخلی چیزی فراتر از چیدمان مبلمان است. هر پروژه یک سفر حسی است — از مفهوم‌پردازی اولیه تا لحظه‌ای که برای اولین بار پا درون فضا می‌گذارید.',
+    approach_p2:'با ترکیب ویژوالیزیشن ۳۶۰ درجه، متریال‌شناسی دقیق و روشنایی هنرمندانه، فضاهایی می‌سازیم که هم کارکرد دارند هم احساس برمی‌انگیزند.',
+    app_li1:'طراحی مفهومی و ماکت‌سازی ۳D', app_li2:'انتخاب متریال و پالت رنگ',
+    app_li3:'طراحی نورپردازی هنری', app_li4:'نظارت بر اجرا و مدیریت پروژه', app_li5:'ویژوالیزیشن واقعیت افزوده',
+    sec_services:'خدمات ما',
+    svc_space_title:'طراحی فضای داخلی', svc_space_desc:'از مفهوم‌پردازی تا اجرا — طراحی کامل فضاهای مسکونی، تجاری و هاسپیتالیتی با رویکردی لوکس و پایدار.',
+    svc_360_title:'ویژوالیزیشن ۳۶۰°', svc_360_desc:'تجربه کامل فضا پیش از ساخت — رندرهای فوتورئالیستیک، تورهای مجازی و ارائه VR برای تصمیم‌گیری آگاهانه.',
+    svc_light_title:'طراحی نورپردازی', svc_light_desc:'نور درام‌آفرین، لایه‌بندی هوشمند نور محیطی و تاکیدی — معماری نور که فضا را زنده می‌کند.',
+    svc_furn_title:'انتخاب مبلمان & متریال', svc_furn_desc:'کیوریشن دقیق مبلمان، پارچه، سنگ و سطوح از برندهای برتر جهانی — هماهنگ با فلسفه بصری پروژه.',
+    svc_plan_title:'برنامه‌ریزی فضا & پلان', svc_plan_desc:'تحلیل جریان، چیدمان بهینه و طراحی پلان‌های کارکردی که از هر متر مربع بیشترین ارزش را بیرون می‌کشند.',
+    svc_art_title:'هنر & دکور', svc_art_desc:'کیوریشن آثار هنری، مجسمه و قطعات دکوراتیو که روح فضا را کامل می‌کنند و روایت بصری منسجمی می‌سازند.',
+    sec_portfolio:'نمونه کارها',
+    portfolio_title:'فضاهایی که<br>داستان<br>می‌گویند',
+    portfolio_copy:'هر پروژه رویکرد منحصربه‌فردی دارد — از پنت‌هاوس‌های اقیانوس‌رو تا ویلاهای کوهستانی، از لابی‌های هتل‌های پنج ستاره تا فضاهای مدیتیشن خصوصی.',
+    filter_all:'همه', filter_res:'مسکونی', filter_hosp:'هاسپیتالیتی', filter_com:'تجاری', filter_priv:'خصوصی',
+    p1_cat:'مسکونی · ۲۰۲۴', p1_name:'Obsidian Penthouse',
+    p2_cat:'هاسپیتالیتی · ۲۰۲۴', p2_name:'Aurum Grand Hotel Lobby',
+    p3_cat:'خصوصی · ۲۰۲۳', p3_name:'Zenith Sanctuary',
+    p4_cat:'مسکونی · ۲۰۲۴', p4_name:'Verdure Villa Dining',
+    p5_cat:'تجاری · ۲۰۲۳', p5_name:'Apex Executive Suite',
+    p6_cat:'هاسپیتالیتی · ۲۰۲۴', p6_name:'Nocturne Resort Pool',
+    view_proj:'مشاهده پروژه',
+    sec_process:'فرآیند کار',
+    step1_title:'کشف & مفهوم', step1_desc:'جلسه عمیق با کارفرما برای درک سبک زندگی، ارزش‌ها و آرزوهای فضایی. تحلیل موقعیت، نور طبیعی و پتانسیل‌های معمارانه.',
+    step2_title:'طراحی & ویژوالیزیشن', step2_desc:'پلان‌های دقیق، مودبورد و رندرهای فوتورئالیستیک ۳D. شما پیش از هر تغییری، نتیجه نهایی را می‌بینید.',
+    step3_title:'انتخاب & تدارک', step3_desc:'کیوریشن تمام متریال‌ها، مبلمان و تجهیزات از تامین‌کنندگان ممتاز. مدیریت زنجیره تدارک با دقت ساعت‌سازی.',
+    step4_title:'اجرا & تحویل', step4_desc:'نظارت حرفه‌ای بر اجرا، هماهنگی پیمانکاران و استایلینگ نهایی. تحویل فضایی که دقیقاً مطابق رویا است.',
+    stat_int1:'پروژه داخلی', stat_int2:'کشور', stat_int3:'جایزه طراحی', stat_int4:'رضایت مشتری %',
+    sec_testi:'نظر مشتریان',
+    testi1_text:'Modiamic فراتر از یک شرکت طراحی است. آن‌ها روح فضای من را فهمیدند و چیزی ساختند که هر بار که وارد می‌شوم نفسم را می‌برد.',
+    testi1_name:'آریا صالحی', testi1_role:'کارفرمای Obsidian Penthouse',
+    testi2_text:'The attention to light and texture in our hotel lobby exceeded all expectations. Guests consistently comment on the atmosphere.',
+    testi2_name:'Marcus Levi', testi2_role:'Director, Aurum Hotels Group',
+    testi3_text:'Die Visualisierungen waren so präzise, dass das fertige Projekt haargenau dem entsprach, was wir in der Präsentation gesehen hatten.',
+    testi3_name:'Sophie Wenger', testi3_role:'Verdure Villa, Geneva',
+    cta_title:'فضایی<br>که همیشه<br>آرزویش را داشتید',
+    cta_sub:'با یک جلسه اکتشافی رایگان شروع کنیم. بگویید چه فضایی رویایتان است — ما آن را به واقعیت تبدیل می‌کنیم.',
+    cta_btn:'شروع همکاری',
+    form_name:'نام شما', form_email:'ایمیل', form_type:'نوع پروژه', form_message:'درباره فضایتان بگویید...',
+    type_res:'مسکونی', type_hosp:'هاسپیتالیتی', type_com:'تجاری', type_priv:'خصوصی',
+    form_submit:'ارسال پیام',
+    footer_copy:'© ۲۰۲۴ تمامی حقوق محفوظ است'
+  },
+  en: {
+    dir:'ltr', code:'EN',
+    nav_services:'Services', nav_works:'Works', nav_studio:'Studio', nav_contact:'Contact',
+    bc_home:'Home', bc_services:'Services', bc_current:'Interior Design',
+    hero_tag:'Interior Design & Space',
+    hero_title:'Designing<br>Spaces that<br><em style="font-style:italic;color:var(--gold)">Last</em>',
+    hero_sub:'Every space has a story. We tell it through light, texture, proportion and detail — at a level where luxury finds its true meaning.',
+    hero_cta:'View Portfolio',
+    stat_projects:'Interior Projects', stat_awards:'Design Awards', stat_countries:'Countries',
+    sec_approach:'Our Approach',
+    approach_title:'The space you <em>live in</em> shapes who you become',
+    approach_title_em:'live in',
+    approach_p1:'At Modiamic, we believe interior design is far more than furniture arrangement. Every project is a sensory journey — from initial concept to the moment you first step inside.',
+    approach_p2:'Combining 360° visualization, precise material knowledge and artistic lighting, we create spaces that are both functional and deeply felt.',
+    app_li1:'Concept design & 3D mockups', app_li2:'Material & color palette selection',
+    app_li3:'Artistic lighting design', app_li4:'Execution oversight & project management', app_li5:'Augmented reality visualization',
+    sec_services:'Our Services',
+    svc_space_title:'Interior Space Design', svc_space_desc:'From concept to completion — full design of residential, commercial and hospitality spaces with a luxury and sustainable approach.',
+    svc_360_title:'360° Visualization', svc_360_desc:'Experience the full space before it is built — photorealistic renders, virtual tours and VR presentations for informed decisions.',
+    svc_light_title:'Lighting Design', svc_light_desc:'Dramatic light, intelligent layering of ambient and accent lighting — the architecture of light that brings a space to life.',
+    svc_furn_title:'Furniture & Material Selection', svc_furn_desc:'Precise curation of furniture, fabric, stone and surfaces from the world\'s leading brands — aligned with the project\'s visual philosophy.',
+    svc_plan_title:'Space Planning & Layouts', svc_plan_desc:'Flow analysis, optimal arrangement and functional floor plans that extract maximum value from every square metre.',
+    svc_art_title:'Art & Decor', svc_art_desc:'Curation of artworks, sculpture and decorative pieces that complete the soul of a space and create a coherent visual narrative.',
+    sec_portfolio:'Portfolio',
+    portfolio_title:'Spaces that<br>tell their<br>own stories',
+    portfolio_copy:'Every project takes a unique approach — from oceanfront penthouses to mountain villas, from five-star hotel lobbies to private meditation sanctuaries.',
+    filter_all:'All', filter_res:'Residential', filter_hosp:'Hospitality', filter_com:'Commercial', filter_priv:'Private',
+    p1_cat:'Residential · 2024', p1_name:'Obsidian Penthouse',
+    p2_cat:'Hospitality · 2024', p2_name:'Aurum Grand Hotel Lobby',
+    p3_cat:'Private · 2023', p3_name:'Zenith Sanctuary',
+    p4_cat:'Residential · 2024', p4_name:'Verdure Villa Dining',
+    p5_cat:'Commercial · 2023', p5_name:'Apex Executive Suite',
+    p6_cat:'Hospitality · 2024', p6_name:'Nocturne Resort Pool',
+    view_proj:'View Project',
+    sec_process:'Our Process',
+    step1_title:'Discovery & Concept', step1_desc:'In-depth session with the client to understand lifestyle, values and spatial aspirations. Analysis of site, natural light and architectural potential.',
+    step2_title:'Design & Visualization', step2_desc:'Precise plans, moodboards and photorealistic 3D renders. You see the final result before a single change is made.',
+    step3_title:'Selection & Procurement', step3_desc:'Curation of all materials, furniture and equipment from premium suppliers. Supply chain management with watchmaker\'s precision.',
+    step4_title:'Execution & Delivery', step4_desc:'Professional oversight of execution, contractor coordination and final styling. Delivery of a space that matches the vision exactly.',
+    stat_int1:'Interior Projects', stat_int2:'Countries', stat_int3:'Design Awards', stat_int4:'Client Satisfaction %',
+    sec_testi:'Client Testimonials',
+    testi1_text:'Modiamic goes beyond being a design firm. They understood the soul of my space and created something that takes my breath away every time I walk in.',
+    testi1_name:'Arya Salehi', testi1_role:'Client, Obsidian Penthouse',
+    testi2_text:'The attention to light and texture in our hotel lobby exceeded all expectations. Guests consistently comment on the atmosphere — it\'s become a destination in itself.',
+    testi2_name:'Marcus Levi', testi2_role:'Director, Aurum Hotels Group',
+    testi3_text:'The visualizations were so precise that the finished project matched exactly what we had seen in the presentation. Extraordinary professionalism.',
+    testi3_name:'Sophie Wenger', testi3_role:'Verdure Villa, Geneva',
+    cta_title:'The space<br>you\'ve always<br>dreamed of',
+    cta_sub:'Let\'s begin with a free discovery session. Tell us what space you envision — we\'ll make it real.',
+    cta_btn:'Start a Project',
+    form_name:'Your Name', form_email:'Email', form_type:'Project Type', form_message:'Tell us about your space...',
+    type_res:'Residential', type_hosp:'Hospitality', type_com:'Commercial', type_priv:'Private',
+    form_submit:'Send Message',
+    footer_copy:'© 2024 All rights reserved'
+  },
+  tr: {
+    dir:'ltr', code:'TR',
+    nav_services:'Hizmetler', nav_works:'Çalışmalar', nav_studio:'Stüdyo', nav_contact:'İletişim',
+    bc_home:'Ana Sayfa', bc_services:'Hizmetler', bc_current:'İç Mekan Tasarımı',
+    hero_tag:'İç Mekan Tasarımı & Mekân',
+    hero_title:'Kalıcı<br>Mekânlar<br><em style="font-style:italic;color:var(--gold)">Tasarlıyoruz</em>',
+    hero_sub:'Her mekânın bir hikâyesi var. Bu hikâyeyi ışık, doku, oran ve detaylarla anlatıyoruz — lüksün gerçek anlamını bulduğu bir düzeyde.',
+    hero_cta:'Portföyü İncele',
+    stat_projects:'İç Mekan Projesi', stat_awards:'Tasarım Ödülü', stat_countries:'Ülke',
+    sec_approach:'Yaklaşımımız',
+    approach_title:'<em>Yaşadığınız</em> mekân sizi şekillendirir',
+    approach_title_em:'Yaşadığınız',
+    approach_p1:'Modiamic\'te iç mekân tasarımının mobilya düzenlemesinin çok ötesinde olduğuna inanıyoruz. Her proje duyusal bir yolculuktur — ilk konseptten mekâna ilk adımınıza kadar.',
+    approach_p2:'360° görselleştirme, hassas malzeme bilgisi ve sanatsal aydınlatmayı birleştirerek hem işlevsel hem de derin hissettiren mekânlar yaratıyoruz.',
+    app_li1:'Konsept tasarım & 3D maketler', app_li2:'Malzeme & renk paleti seçimi',
+    app_li3:'Sanatsal aydınlatma tasarımı', app_li4:'Uygulama denetimi & proje yönetimi', app_li5:'Artırılmış gerçeklik görselleştirme',
+    sec_services:'Hizmetlerimiz',
+    svc_space_title:'İç Mekan Tasarımı', svc_space_desc:'Konseptten uygulamaya — konut, ticari ve otelcilik mekânlarının lüks ve sürdürülebilir bir yaklaşımla tam tasarımı.',
+    svc_360_title:'360° Görselleştirme', svc_360_desc:'Mekânı inşa edilmeden önce tam olarak deneyimleyin — fotorealistik render, sanal turlar ve bilinçli kararlar için VR sunumlar.',
+    svc_light_title:'Aydınlatma Tasarımı', svc_light_desc:'Dramatik ışık, akıllı ortam ve vurgu aydınlatma katmanlaması — mekânı canlandıran ışık mimarisi.',
+    svc_furn_title:'Mobilya & Malzeme Seçimi', svc_furn_desc:'Dünyanın önde gelen markalarından mobilya, kumaş, taş ve yüzeylerin hassas seçimi — projenin görsel felsefesiyle uyumlu.',
+    svc_plan_title:'Mekân Planlama & Planlar', svc_plan_desc:'Akış analizi, optimal düzenleme ve her metrekareden maksimum değer çıkaran işlevsel kat planları.',
+    svc_art_title:'Sanat & Dekor', svc_art_desc:'Mekânın ruhunu tamamlayan ve tutarlı görsel bir anlatı oluşturan sanat eserleri, heykel ve dekoratif parçaların seçimi.',
+    sec_portfolio:'Portföy',
+    portfolio_title:'Kendi hikâyelerini<br>anlatan<br>mekânlar',
+    portfolio_copy:'Her proje benzersiz bir yaklaşım gerektirir — okyanus manzaralı çatı katlarından dağ villalarına, beş yıldızlı otel lobilerinden özel meditasyon mekânlarına.',
+    filter_all:'Tümü', filter_res:'Konut', filter_hosp:'Otelcilik', filter_com:'Ticari', filter_priv:'Özel',
+    p1_cat:'Konut · 2024', p1_name:'Obsidian Penthouse',
+    p2_cat:'Otelcilik · 2024', p2_name:'Aurum Grand Hotel Lobby',
+    p3_cat:'Özel · 2023', p3_name:'Zenith Sanctuary',
+    p4_cat:'Konut · 2024', p4_name:'Verdure Villa Dining',
+    p5_cat:'Ticari · 2023', p5_name:'Apex Executive Suite',
+    p6_cat:'Otelcilik · 2024', p6_name:'Nocturne Resort Pool',
+    view_proj:'Projeyi Gör',
+    sec_process:'Sürecimiz',
+    step1_title:'Keşif & Konsept', step1_desc:'Yaşam tarzını, değerleri ve mekânsal özlemleri anlamak için müşteriyle derinlemesine görüşme. Konum, doğal ışık ve mimari potansiyel analizi.',
+    step2_title:'Tasarım & Görselleştirme', step2_desc:'Hassas planlar, mood board\'lar ve fotorealistik 3D render\'lar. Herhangi bir değişiklik yapılmadan önce nihai sonucu görürsünüz.',
+    step3_title:'Seçim & Tedarik', step3_desc:'Premium tedarikçilerden tüm malzeme, mobilya ve ekipmanın seçimi. Saatçi hassasiyetiyle tedarik zinciri yönetimi.',
+    step4_title:'Uygulama & Teslim', step4_desc:'Uygulamanın profesyonel denetimi, müteahhit koordinasyonu ve final stilizasyon. Tam olarak vizyonla örtüşen bir mekânın teslimi.',
+    stat_int1:'İç Mekan Projesi', stat_int2:'Ülke', stat_int3:'Tasarım Ödülü', stat_int4:'Müşteri Memnuniyeti %',
+    sec_testi:'Müşteri Yorumları',
+    testi1_text:'Modiamic bir tasarım firmasının çok ötesine geçiyor. Mekânımın ruhunu anladılar ve her girdiğimde nefesimi kesen bir şey yarattılar.',
+    testi1_name:'Arya Salehi', testi1_role:'Obsidian Penthouse Müşterisi',
+    testi2_text:'The attention to light and texture in our hotel lobby exceeded all expectations. Guests consistently comment on the atmosphere.',
+    testi2_name:'Marcus Levi', testi2_role:'Director, Aurum Hotels Group',
+    testi3_text:'Görselleştirmeler o kadar hassastı ki bitmiş proje sunumda gördüğümüzle tam olarak örtüşüyordu. Olağanüstü profesyonellik.',
+    testi3_name:'Sophie Wenger', testi3_role:'Verdure Villa, Cenevre',
+    cta_title:'Her zaman<br>hayal ettiğiniz<br>mekân',
+    cta_sub:'Ücretsiz bir keşif görüşmesiyle başlayalım. Hangi mekânı hayal ettiğinizi söyleyin — biz onu gerçeğe dönüştürelim.',
+    cta_btn:'Projeye Başla',
+    form_name:'Adınız', form_email:'E-posta', form_type:'Proje Türü', form_message:'Mekânınız hakkında anlatın...',
+    type_res:'Konut', type_hosp:'Otelcilik', type_com:'Ticari', type_priv:'Özel',
+    form_submit:'Mesaj Gönder',
+    footer_copy:'© 2024 Tüm hakları saklıdır'
+  },
+  de: {
+    dir:'ltr', code:'DE',
+    nav_services:'Leistungen', nav_works:'Arbeiten', nav_studio:'Studio', nav_contact:'Kontakt',
+    bc_home:'Startseite', bc_services:'Leistungen', bc_current:'Innenarchitektur',
+    hero_tag:'Innenarchitektur & Raumgestaltung',
+    hero_title:'Räume gestalten,<br>die für immer<br><em style="font-style:italic;color:var(--gold)">bleiben</em>',
+    hero_sub:'Jeder Raum erzählt eine Geschichte. Wir erzählen sie durch Licht, Textur, Proportion und Details — auf einem Niveau, auf dem Luxus seinen wahren Sinn findet.',
+    hero_cta:'Portfolio ansehen',
+    stat_projects:'Innenraum-Projekte', stat_awards:'Designpreise', stat_countries:'Länder',
+    sec_approach:'Unser Ansatz',
+    approach_title:'Der Raum, in dem Sie <em>leben</em>, formt Sie',
+    approach_title_em:'leben',
+    approach_p1:'Bei Modiamic glauben wir, dass Innenarchitektur weit mehr als Möbelanordnung ist. Jedes Projekt ist eine Sinnesreise — von der ersten Idee bis zu dem Moment, in dem Sie den Raum betreten.',
+    approach_p2:'Durch die Kombination von 360°-Visualisierung, präzisem Materialwissen und künstlerischer Beleuchtung schaffen wir Räume, die sowohl funktional als auch tief empfunden sind.',
+    app_li1:'Konzeptdesign & 3D-Modelle', app_li2:'Material- & Farbpaletten-Auswahl',
+    app_li3:'Künstlerische Beleuchtungsplanung', app_li4:'Ausführungsüberwachung & Projektmanagement', app_li5:'Augmented-Reality-Visualisierung',
+    sec_services:'Unsere Leistungen',
+    svc_space_title:'Innenraumgestaltung', svc_space_desc:'Von der Idee bis zur Ausführung — vollständiges Design von Wohn-, Gewerbe- und Hospitality-Räumen mit einem luxuriösen und nachhaltigen Ansatz.',
+    svc_360_title:'360°-Visualisierung', svc_360_desc:'Erleben Sie den Raum vollständig, bevor er gebaut wird — fotorealistische Renderings, virtuelle Touren und VR-Präsentationen für fundierte Entscheidungen.',
+    svc_light_title:'Beleuchtungsdesign', svc_light_desc:'Dramatisches Licht, intelligente Schichtung von Ambient- und Akzentbeleuchtung — die Lichtarchitektur, die einen Raum zum Leben erweckt.',
+    svc_furn_title:'Möbel & Materialauswahl', svc_furn_desc:'Präzise Kuratierung von Möbeln, Stoffen, Stein und Oberflächen der weltweit führenden Marken — abgestimmt auf die visuelle Philosophie des Projekts.',
+    svc_plan_title:'Raumplanung & Grundrisse', svc_plan_desc:'Flussanalyse, optimale Anordnung und funktionale Grundrisse, die aus jedem Quadratmeter maximalen Wert schöpfen.',
+    svc_art_title:'Kunst & Dekor', svc_art_desc:'Kuratierung von Kunstwerken, Skulpturen und dekorativen Stücken, die die Seele eines Raums vervollständigen und eine kohärente visuelle Erzählung schaffen.',
+    sec_portfolio:'Portfolio',
+    portfolio_title:'Räume, die<br>ihre eigene<br>Geschichte erzählen',
+    portfolio_copy:'Jedes Projekt verfolgt einen einzigartigen Ansatz — von Penthouses mit Meerblick bis zu Bergvillen, von Luxushotelfoyers bis zu privaten Meditationsräumen.',
+    filter_all:'Alle', filter_res:'Wohnbau', filter_hosp:'Hospitality', filter_com:'Gewerbe', filter_priv:'Privat',
+    p1_cat:'Wohnbau · 2024', p1_name:'Obsidian Penthouse',
+    p2_cat:'Hospitality · 2024', p2_name:'Aurum Grand Hotel Lobby',
+    p3_cat:'Privat · 2023', p3_name:'Zenith Sanctuary',
+    p4_cat:'Wohnbau · 2024', p4_name:'Verdure Villa Speisesaal',
+    p5_cat:'Gewerbe · 2023', p5_name:'Apex Executive Suite',
+    p6_cat:'Hospitality · 2024', p6_name:'Nocturne Resort Pool',
+    view_proj:'Projekt ansehen',
+    sec_process:'Unser Prozess',
+    step1_title:'Entdeckung & Konzept', step1_desc:'Eingehendes Gespräch mit dem Kunden, um Lebensstil, Werte und räumliche Vorstellungen zu verstehen. Analyse von Standort, natürlichem Licht und architektonischem Potenzial.',
+    step2_title:'Design & Visualisierung', step2_desc:'Präzise Pläne, Moodboards und fotorealistische 3D-Renderings. Sie sehen das Endergebnis, bevor eine einzige Änderung vorgenommen wird.',
+    step3_title:'Auswahl & Beschaffung', step3_desc:'Kuratierung aller Materialien, Möbel und Ausstattungen von Premium-Lieferanten. Supply-Chain-Management mit Uhrmacher-Präzision.',
+    step4_title:'Ausführung & Übergabe', step4_desc:'Professionelle Überwachung der Ausführung, Koordination der Auftragnehmer und finales Styling. Übergabe eines Raums, der der Vision genau entspricht.',
+    stat_int1:'Innenraum-Projekte', stat_int2:'Länder', stat_int3:'Designpreise', stat_int4:'Kundenzufriedenheit %',
+    sec_testi:'Kundenstimmen',
+    testi1_text:'Modiamic geht weit über ein Designunternehmen hinaus. Sie verstanden die Seele meines Raums und schufen etwas, das mir jedes Mal den Atem verschlägt.',
+    testi1_name:'Arya Salehi', testi1_role:'Auftraggeber, Obsidian Penthouse',
+    testi2_text:'The attention to light and texture in our hotel lobby exceeded all expectations. Guests consistently comment on the atmosphere.',
+    testi2_name:'Marcus Levi', testi2_role:'Director, Aurum Hotels Group',
+    testi3_text:'Die Visualisierungen waren so präzise, dass das fertige Projekt haargenau dem entsprach, was wir in der Präsentation gesehen hatten. Außergewöhnliche Professionalität.',
+    testi3_name:'Sophie Wenger', testi3_role:'Verdure Villa, Genf',
+    cta_title:'Der Raum,<br>von dem Sie<br>immer geträumt haben',
+    cta_sub:'Beginnen wir mit einem kostenlosen Entdeckungsgespräch. Erzählen Sie uns von Ihrem Traumraum — wir verwirklichen ihn.',
+    cta_btn:'Projekt starten',
+    form_name:'Ihr Name', form_email:'E-Mail', form_type:'Projekttyp', form_message:'Erzählen Sie uns von Ihrem Raum...',
+    type_res:'Wohnbau', type_hosp:'Hospitality', type_com:'Gewerbe', type_priv:'Privat',
+    form_submit:'Nachricht senden',
+    footer_copy:'© 2024 Alle Rechte vorbehalten'
+  },
+  fr: {
+    dir:'ltr', code:'FR',
+    nav_services:'Services', nav_works:'Œuvres', nav_studio:'Studio', nav_contact:'Contact',
+    bc_home:'Accueil', bc_services:'Services', bc_current:'Design Intérieur',
+    hero_tag:'Design Intérieur & Espace',
+    hero_title:'Concevoir des<br>espaces qui<br><em style="font-style:italic;color:var(--gold)">perdurent</em>',
+    hero_sub:'Chaque espace a une histoire. Nous la racontons à travers la lumière, la texture, la proportion et les détails — à un niveau où le luxe trouve son vrai sens.',
+    hero_cta:'Voir le portfolio',
+    stat_projects:'Projets Intérieurs', stat_awards:'Prix de Design', stat_countries:'Pays',
+    sec_approach:'Notre Approche',
+    approach_title:'L\'espace dans lequel vous <em>vivez</em> vous façonne',
+    approach_title_em:'vivez',
+    approach_p1:'Chez Modiamic, nous croyons que le design intérieur va bien au-delà de l\'agencement des meubles. Chaque projet est un voyage sensoriel — du concept initial au moment où vous entrez dans l\'espace pour la première fois.',
+    approach_p2:'En combinant visualisation 360°, connaissance précise des matériaux et éclairage artistique, nous créons des espaces à la fois fonctionnels et profondément ressentis.',
+    app_li1:'Design conceptuel & maquettes 3D', app_li2:'Sélection des matériaux & palette de couleurs',
+    app_li3:'Conception artistique de l\'éclairage', app_li4:'Supervision de l\'exécution & gestion de projet', app_li5:'Visualisation en réalité augmentée',
+    sec_services:'Nos Services',
+    svc_space_title:'Design d\'Espace Intérieur', svc_space_desc:'Du concept à la réalisation — design complet d\'espaces résidentiels, commerciaux et hôteliers avec une approche luxueuse et durable.',
+    svc_360_title:'Visualisation 360°', svc_360_desc:'Vivez pleinement l\'espace avant sa construction — rendus photoréalistes, visites virtuelles et présentations VR pour des décisions éclairées.',
+    svc_light_title:'Conception de l\'Éclairage', svc_light_desc:'Lumière dramatique, superposition intelligente d\'éclairages d\'ambiance et d\'accent — l\'architecture lumineuse qui donne vie à un espace.',
+    svc_furn_title:'Sélection Mobilier & Matériaux', svc_furn_desc:'Curation précise de mobilier, tissus, pierres et surfaces des marques mondiales de premier plan — en accord avec la philosophie visuelle du projet.',
+    svc_plan_title:'Planification & Aménagement', svc_plan_desc:'Analyse des flux, aménagement optimal et plans fonctionnels qui tirent le maximum de valeur de chaque mètre carré.',
+    svc_art_title:'Art & Décor', svc_art_desc:'Curation d\'œuvres d\'art, sculptures et pièces décoratives qui complètent l\'âme d\'un espace et créent un récit visuel cohérent.',
+    sec_portfolio:'Portfolio',
+    portfolio_title:'Des espaces qui<br>racontent leur<br>propre histoire',
+    portfolio_copy:'Chaque projet adopte une approche unique — des penthouses en bord d\'océan aux villas de montagne, des lobbies d\'hôtels cinq étoiles aux sanctuaires de méditation privés.',
+    filter_all:'Tous', filter_res:'Résidentiel', filter_hosp:'Hôtellerie', filter_com:'Commercial', filter_priv:'Privé',
+    p1_cat:'Résidentiel · 2024', p1_name:'Obsidian Penthouse',
+    p2_cat:'Hôtellerie · 2024', p2_name:'Aurum Grand Hotel Lobby',
+    p3_cat:'Privé · 2023', p3_name:'Zenith Sanctuary',
+    p4_cat:'Résidentiel · 2024', p4_name:'Verdure Villa Salle à manger',
+    p5_cat:'Commercial · 2023', p5_name:'Apex Executive Suite',
+    p6_cat:'Hôtellerie · 2024', p6_name:'Nocturne Resort Pool',
+    view_proj:'Voir le Projet',
+    sec_process:'Notre Processus',
+    step1_title:'Découverte & Concept', step1_desc:'Session approfondie avec le client pour comprendre le style de vie, les valeurs et les aspirations spatiales. Analyse du site, de la lumière naturelle et du potentiel architectural.',
+    step2_title:'Design & Visualisation', step2_desc:'Plans précis, moodboards et rendus 3D photoréalistes. Vous voyez le résultat final avant qu\'un seul changement ne soit effectué.',
+    step3_title:'Sélection & Approvisionnement', step3_desc:'Curation de tous les matériaux, mobiliers et équipements auprès de fournisseurs premium. Gestion de la chaîne d\'approvisionnement avec une précision d\'horloger.',
+    step4_title:'Exécution & Livraison', step4_desc:'Supervision professionnelle de l\'exécution, coordination des entreprises et stylisme final. Livraison d\'un espace qui correspond exactement à la vision.',
+    stat_int1:'Projets Intérieurs', stat_int2:'Pays', stat_int3:'Prix de Design', stat_int4:'Satisfaction Client %',
+    sec_testi:'Témoignages Clients',
+    testi1_text:'Modiamic va bien au-delà d\'une agence de design. Ils ont compris l\'âme de mon espace et créé quelque chose qui me coupe le souffle à chaque fois que j\'entre.',
+    testi1_name:'Arya Salehi', testi1_role:'Client, Obsidian Penthouse',
+    testi2_text:'L\'attention portée à la lumière et à la texture dans le lobby de notre hôtel a dépassé toutes les attentes. Les clients commentent constamment l\'atmosphère.',
+    testi2_name:'Marcus Levi', testi2_role:'Directeur, Aurum Hotels Group',
+    testi3_text:'Les visualisations étaient si précises que le projet terminé correspondait exactement à ce que nous avions vu dans la présentation. Professionnalisme extraordinaire.',
+    testi3_name:'Sophie Wenger', testi3_role:'Verdure Villa, Genève',
+    cta_title:'L\'espace dont<br>vous avez toujours<br>rêvé',
+    cta_sub:'Commençons par une session de découverte gratuite. Dites-nous l\'espace que vous envisagez — nous le rendrons réel.',
+    cta_btn:'Démarrer un Projet',
+    form_name:'Votre Nom', form_email:'E-mail', form_type:'Type de Projet', form_message:'Parlez-nous de votre espace...',
+    type_res:'Résidentiel', type_hosp:'Hôtellerie', type_com:'Commercial', type_priv:'Privé',
+    form_submit:'Envoyer',
+    footer_copy:'© 2024 Tous droits réservés'
+  },
+  it: {dir:'ltr',code:'IT',nav_services:'Servizi',nav_works:'Lavori',nav_studio:'Studio',nav_contact:'Contatti',bc_home:'Home',bc_services:'Servizi',bc_current:'Design Interni',hero_tag:'Design Interni & Spazi',hero_title:'Progettare spazi<br>che <em style="font-style:italic;color:var(--gold)">durano</em>',hero_sub:'Ogni spazio ha una storia. La raccontiamo attraverso luce, texture, proporzione e dettagli — a un livello in cui il lusso trova il suo vero significato.',hero_cta:'Vedi Portfolio',stat_projects:'Progetti Interni',stat_awards:'Premi Design',stat_countries:'Paesi',sec_approach:'Il Nostro Approccio',approach_title:'Lo spazio in cui <em>vivi</em> ti plasma',approach_title_em:'vivi',approach_p1:'In Modiamic crediamo che il design d\'interni vada ben oltre la disposizione dei mobili. Ogni progetto è un viaggio sensoriale — dal concetto iniziale al momento in cui entri nello spazio per la prima volta.',approach_p2:'Combinando visualizzazione 360°, precisa conoscenza dei materiali e illuminazione artistica, creiamo spazi che sono sia funzionali che profondamente sentiti.',app_li1:'Design concettuale & mockup 3D',app_li2:'Selezione materiali & palette colori',app_li3:'Progettazione illuminazione artistica',app_li4:'Supervisione esecuzione & project management',app_li5:'Visualizzazione realtà aumentata',sec_services:'I Nostri Servizi',svc_space_title:'Design Spazio Interni',svc_space_desc:'Dal concept alla realizzazione — design completo di spazi residenziali, commerciali e hospitality con un approccio lussuoso e sostenibile.',svc_360_title:'Visualizzazione 360°',svc_360_desc:'Vivi pienamente lo spazio prima che venga costruito — render fotorealistici, tour virtuali e presentazioni VR per decisioni consapevoli.',svc_light_title:'Progettazione Illuminazione',svc_light_desc:'Luce drammatica, stratificazione intelligente di illuminazione ambientale e di accento — l\'architettura della luce che dà vita a uno spazio.',svc_furn_title:'Selezione Mobili & Materiali',svc_furn_desc:'Curation precisa di mobili, tessuti, pietra e superfici dei marchi leader mondiali — in linea con la filosofia visiva del progetto.',svc_plan_title:'Pianificazione & Planimetrie',svc_plan_desc:'Analisi dei flussi, disposizione ottimale e planimetrie funzionali che estraggono il massimo valore da ogni metro quadrato.',svc_art_title:'Arte & Decor',svc_art_desc:'Curation di opere d\'arte, sculture e pezzi decorativi che completano l\'anima di uno spazio e creano una narrativa visiva coerente.',sec_portfolio:'Portfolio',portfolio_title:'Spazi che<br>raccontano la<br>loro storia',portfolio_copy:'Ogni progetto adotta un approccio unico — dai attico con vista oceano alle ville di montagna, dalle lobby di hotel cinque stelle ai santuari di meditazione privati.',filter_all:'Tutti',filter_res:'Residenziale',filter_hosp:'Hospitality',filter_com:'Commerciale',filter_priv:'Privato',p1_cat:'Residenziale · 2024',p1_name:'Obsidian Penthouse',p2_cat:'Hospitality · 2024',p2_name:'Aurum Grand Hotel Lobby',p3_cat:'Privato · 2023',p3_name:'Zenith Sanctuary',p4_cat:'Residenziale · 2024',p4_name:'Verdure Villa Sala da Pranzo',p5_cat:'Commerciale · 2023',p5_name:'Apex Executive Suite',p6_cat:'Hospitality · 2024',p6_name:'Nocturne Resort Pool',view_proj:'Vedi Progetto',sec_process:'Il Nostro Processo',step1_title:'Scoperta & Concept',step1_desc:'Sessione approfondita con il cliente per comprendere stile di vita, valori e aspirazioni spaziali.',step2_title:'Design & Visualizzazione',step2_desc:'Piani precisi, moodboard e render 3D fotorealistici. Vedete il risultato finale prima che venga apportata qualsiasi modifica.',step3_title:'Selezione & Approvvigionamento',step3_desc:'Curation di tutti i materiali, mobili e attrezzature da fornitori premium.',step4_title:'Esecuzione & Consegna',step4_desc:'Supervisione professionale dell\'esecuzione, coordinamento degli appaltatori e styling finale.',stat_int1:'Progetti Interni',stat_int2:'Paesi',stat_int3:'Premi Design',stat_int4:'Soddisfazione Cliente %',sec_testi:'Testimonianze',testi1_text:'Modiamic va ben oltre un\'agenzia di design. Hanno capito l\'anima del mio spazio e creato qualcosa che mi toglie il fiato ogni volta che entro.',testi1_name:'Arya Salehi',testi1_role:'Cliente, Obsidian Penthouse',testi2_text:'The attention to light and texture in our hotel lobby exceeded all expectations.',testi2_name:'Marcus Levi',testi2_role:'Director, Aurum Hotels Group',testi3_text:'Le visualizzazioni erano così precise che il progetto finito corrispondeva esattamente a ciò che avevamo visto nella presentazione.',testi3_name:'Sophie Wenger',testi3_role:'Verdure Villa, Ginevra',cta_title:'Lo spazio<br>che avete sempre<br>sognato',cta_sub:'Iniziamo con una sessione di scoperta gratuita. Diteci lo spazio che immaginate — lo renderemo reale.',cta_btn:'Inizia un Progetto',form_name:'Il tuo nome',form_email:'Email',form_type:'Tipo di Progetto',form_message:'Raccontaci del tuo spazio...',type_res:'Residenziale',type_hosp:'Hospitality',type_com:'Commerciale',type_priv:'Privato',form_submit:'Invia Messaggio',footer_copy:'© 2024 Tutti i diritti riservati'},
+  es: {dir:'ltr',code:'ES',nav_services:'Servicios',nav_works:'Trabajos',nav_studio:'Estudio',nav_contact:'Contacto',bc_home:'Inicio',bc_services:'Servicios',bc_current:'Diseño Interior',hero_tag:'Diseño Interior & Espacios',hero_title:'Diseñando espacios<br>que <em style="font-style:italic;color:var(--gold)">perduran</em>',hero_sub:'Cada espacio tiene una historia. La contamos a través de luz, textura, proporción y detalles — en un nivel donde el lujo encuentra su verdadero significado.',hero_cta:'Ver Portfolio',stat_projects:'Proyectos Interiores',stat_awards:'Premios de Diseño',stat_countries:'Países',sec_approach:'Nuestro Enfoque',approach_title:'El espacio en el que <em>vives</em> te moldea',approach_title_em:'vives',approach_p1:'En Modiamic creemos que el diseño interior va mucho más allá de la disposición de muebles. Cada proyecto es un viaje sensorial — desde el concepto inicial hasta el momento en que entras al espacio.',approach_p2:'Combinando visualización 360°, conocimiento preciso de materiales e iluminación artística, creamos espacios que son tanto funcionales como profundamente sentidos.',app_li1:'Diseño conceptual & maquetas 3D',app_li2:'Selección de materiales & paleta de colores',app_li3:'Diseño artístico de iluminación',app_li4:'Supervisión de ejecución & gestión de proyectos',app_li5:'Visualización de realidad aumentada',sec_services:'Nuestros Servicios',svc_space_title:'Diseño de Espacio Interior',svc_space_desc:'Del concepto a la ejecución — diseño completo de espacios residenciales, comerciales y hoteleros con un enfoque lujoso y sostenible.',svc_360_title:'Visualización 360°',svc_360_desc:'Experimenta el espacio completo antes de construirlo — renders fotorrealistas, tours virtuales y presentaciones VR para decisiones informadas.',svc_light_title:'Diseño de Iluminación',svc_light_desc:'Luz dramática, capas inteligentes de iluminación ambiental y de acento — la arquitectura de la luz que da vida a un espacio.',svc_furn_title:'Selección Mobiliario & Materiales',svc_furn_desc:'Curaduría precisa de mobiliario, telas, piedra y superficies de las mejores marcas mundiales.',svc_plan_title:'Planificación & Distribución',svc_plan_desc:'Análisis de flujos, disposición óptima y plantas funcionales que extraen el máximo valor de cada metro cuadrado.',svc_art_title:'Arte & Decoración',svc_art_desc:'Curaduría de obras de arte, esculturas y piezas decorativas que completan el alma de un espacio.',sec_portfolio:'Portfolio',portfolio_title:'Espacios que<br>cuentan su<br>propia historia',portfolio_copy:'Cada proyecto adopta un enfoque único — desde áticos con vista al océano hasta villas de montaña.',filter_all:'Todos',filter_res:'Residencial',filter_hosp:'Hospitalidad',filter_com:'Comercial',filter_priv:'Privado',p1_cat:'Residencial · 2024',p1_name:'Obsidian Penthouse',p2_cat:'Hospitalidad · 2024',p2_name:'Aurum Grand Hotel Lobby',p3_cat:'Privado · 2023',p3_name:'Zenith Sanctuary',p4_cat:'Residencial · 2024',p4_name:'Verdure Villa Comedor',p5_cat:'Comercial · 2023',p5_name:'Apex Executive Suite',p6_cat:'Hospitalidad · 2024',p6_name:'Nocturne Resort Pool',view_proj:'Ver Proyecto',sec_process:'Nuestro Proceso',step1_title:'Descubrimiento & Concepto',step1_desc:'Sesión profunda con el cliente para entender el estilo de vida, valores y aspiraciones espaciales.',step2_title:'Diseño & Visualización',step2_desc:'Planos precisos, moodboards y renders 3D fotorrealistas. Verás el resultado final antes de hacer cualquier cambio.',step3_title:'Selección & Adquisición',step3_desc:'Curaduría de todos los materiales, mobiliario y equipamiento de proveedores premium.',step4_title:'Ejecución & Entrega',step4_desc:'Supervisión profesional de la ejecución, coordinación de contratistas y estilismo final.',stat_int1:'Proyectos Interiores',stat_int2:'Países',stat_int3:'Premios de Diseño',stat_int4:'Satisfacción del Cliente %',sec_testi:'Testimonios de Clientes',testi1_text:'Modiamic va mucho más allá de ser una empresa de diseño. Entendieron el alma de mi espacio y crearon algo que me quita el aliento cada vez que entro.',testi1_name:'Arya Salehi',testi1_role:'Cliente, Obsidian Penthouse',testi2_text:'The attention to light and texture in our hotel lobby exceeded all expectations.',testi2_name:'Marcus Levi',testi2_role:'Director, Aurum Hotels Group',testi3_text:'Las visualizaciones eran tan precisas que el proyecto terminado coincidía exactamente con lo que habíamos visto en la presentación.',testi3_name:'Sophie Wenger',testi3_role:'Verdure Villa, Ginebra',cta_title:'El espacio<br>que siempre<br>soñaste',cta_sub:'Empecemos con una sesión de descubrimiento gratuita. Cuéntanos qué espacio imaginas — lo haremos realidad.',cta_btn:'Iniciar Proyecto',form_name:'Tu Nombre',form_email:'Correo',form_type:'Tipo de Proyecto',form_message:'Cuéntanos sobre tu espacio...',type_res:'Residencial',type_hosp:'Hospitalidad',type_com:'Comercial',type_priv:'Privado',form_submit:'Enviar Mensaje',footer_copy:'© 2024 Todos los derechos reservados'},
+  el: {dir:'ltr',code:'EL',nav_services:'Υπηρεσίες',nav_works:'Έργα',nav_studio:'Στούντιο',nav_contact:'Επικοινωνία',bc_home:'Αρχική',bc_services:'Υπηρεσίες',bc_current:'Εσωτερικός Σχεδιασμός',hero_tag:'Εσωτερική Διακόσμηση & Χώρος',hero_title:'Σχεδιάζοντας<br>χώρους που<br><em style="font-style:italic;color:var(--gold)">διαρκούν</em>',hero_sub:'Κάθε χώρος έχει μια ιστορία. Την αφηγούμαστε μέσα από φως, υφή, αναλογία και λεπτομέρεια.',hero_cta:'Δείτε το Portfolio',stat_projects:'Εσωτερικά Έργα',stat_awards:'Βραβεία Σχεδιασμού',stat_countries:'Χώρες',sec_approach:'Η Προσέγγισή μας',approach_title:'Ο χώρος στον οποίο <em>ζείτε</em> σας διαμορφώνει',approach_title_em:'ζείτε',approach_p1:'Στην Modiamic πιστεύουμε ότι ο εσωτερικός σχεδιασμός είναι πολύ περισσότερο από τακτοποίηση επίπλων.',approach_p2:'Συνδυάζοντας 360° οπτικοποίηση, ακριβή γνώση υλικών και καλλιτεχνικό φωτισμό, δημιουργούμε χώρους που είναι λειτουργικοί και βαθιά αισθητοί.',app_li1:'Εννοιολογικός σχεδιασμός & 3D μακέτες',app_li2:'Επιλογή υλικών & χρωματική παλέτα',app_li3:'Καλλιτεχνικός σχεδιασμός φωτισμού',app_li4:'Εποπτεία εκτέλεσης & διαχείριση έργου',app_li5:'Οπτικοποίηση επαυξημένης πραγματικότητας',sec_services:'Οι Υπηρεσίες μας',svc_space_title:'Σχεδιασμός Εσωτερικού Χώρου',svc_space_desc:'Από την ιδέα έως την υλοποίηση — πλήρης σχεδιασμός οικιστικών, εμπορικών και hospitality χώρων.',svc_360_title:'Οπτικοποίηση 360°',svc_360_desc:'Βιώστε πλήρως τον χώρο πριν κατασκευαστεί — φωτορεαλιστικά renders, εικονικές περιηγήσεις και παρουσιάσεις VR.',svc_light_title:'Σχεδιασμός Φωτισμού',svc_light_desc:'Δραματικό φως, έξυπνη στρωματοποίηση περιβαλλοντικού και τονιστικού φωτισμού.',svc_furn_title:'Επιλογή Επίπλων & Υλικών',svc_furn_desc:'Ακριβής επιμέλεια επίπλων, υφασμάτων, πέτρας και επιφανειών από κορυφαίες παγκόσμιες μάρκες.',svc_plan_title:'Σχεδιασμός & Κατόψεις',svc_plan_desc:'Ανάλυση ροής, βέλτιστη διάταξη και λειτουργικές κατόψεις.',svc_art_title:'Τέχνη & Διακόσμηση',svc_art_desc:'Επιμέλεια έργων τέχνης, γλυπτών και διακοσμητικών κομματιών που συμπληρώνουν την ψυχή ενός χώρου.',sec_portfolio:'Portfolio',portfolio_title:'Χώροι που<br>αφηγούνται τη<br>δική τους ιστορία',portfolio_copy:'Κάθε έργο υιοθετεί μια μοναδική προσέγγιση — από penthouses με θέα στον ωκεανό έως ορεινές βίλες.',filter_all:'Όλα',filter_res:'Κατοικία',filter_hosp:'Φιλοξενία',filter_com:'Εμπορικό',filter_priv:'Ιδιωτικό',p1_cat:'Κατοικία · 2024',p1_name:'Obsidian Penthouse',p2_cat:'Φιλοξενία · 2024',p2_name:'Aurum Grand Hotel Lobby',p3_cat:'Ιδιωτικό · 2023',p3_name:'Zenith Sanctuary',p4_cat:'Κατοικία · 2024',p4_name:'Verdure Villa Τραπεζαρία',p5_cat:'Εμπορικό · 2023',p5_name:'Apex Executive Suite',p6_cat:'Φιλοξενία · 2024',p6_name:'Nocturne Resort Pool',view_proj:'Δείτε το Έργο',sec_process:'Η Διαδικασία μας',step1_title:'Ανακάλυψη & Έννοια',step1_desc:'Σε βάθος συνεδρία με τον πελάτη για κατανόηση του τρόπου ζωής, αξιών και χωρικών φιλοδοξιών.',step2_title:'Σχεδιασμός & Οπτικοποίηση',step2_desc:'Ακριβή σχέδια, moodboards και φωτορεαλιστικά 3D renders.',step3_title:'Επιλογή & Προμήθεια',step3_desc:'Επιμέλεια όλων των υλικών, επίπλων και εξοπλισμού από premium προμηθευτές.',step4_title:'Εκτέλεση & Παράδοση',step4_desc:'Επαγγελματική εποπτεία εκτέλεσης, συντονισμός εργολάβων και τελικό styling.',stat_int1:'Εσωτερικά Έργα',stat_int2:'Χώρες',stat_int3:'Βραβεία Σχεδιασμού',stat_int4:'Ικανοποίηση Πελατών %',sec_testi:'Μαρτυρίες Πελατών',testi1_text:'Η Modiamic ξεπερνά κατά πολύ το να είναι μια εταιρεία σχεδιασμού. Κατάλαβαν την ψυχή του χώρου μου.',testi1_name:'Arya Salehi',testi1_role:'Πελάτης, Obsidian Penthouse',testi2_text:'The attention to light and texture in our hotel lobby exceeded all expectations.',testi2_name:'Marcus Levi',testi2_role:'Director, Aurum Hotels Group',testi3_text:'Οι οπτικοποιήσεις ήταν τόσο ακριβείς που το τελικό έργο αντιστοιχούσε ακριβώς σε αυτό που είχαμε δει στην παρουσίαση.',testi3_name:'Sophie Wenger',testi3_role:'Verdure Villa, Γενεύη',cta_title:'Ο χώρος που<br>πάντα<br>ονειρευόσαστε',cta_sub:'Ας ξεκινήσουμε με μια δωρεάν συνεδρία ανακάλυψης.',cta_btn:'Ξεκινήστε Έργο',form_name:'Το Όνομά σας',form_email:'Email',form_type:'Τύπος Έργου',form_message:'Πείτε μας για τον χώρο σας...',type_res:'Κατοικία',type_hosp:'Φιλοξενία',type_com:'Εμπορικό',type_priv:'Ιδιωτικό',form_submit:'Αποστολή',footer_copy:'© 2024 Όλα τα δικαιώματα διατηρούνται'}
+};
+
+let currentLang = 'fa';
+
+function applyLanguage(lang) {
+  const t = T[lang];
+  if (!t) return;
+  currentLang = lang;
+  document.documentElement.setAttribute('dir', t.dir);
+  document.documentElement.setAttribute('lang', lang);
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (t[key] !== undefined) el.placeholder = t[key];
+  });
+  document.getElementById('lang-current-label').textContent = t.code;
+  document.querySelectorAll('.lang-option').forEach(opt => {
+    opt.classList.toggle('selected', opt.dataset.lang === lang);
+  });
+  // RTL alignment for service items
+  document.querySelectorAll('.svc-name,.svc-desc,.svc-num,.step-title,.step-desc').forEach(el => {
+    el.style.textAlign = t.dir === 'rtl' ? 'right' : 'left';
+  });
+  try { localStorage.setItem('modiamic_lang', lang); } catch(e) {}
+}
+
+// Language switcher
+const langBtn = document.getElementById('lang-btn');
+const langDropdown = document.getElementById('lang-dropdown');
+langBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  const open = langDropdown.classList.contains('open');
+  langDropdown.classList.toggle('open', !open);
+  langBtn.classList.toggle('active', !open);
+});
+document.addEventListener('click', () => {
+  langDropdown.classList.remove('open');
+  langBtn.classList.remove('active');
+});
+langDropdown.addEventListener('click', e => {
+  const opt = e.target.closest('.lang-option');
+  if (opt) { applyLanguage(opt.dataset.lang); langDropdown.classList.remove('open'); langBtn.classList.remove('active'); }
+});
+
+// Init language
+(function() {
+  let saved; try { saved = localStorage.getItem('modiamic_lang'); } catch(e) {}
+  applyLanguage(saved && T[saved] ? saved : 'fa');
+})();
+
+/* ═══ SCROLL PROGRESS ═══ */
+const sp = document.getElementById('scroll-progress');
+window.addEventListener('scroll', () => {
+  const dh = document.documentElement.scrollHeight - window.innerHeight;
+  sp.style.width = (dh > 0 ? (window.scrollY / dh) * 100 : 0) + '%';
+}, {passive:true});
+
+/* ═══ BACK TO TOP ═══ */
+const bt = document.getElementById('back-top');
+window.addEventListener('scroll', () => bt.classList.toggle('visible', window.scrollY > 500), {passive:true});
+
+/* ═══ NAV BG ═══ */
+const nav = document.getElementById('main-nav');
+window.addEventListener('scroll', () => {
+  nav.style.background = window.scrollY > 60 ? 'rgba(5,5,7,0.97)' : 'linear-gradient(to bottom,rgba(5,5,7,0.95) 0%,transparent 100%)';
+}, {passive:true});
+
+/* ═══ HAMBURGER ═══ */
+const navToggle = document.getElementById('nav-toggle');
+const navOverlay = document.getElementById('nav-overlay');
+function openNav(){navToggle.classList.add('open');navOverlay.classList.add('open');document.body.style.overflow='hidden'}
+function closeNav(){navToggle.classList.remove('open');navOverlay.classList.remove('open');document.body.style.overflow=''}
+navToggle.addEventListener('click', () => navOverlay.classList.contains('open') ? closeNav() : openNav());
+
+/* ═══ CURSOR ═══ */
+const cur = document.getElementById('cursor');
+if (cur) {
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px';
+    cur.style.top = e.clientY + 'px';
+  }, {passive:true});
+  let pt=0;
+  (function animOrb(){pt+=0.04;const p=1+Math.sin(pt)*0.12;if(!cur.classList.contains('big'))cur.style.transform=`translate(-50%,-50%) scale(${p})`;requestAnimationFrame(animOrb)})();
+  document.querySelectorAll('a,button,.proj,.svc-item,.step,.testi').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('big'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('big'));
+  });
+}
+
+/* ═══ REVEAL ON SCROLL ═══ */
+const reveals = document.querySelectorAll('.reveal');
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revObs.unobserve(e.target); }});
+}, {threshold: 0.1});
+reveals.forEach(el => revObs.observe(el));
+
+/* ═══ STAT COUNTERS ═══ */
+function animateCounter(el) {
+  const target = parseInt(el.getAttribute('data-target'));
+  const dur = 1800;
+  const start = performance.now();
+  (function step(now) {
+    const p = Math.min((now - start) / dur, 1);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.floor(eased * target);
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = target;
+  })(performance.now());
+}
+const statObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { animateCounter(e.target); statObs.unobserve(e.target); }});
+}, {threshold: 0.5});
+document.querySelectorAll('[data-target]').forEach(el => statObs.observe(el));
+
+/* ═══ PROJECT TILT ═══ */
+document.querySelectorAll('.proj').forEach(proj => {
+  proj.addEventListener('mousemove', e => {
+    const r = proj.getBoundingClientRect();
+    const dx = (e.clientX - r.left - r.width/2) / (r.width/2);
+    const dy = (e.clientY - r.top - r.height/2) / (r.height/2);
+    proj.style.transform = `perspective(800px) rotateY(${dx*3}deg) rotateX(${-dy*3}deg)`;
+  });
+  proj.addEventListener('mouseleave', () => { proj.style.transform = ''; });
+});
+
+/* ═══ PORTFOLIO FILTER ═══ */
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.getAttribute('data-filter');
+    document.querySelectorAll('.proj').forEach(proj => {
+      const cat = proj.getAttribute('data-category');
+      if (filter === 'all' || cat === filter) {
+        proj.style.opacity = '1';
+        proj.style.transform = '';
+        proj.style.pointerEvents = 'auto';
+      } else {
+        proj.style.opacity = '0.15';
+        proj.style.transform = 'scale(0.97)';
+        proj.style.pointerEvents = 'none';
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>
