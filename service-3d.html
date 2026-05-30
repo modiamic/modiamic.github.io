@@ -1,0 +1,2169 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050507">
+<title>3D Design & Architecture — Modiamic Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,700;1,300;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Cinzel:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --silver:#c8cdd4;
+  --silver-bright:#e8ecf0;
+  --silver-dark:#8a8f96;
+  --gold:#b8a070;
+  --bg:#050507;
+  --bg2:#090910;
+  --text:#d8dde4;
+  --accent:#ffffff;
+}
+
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  overflow-x:hidden;
+  cursor:none;
+  -webkit-text-size-adjust:100%;
+}
+*,*::before,*::after{cursor:none!important;-webkit-tap-highlight-color:transparent}
+
+/* CURSOR */
+#cursor{
+  width:12px;height:12px;border-radius:50%;
+  position:fixed;left:0;top:0;pointer-events:none;
+  z-index:9999;will-change:transform;transform:translate(-50%,-50%);
+  background:radial-gradient(circle at 38% 36%, #ffffff 0%, #d8eeff 40%, #a0c8ff 70%, transparent 100%);
+  box-shadow:0 0 6px 2px rgba(180,220,255,0.9),0 0 18px 5px rgba(140,190,255,0.55),0 0 40px 10px rgba(100,160,255,0.22);
+  transition:width .3s cubic-bezier(.22,1,.36,1),height .3s cubic-bezier(.22,1,.36,1),box-shadow .3s,background .3s;
+}
+#cursor.big{
+  width:20px;height:20px;
+  box-shadow:0 0 8px 3px rgba(220,200,255,0.95),0 0 28px 8px rgba(184,160,255,0.6),0 0 60px 16px rgba(150,120,255,0.25);
+  background:radial-gradient(circle at 38% 36%, #ffffff 0%, #eeddff 40%, #c8a8ff 70%, transparent 100%);
+}
+
+/* SCROLL PROGRESS */
+#scroll-progress{
+  position:fixed;top:0;left:0;height:2px;width:0%;
+  background:linear-gradient(90deg,var(--gold),#e8d4a8,var(--gold));
+  z-index:9998;transition:width .1s linear;
+  box-shadow:0 0 8px var(--gold);
+}
+
+/* BACK TO TOP */
+#back-top{
+  position:fixed;bottom:32px;left:32px;width:44px;height:44px;border-radius:50%;
+  background:rgba(10,10,14,0.85);border:1px solid rgba(184,160,112,0.35);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;z-index:200;opacity:0;pointer-events:none;
+  transition:opacity .4s,transform .4s,border-color .3s;backdrop-filter:blur(12px);
+}
+#back-top.visible{opacity:1;pointer-events:auto}
+#back-top:hover{border-color:var(--gold);transform:translateY(-3px)}
+#back-top svg{width:16px;height:16px;stroke:var(--gold);stroke-width:1.5;fill:none}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:linear-gradient(to bottom,rgba(5,5,7,0.95) 0%,transparent 100%);
+  transition:background .4s;
+}
+.nav-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:28px 60px;
+}
+.logo-nav{
+  font-family:'Cinzel',serif;font-size:18px;letter-spacing:0.35em;
+  color:var(--silver-bright);text-transform:uppercase;
+  text-decoration:none;
+}
+.nav-links{display:flex;gap:48px;list-style:none}
+.nav-links a{
+  color:var(--silver-dark);text-decoration:none;
+  font-size:12px;letter-spacing:0.18em;text-transform:uppercase;
+  transition:color .3s;
+}
+.nav-links a:hover{color:white}
+
+/* HAMBURGER */
+#nav-toggle{
+  display:none;align-items:center;justify-content:center;
+  background:none;border:none;outline:none;
+  padding:0;cursor:pointer;
+  position:relative;width:44px;height:44px;border-radius:50%;
+}
+#nav-overlay{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:fixed;inset:0;z-index:300;
+  opacity:0;pointer-events:none;transition:opacity .45s cubic-bezier(.22,1,.36,1);
+  visibility:hidden;background:rgba(3,3,5,0.98);backdrop-filter:blur(32px);
+}
+#nav-overlay.open{opacity:1;pointer-events:auto;visibility:visible}
+#nav-overlay ul{list-style:none;text-align:center;gap:32px;display:flex;flex-direction:column}
+#nav-overlay ul li a{
+  font-family:'Playfair Display',serif;font-size:clamp(28px,7vw,44px);
+  color:var(--silver-bright);text-decoration:none;letter-spacing:0.04em;
+  transition:color .3s;display:flex;align-items:center;gap:16px;
+}
+#nav-overlay ul li a:hover{color:var(--gold)}
+.link-num{font-family:'DM Sans',sans-serif;font-size:11px;color:var(--gold);letter-spacing:0.25em}
+
+/* LANGUAGE SWITCHER */
+#lang-switcher{position:relative;display:flex;align-items:center}
+#lang-btn{
+  display:flex;align-items:center;gap:8px;background:none;
+  border:1px solid rgba(184,160,112,0.25);border-radius:28px;
+  padding:7px 14px 7px 10px;cursor:pointer;
+  transition:all .35s cubic-bezier(.22,1,.36,1);position:relative;overflow:visible;
+}
+#lang-btn::before{
+  content:'';position:absolute;inset:-1px;border-radius:28px;
+  background:conic-gradient(from 0deg,rgba(184,160,112,0) 0deg,rgba(184,160,112,0.4) 120deg,rgba(232,212,168,0.6) 180deg,rgba(184,160,112,0.4) 240deg,rgba(184,160,112,0) 360deg);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 1.5px),#000 calc(100% - 1.5px));
+  mask:radial-gradient(farthest-side,transparent calc(100% - 1.5px),#000 calc(100% - 1.5px));
+  opacity:0;animation:langRingRotate 4s linear infinite;transition:opacity .35s;
+}
+@keyframes langRingRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+#lang-btn:hover::before,#lang-btn.active::before{opacity:1}
+#lang-btn:hover{border-color:rgba(184,160,112,0.5);background:rgba(184,160,112,0.06)}
+#lang-btn.active{border-color:rgba(184,160,112,0.5);background:rgba(184,160,112,0.08)}
+.lang-globe{width:16px;height:16px;flex-shrink:0;transition:transform .5s cubic-bezier(.22,1,.36,1)}
+#lang-btn:hover .lang-globe,#lang-btn.active .lang-globe{transform:rotate(30deg) scale(1.1)}
+.lang-current{font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--silver-bright);line-height:1}
+.lang-chevron{width:10px;height:10px;stroke:var(--gold);stroke-width:1.5;fill:none;transition:transform .35s cubic-bezier(.22,1,.36,1);flex-shrink:0}
+#lang-btn.active .lang-chevron{transform:rotate(180deg)}
+#lang-dropdown{
+  position:absolute;top:calc(100% + 10px);right:0;min-width:210px;
+  background:rgba(8,8,12,0.97);border:1px solid rgba(184,160,112,0.2);border-radius:8px;overflow:hidden;
+  opacity:0;pointer-events:none;transform:translateY(-8px) scale(0.97);transform-origin:top right;
+  transition:opacity .3s cubic-bezier(.22,1,.36,1),transform .35s cubic-bezier(.22,1,.36,1);
+  z-index:500;backdrop-filter:blur(24px);
+  box-shadow:0 20px 60px rgba(0,0,0,0.7),0 0 0 1px rgba(184,160,112,0.08);
+}
+#lang-dropdown.open{opacity:1;pointer-events:auto;transform:translateY(0) scale(1)}
+.lang-option{
+  display:flex;align-items:center;gap:12px;padding:11px 16px;cursor:pointer;
+  transition:background .2s;border-bottom:1px solid rgba(255,255,255,0.04);position:relative;
+}
+.lang-option:last-child{border-bottom:none}
+.lang-option::after{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,transparent,var(--gold),transparent);transform:scaleY(0);transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.lang-option:hover::after,.lang-option.selected::after{transform:scaleY(1)}
+.lang-option:hover{background:rgba(184,160,112,0.07)}
+.lang-option.selected{background:rgba(184,160,112,0.1)}
+.lang-option.selected .lang-opt-name{color:var(--gold)}
+.lang-flag{font-size:16px;line-height:1;flex-shrink:0}
+.lang-opt-name{font-family:'DM Sans',sans-serif;font-size:12px;letter-spacing:0.1em;color:var(--silver-bright);flex:1}
+.lang-opt-native{font-size:11px;color:var(--silver-dark);letter-spacing:0.05em}
+.lang-check{width:12px;height:12px;stroke:var(--gold);stroke-width:2;fill:none;opacity:0;transition:opacity .2s}
+.lang-option.selected .lang-check{opacity:1}
+
+/* ═══ PAGE HERO ═══ */
+.page-hero{
+  position:relative;height:75vh;min-height:600px;
+  display:flex;align-items:flex-end;justify-content:flex-start;
+  overflow:hidden;padding:0 60px 80px;
+}
+#page-hero-canvas{
+  position:absolute;inset:0;width:100%;height:100%;
+}
+.page-hero-bg-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to right, rgba(5,5,7,0.85) 40%, rgba(5,5,7,0.3) 100%),
+             linear-gradient(to top, rgba(5,5,7,0.9) 0%, transparent 50%);
+  z-index:2;
+}
+.page-hero-content{position:relative;z-index:5;max-width:720px}
+.page-hero-breadcrumb{
+  font-size:10px;letter-spacing:0.38em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:28px;
+  display:flex;align-items:center;gap:12px;
+  animation:fadeUp 1s 0.2s both;
+}
+.page-hero-breadcrumb a{color:var(--silver-dark);text-decoration:none;transition:color .3s}
+.page-hero-breadcrumb a:hover{color:var(--gold)}
+.page-hero-breadcrumb span{color:var(--gold);opacity:0.5}
+.page-hero-tag{
+  display:inline-block;
+  border:1px solid rgba(184,160,112,0.4);
+  padding:5px 14px;border-radius:2px;
+  font-size:9px;letter-spacing:0.35em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:28px;
+  animation:fadeUp 1s 0.3s both;
+}
+.page-hero-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(52px,7vw,96px);font-weight:300;line-height:0.95;
+  color:transparent;
+  background:linear-gradient(135deg,#ffffff 0%,#c8cdd4 40%,#8a8f96 70%,#c8cdd4 100%);
+  -webkit-background-clip:text;background-clip:text;
+  margin-bottom:28px;
+  animation:fadeUp 1s 0.4s both;
+}
+.page-hero-sub{
+  font-size:14px;line-height:1.9;color:var(--silver-dark);
+  max-width:520px;
+  animation:fadeUp 1s 0.55s both;
+}
+.page-hero-scroll{
+  position:absolute;bottom:48px;right:60px;z-index:5;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  animation:fadeUp 1s 0.8s both;
+}
+.page-hero-scroll-line{
+  width:1px;height:60px;
+  background:linear-gradient(to bottom,var(--gold),transparent);
+}
+.page-hero-scroll-text{
+  font-size:9px;letter-spacing:0.35em;text-transform:uppercase;
+  color:var(--silver-dark);writing-mode:vertical-rl;
+}
+
+/* ═══ SECTION GENERAL ═══ */
+.section-label{
+  font-size:10px;letter-spacing:0.45em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:80px;
+  display:flex;align-items:center;gap:20px;
+}
+.section-label::before{content:'✦';color:var(--gold);opacity:0.5;font-size:8px;margin-left:4px}
+.section-label::after{content:'';flex:1;max-width:60px;height:1px;background:var(--gold);opacity:0.4}
+
+/* ═══ OVERVIEW SECTION ═══ */
+#overview{padding:120px 60px;background:var(--bg)}
+.overview-grid{display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center}
+.overview-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(40px,4.5vw,64px);font-weight:300;
+  color:var(--silver-bright);line-height:1.1;margin-bottom:32px;
+}
+.overview-body{font-size:14px;line-height:2;color:var(--silver-dark);margin-bottom:32px}
+.overview-cta{
+  display:inline-flex;align-items:center;gap:14px;
+  font-size:10px;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--silver-bright);text-decoration:none;
+  border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:8px;
+  transition:all .35s;
+}
+.overview-cta:hover{color:var(--gold);border-color:var(--gold)}
+.overview-cta svg{transition:transform .35s}
+.overview-cta:hover svg{transform:translateX(6px)}
+.overview-visual{position:relative}
+.overview-3d-wrap{
+  position:relative;height:480px;background:var(--bg2);overflow:hidden;
+}
+.overview-3d-wrap canvas{width:100%!important;height:100%!important;display:block}
+.overview-spec-list{
+  margin-top:2px;background:var(--bg2);padding:32px 36px;
+  display:grid;grid-template-columns:1fr 1fr;gap:20px;
+}
+.spec-item{display:flex;flex-direction:column;gap:4px}
+.spec-label{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);opacity:0.7}
+.spec-value{font-size:13px;color:var(--silver-bright);letter-spacing:0.05em}
+
+/* ═══ CAPABILITIES ═══ */
+#capabilities{padding:120px 60px;background:var(--bg2)}
+.cap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:0}
+.cap-card{
+  padding:48px 40px;background:var(--bg);position:relative;overflow:hidden;
+  transition:background .4s;
+}
+.cap-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(200,205,212,0.04) 0%,transparent 60%);
+  opacity:0;transition:opacity .4s;
+}
+.cap-card:hover{background:#0d0d16}
+.cap-card:hover::before{opacity:1}
+.cap-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  transform:scaleX(0);transform-origin:center;
+  transition:transform .5s cubic-bezier(.22,1,.36,1);
+}
+.cap-card:hover::after{transform:scaleX(1)}
+.cap-num{font-size:10px;letter-spacing:0.3em;color:var(--gold);opacity:0.5;margin-bottom:28px}
+.cap-icon{width:44px;height:44px;margin-bottom:24px}
+.cap-title{
+  font-family:'Playfair Display',serif;font-size:22px;font-weight:300;
+  color:var(--silver-bright);margin-bottom:14px;line-height:1.2;
+}
+.cap-desc{font-size:13px;line-height:1.8;color:var(--silver-dark)}
+
+/* ═══ PROJECTS SECTION ═══ */
+#projects{padding:120px 60px;background:var(--bg)}
+.projects-intro{
+  display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:end;margin-bottom:80px;
+}
+.projects-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(40px,4.5vw,60px);font-weight:300;
+  color:var(--silver-bright);line-height:1.1;
+}
+.projects-copy{font-size:14px;line-height:2;color:var(--silver-dark);padding-bottom:8px}
+
+/* Projects grid */
+.projects-grid{display:flex;flex-direction:column;gap:2px}
+.proj-row-main{display:grid;grid-template-columns:7fr 5fr;gap:2px;margin-bottom:2px}
+.proj-row-three{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:2px}
+.proj-row-two{display:grid;grid-template-columns:5fr 7fr;gap:2px}
+
+.proj-card{
+  position:relative;overflow:hidden;background:var(--bg2);
+  cursor:pointer;
+  transform-style:preserve-3d;
+  transition:transform 0.08s linear,box-shadow .4s ease;
+  will-change:transform;
+}
+.proj-card::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at var(--wx,50%) var(--wy,50%),
+    rgba(184,160,112,0.13) 0%,rgba(184,160,112,0.04) 30%,transparent 65%);
+  opacity:0;transition:opacity .35s;pointer-events:none;z-index:3;mix-blend-mode:screen;
+}
+.proj-card:hover::after{opacity:1}
+.proj-card::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent 0px,transparent 3px,rgba(255,255,255,0.012) 3px,rgba(255,255,255,0.012) 4px);
+  opacity:0;pointer-events:none;z-index:4;transition:opacity .4s;
+}
+.proj-card:hover::before{opacity:1}
+.proj-card-img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .5s cubic-bezier(.22,1,.36,1);display:block;
+}
+.proj-card:hover .proj-card-img{transform:scale(1.04)}
+
+/* SVG scene inside project cards */
+.proj-scene{width:100%;height:100%;display:block;transition:transform .5s cubic-bezier(.22,1,.36,1)}
+.proj-card:hover .proj-scene{transform:scale(1.04)}
+
+/* gold corner accents */
+.proj-corner{
+  position:absolute;width:20px;height:20px;
+  opacity:0;transition:opacity .4s .05s,transform .45s cubic-bezier(.22,1,.36,1);
+  pointer-events:none;z-index:5;
+}
+.proj-corner-tl{top:14px;left:14px;border-top:1px solid var(--gold);border-left:1px solid var(--gold);transform:translate(-6px,-6px)}
+.proj-corner-tr{top:14px;right:14px;border-top:1px solid var(--gold);border-right:1px solid var(--gold);transform:translate(6px,-6px)}
+.proj-corner-bl{bottom:72px;left:14px;border-bottom:1px solid var(--gold);border-left:1px solid var(--gold);transform:translate(-6px,6px)}
+.proj-corner-br{bottom:72px;right:14px;border-bottom:1px solid var(--gold);border-right:1px solid var(--gold);transform:translate(6px,6px)}
+.proj-card:hover .proj-corner{opacity:0.7;transform:translate(0,0)}
+
+.proj-label{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:28px;
+  background:linear-gradient(to top,rgba(5,5,7,0.95) 0%,rgba(5,5,7,0.4) 60%,transparent 100%);
+  transform:translateY(100%);
+  transition:transform .5s cubic-bezier(.22,1,.36,1);
+  z-index:6;
+}
+.proj-card:hover .proj-label{transform:translateY(0)}
+.proj-label-cat{
+  font-size:10px;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:7px;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .4s .1s,transform .4s .1s cubic-bezier(.22,1,.36,1);
+}
+.proj-card:hover .proj-label-cat{opacity:1;transform:translateY(0)}
+.proj-label-title{
+  font-family:'Playfair Display',serif;font-size:22px;color:white;
+  opacity:0;transform:translateY(10px);
+  transition:opacity .4s .18s,transform .4s .18s cubic-bezier(.22,1,.36,1);
+  margin-bottom:6px;
+}
+.proj-card:hover .proj-label-title{opacity:1;transform:translateY(0)}
+.proj-label-meta{
+  font-size:10px;letter-spacing:0.15em;color:rgba(255,255,255,0.4);
+  opacity:0;transform:translateY(8px);
+  transition:opacity .4s .24s,transform .4s .24s cubic-bezier(.22,1,.36,1);
+}
+.proj-card:hover .proj-label-meta{opacity:1;transform:translateY(0)}
+.proj-label-cta{
+  display:inline-flex;align-items:center;gap:8px;margin-top:10px;
+  font-size:9px;letter-spacing:0.32em;text-transform:uppercase;
+  color:rgba(255,255,255,0.5);
+  opacity:0;transform:translateY(8px);
+  transition:opacity .4s .3s,transform .4s .3s cubic-bezier(.22,1,.36,1);
+}
+.proj-label-cta::after{
+  content:'';display:block;width:24px;height:1px;background:var(--gold);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .35s .55s ease;
+}
+.proj-card:hover .proj-label-cta{opacity:1;transform:translateY(0)}
+.proj-card:hover .proj-label-cta::after{transform:scaleX(1)}
+
+/* heights for project rows */
+.proj-tall{height:560px}
+.proj-medium{height:400px}
+.proj-short{height:320px}
+
+/* ═══ PROCESS SECTION ═══ */
+#process{padding:120px 60px;background:var(--bg2)}
+.process-inner{max-width:900px;margin:0 auto}
+.process-steps{display:flex;flex-direction:column;gap:0}
+.process-step{
+  display:grid;grid-template-columns:80px 1fr;gap:40px;
+  padding:48px 0;border-bottom:1px solid rgba(255,255,255,0.05);
+  position:relative;
+}
+.process-step:last-child{border-bottom:none}
+.process-step-num{
+  font-family:'Playfair Display',serif;
+  font-size:52px;font-weight:300;
+  color:transparent;
+  background:linear-gradient(135deg,rgba(184,160,112,0.6),rgba(184,160,112,0.15));
+  -webkit-background-clip:text;background-clip:text;
+  line-height:1;padding-top:4px;
+}
+.process-step-content{}
+.process-step-title{
+  font-family:'Playfair Display',serif;font-size:26px;font-weight:300;
+  color:var(--silver-bright);margin-bottom:14px;
+}
+.process-step-desc{font-size:13px;line-height:1.9;color:var(--silver-dark)}
+.process-step-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.process-tag{
+  font-size:9px;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--gold);border:1px solid rgba(184,160,112,0.25);
+  padding:4px 12px;border-radius:2px;opacity:0.7;
+}
+
+/* ═══ STATS ═══ */
+#svc-stats{
+  background:var(--bg2);padding:80px 60px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:2px;
+}
+.stat-box{
+  padding:48px 40px;background:var(--bg);text-align:center;
+  position:relative;overflow:hidden;
+  transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s;
+}
+.stat-box:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(184,160,112,0.08)}
+.stat-num{
+  font-family:'Playfair Display',serif;font-size:64px;font-weight:300;
+  color:var(--silver-bright);display:block;line-height:1;margin-bottom:12px;
+}
+.stat-label{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--silver-dark)}
+.stat-box::after{
+  content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:30px;height:2px;background:var(--gold);
+}
+
+/* ═══ CTA BAND ═══ */
+#svc-cta{
+  padding:140px 60px;background:var(--bg);
+  display:grid;grid-template-columns:1fr 1fr;gap:120px;align-items:center;
+}
+.svc-cta-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(40px,5vw,68px);font-weight:300;
+  color:var(--silver-bright);line-height:1;margin-bottom:28px;
+}
+.svc-cta-sub{font-size:14px;line-height:2;color:var(--silver-dark);margin-bottom:40px}
+.svc-cta-btn{
+  display:inline-block;padding:18px 48px;
+  border:1px solid rgba(200,205,212,0.3);color:var(--silver-bright);
+  text-decoration:none;font-size:11px;letter-spacing:0.3em;text-transform:uppercase;
+  transition:all .4s;position:relative;overflow:hidden;
+}
+.svc-cta-btn::before{
+  content:'';position:absolute;inset:0;background:rgba(255,255,255,0.06);
+  transform:scaleX(0);transform-origin:left;transition:transform .4s;
+}
+.svc-cta-btn:hover::before{transform:scaleX(1)}
+.svc-cta-visual{position:relative}
+.svc-cta-canvas-wrap{height:400px;position:relative;background:var(--bg2);overflow:hidden}
+.svc-cta-canvas-wrap canvas{width:100%!important;height:100%!important}
+
+/* ═══ PRE-FOOTER TICKER ═══ */
+.pre-footer-ticker{
+  background:var(--bg2);border-top:1px solid rgba(255,255,255,0.04);
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  overflow:hidden;white-space:nowrap;padding:14px 0;
+}
+.pre-footer-ticker-inner{display:inline-block;animation:marquee 28s linear infinite}
+.pre-footer-ticker-item{
+  display:inline-block;font-family:'Playfair Display',serif;
+  font-size:11px;letter-spacing:0.35em;text-transform:uppercase;
+  color:rgba(184,160,112,0.35);margin:0 40px;
+}
+.pre-footer-ticker-item b{color:rgba(184,160,112,0.6);font-weight:400}
+
+/* ═══ FOOTER ═══ */
+footer{
+  background:var(--bg2);padding:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid rgba(255,255,255,0.05);
+}
+.footer-logo{font-family:'Playfair Display',serif;font-size:22px;letter-spacing:0.3em;color:var(--silver-bright);text-transform:uppercase}
+.footer-copy{font-size:11px;letter-spacing:0.15em;color:var(--silver-dark)}
+.footer-links{display:flex;gap:32px}
+.footer-links a{font-size:11px;letter-spacing:0.2em;color:var(--silver-dark);text-decoration:none;text-transform:uppercase;transition:color .3s}
+.footer-links a:hover{color:white}
+.footer-social-link{display:inline-flex;align-items:center;gap:7px}
+.footer-social-link svg{transition:transform .3s cubic-bezier(.22,1,.36,1);flex-shrink:0}
+.footer-social-link:hover svg{transform:scale(1.18) translateY(-1px)}
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}
+.reveal.visible{opacity:1;transform:none}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:900px){
+  .nav-inner{padding:20px 28px}
+  .nav-links{gap:24px}
+  .page-hero{padding:0 28px 60px}
+  #overview,#capabilities,#projects,#process,#svc-stats,#svc-cta{padding:80px 28px}
+  .overview-grid,.projects-intro,.svc-cta{grid-template-columns:1fr;gap:52px}
+  .cap-grid{grid-template-columns:1fr 1fr}
+  .proj-row-main{grid-template-columns:1fr}
+  .proj-row-three{grid-template-columns:1fr 1fr}
+  .proj-row-two{grid-template-columns:1fr}
+  .proj-tall,.proj-medium{height:380px}.proj-short{height:280px}
+  #svc-stats{grid-template-columns:1fr 1fr;padding:60px 28px}
+  footer{flex-direction:column;gap:20px;text-align:center;padding:40px 28px}
+  .footer-links{justify-content:center}
+}
+@media(max-width:600px){
+  *,*::before,*::after{cursor:auto!important}
+  #cursor{display:none}
+  .nav-inner{padding:15px 20px}
+  .nav-links{display:none!important}
+  #nav-toggle{display:flex!important}
+  .page-hero{padding:0 20px 52px;height:65vh;min-height:500px}
+  .page-hero-title{font-size:clamp(40px,12vw,64px)}
+  #overview,#capabilities,#projects,#process,#svc-cta{padding:64px 20px}
+  #svc-stats{padding:36px 16px}
+  .overview-grid,.projects-intro,.svc-cta{grid-template-columns:1fr;gap:36px}
+  .cap-grid{grid-template-columns:1fr;gap:2px}
+  .proj-row-main,.proj-row-three,.proj-row-two{grid-template-columns:1fr}
+  .proj-tall{height:300px}.proj-medium{height:260px}.proj-short{height:230px}
+  #svc-stats{grid-template-columns:1fr 1fr}
+  .stat-num{font-size:40px}
+  footer{flex-direction:column;gap:14px;padding:26px 20px;text-align:center}
+  .footer-links{justify-content:center;gap:18px}
+  .process-step{grid-template-columns:60px 1fr;gap:24px;padding:32px 0}
+  .process-step-num{font-size:38px}
+  .svc-cta-canvas-wrap{height:280px}
+  .page-hero-scroll{display:none}
+  #back-top{width:38px;height:38px;bottom:20px;left:20px}
+}
+</style>
+</head>
+<body>
+
+<div id="scroll-progress"></div>
+<div id="cursor"></div>
+
+<!-- Mobile Nav Overlay -->
+<div id="nav-overlay">
+  <ul>
+    <li><a href="index.html#services" onclick="closeNav()"><span class="link-bar"></span><span data-i18n="nav_services">Services</span><span class="link-num">01</span></a></li>
+    <li><a href="index.html#works" onclick="closeNav()"><span class="link-bar"></span><span data-i18n="nav_works">Works</span><span class="link-num">02</span></a></li>
+    <li><a href="index.html#philosophy" onclick="closeNav()"><span class="link-bar"></span><span data-i18n="nav_studio">Studio</span><span class="link-num">03</span></a></li>
+    <li><a href="index.html#contact" onclick="closeNav()"><span class="link-bar"></span><span data-i18n="nav_contact">Contact</span><span class="link-num">04</span></a></li>
+  </ul>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo-nav" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+      <svg width="28" height="28" viewBox="0 0 44 44" fill="none">
+        <polygon points="8,36 8,8 12,8 22,28 32,8 36,8 36,36 32,36 32,14 22,34 12,14 12,36" fill="#c8cdd4" opacity="0.9"/>
+      </svg>
+      <span>Modiamic</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html#services" data-i18n="nav_services">Services</a></li>
+      <li><a href="index.html#works" data-i18n="nav_works">Works</a></li>
+      <li><a href="index.html#philosophy" data-i18n="nav_studio">Studio</a></li>
+      <li><a href="index.html#contact" data-i18n="nav_contact">Contact</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:16px">
+      <!-- Language Switcher -->
+      <div id="lang-switcher">
+        <button id="lang-btn" aria-label="Change language">
+          <svg class="lang-globe" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="6.5" stroke="#b8a070" stroke-width="1"/>
+            <ellipse cx="8" cy="8" rx="2.8" ry="6.5" stroke="#b8a070" stroke-width="0.8"/>
+            <line x1="1.5" y1="6" x2="14.5" y2="6" stroke="#b8a070" stroke-width="0.8"/>
+            <line x1="1.5" y1="10" x2="14.5" y2="10" stroke="#b8a070" stroke-width="0.8"/>
+          </svg>
+          <span class="lang-current" id="lang-current-label">FA</span>
+          <svg class="lang-chevron" viewBox="0 0 10 10"><polyline points="2,3 5,7 8,3"/></svg>
+        </button>
+        <div id="lang-dropdown">
+          <div class="lang-option selected" data-lang="fa"><span class="lang-flag">🇮🇷</span><span class="lang-opt-name">فارسی</span><span class="lang-opt-native">FA</span><svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div class="lang-option" data-lang="en"><span class="lang-flag">🇬🇧</span><span class="lang-opt-name">English</span><span class="lang-opt-native">EN</span><svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div class="lang-option" data-lang="tr"><span class="lang-flag">🇹🇷</span><span class="lang-opt-name">Türkçe</span><span class="lang-opt-native">TR</span><svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div class="lang-option" data-lang="de"><span class="lang-flag">🇩🇪</span><span class="lang-opt-name">Deutsch</span><span class="lang-opt-native">DE</span><svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div class="lang-option" data-lang="fr"><span class="lang-flag">🇫🇷</span><span class="lang-opt-name">Français</span><span class="lang-opt-native">FR</span><svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div class="lang-option" data-lang="it"><span class="lang-flag">🇮🇹</span><span class="lang-opt-name">Italiano</span><span class="lang-opt-native">IT</span><svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div class="lang-option" data-lang="es"><span class="lang-flag">🇪🇸</span><span class="lang-opt-name">Español</span><span class="lang-opt-native">ES</span><svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div class="lang-option" data-lang="el"><span class="lang-flag">🇬🇷</span><span class="lang-opt-name">Ελληνικά</span><span class="lang-opt-native">EL</span><svg class="lang-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        </div>
+      </div>
+      <button id="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Back to top -->
+<button id="back-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg viewBox="0 0 16 16"><polyline points="3,10 8,5 13,10"/></svg>
+</button>
+
+<!-- ═══ PAGE HERO ═══ -->
+<section class="page-hero">
+  <canvas id="page-hero-canvas"></canvas>
+  <div class="page-hero-bg-overlay"></div>
+  <div class="page-hero-content">
+    <div class="page-hero-breadcrumb">
+      <a href="index.html" data-i18n="nav_home">خانه</a>
+      <span>—</span>
+      <a href="index.html#services" data-i18n="nav_services">خدمات</a>
+      <span>—</span>
+      <span data-i18n="hero_breadcrumb">طراحی ۳D & معماری</span>
+    </div>
+    <div class="page-hero-tag" data-i18n="hero_tag">3D · Arch · Viz</div>
+    <h1 class="page-hero-title" data-i18n="hero_title">طراحی سه‌بعدی<br>& معماری</h1>
+    <p class="page-hero-sub" data-i18n="hero_sub">از مفهوم تا رندر نهایی — ما فضاهایی می‌سازیم که قبل از ساخته شدن، دیده می‌شوند</p>
+  </div>
+  <div class="page-hero-scroll">
+    <div class="page-hero-scroll-line"></div>
+    <span class="page-hero-scroll-text" data-i18n="scroll_hint">پایین بروید</span>
+  </div>
+</section>
+
+<!-- ═══ OVERVIEW ═══ -->
+<section id="overview">
+  <div class="section-label reveal" data-i18n="section_overview">درباره این سرویس</div>
+  <div class="overview-grid">
+    <div class="reveal">
+      <h2 class="overview-title" data-i18n="overview_title">هنر دیدن<br>پیش از ساختن</h2>
+      <p class="overview-body" data-i18n="overview_body1">در Modiamic، معماری را نه تنها به عنوان علم سازه، بلکه به عنوان هنر تجربه می‌بینیم. هر پروژه سه‌بعدی که خلق می‌کنیم، پیش از آنکه به واقعیت تبدیل شود، یک سفر بصری کامل است.</p>
+      <p class="overview-body" data-i18n="overview_body2" style="margin-top:-10px">با تکنیک‌های رندرینگ فتورئالیستیک، نورپردازی فیزیکی‌محور، و مدل‌سازی دقیق پارامتریک، طراحی‌هایی ارائه می‌دهیم که مرز دیجیتال و واقعیت را محو می‌کنند.</p>
+      <a href="index.html#contact" class="overview-cta" data-i18n="overview_cta">
+        شروع پروژه
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><line x1="2" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width="1.2"/><polyline points="9,3 14,8 9,13" stroke="currentColor" stroke-width="1.2" fill="none"/></svg>
+      </a>
+    </div>
+    <div class="overview-visual reveal" style="transition-delay:0.15s">
+      <div class="overview-3d-wrap">
+        <canvas id="overview-canvas"></canvas>
+      </div>
+      <div class="overview-spec-list">
+        <div class="spec-item">
+          <span class="spec-label" data-i18n="spec1_label">رزولوشن رندر</span>
+          <span class="spec-value">Up to 8K · 16K</span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label" data-i18n="spec2_label">موتور رندر</span>
+          <span class="spec-value">V-Ray · Corona · Unreal</span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label" data-i18n="spec3_label">فرمت خروجی</span>
+          <span class="spec-value">EXR · PNG · TIFF · MP4</span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label" data-i18n="spec4_label">تحویل</span>
+          <span class="spec-value">7–21 <span data-i18n="days_text">روز کاری</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CAPABILITIES ═══ -->
+<section id="capabilities">
+  <div class="section-label reveal" data-i18n="section_cap">توانمندی‌ها</div>
+  <div class="cap-grid">
+    <div class="cap-card reveal">
+      <div class="cap-num">01</div>
+      <svg class="cap-icon" viewBox="0 0 44 44" fill="none">
+        <rect x="4" y="22" width="36" height="18" rx="1" stroke="#c8cdd4" stroke-width="0.7" opacity="0.4"/>
+        <polygon points="4,22 22,8 40,22" stroke="#b8a070" stroke-width="0.8" fill="none" opacity="0.7"/>
+        <line x1="22" y1="8" x2="22" y2="40" stroke="#c8cdd4" stroke-width="0.5" opacity="0.2"/>
+        <line x1="4" y1="22" x2="40" y2="22" stroke="#c8cdd4" stroke-width="0.5" opacity="0.2"/>
+      </svg>
+      <h3 class="cap-title" data-i18n="cap1_title">ویژوالیزیشن معماری</h3>
+      <p class="cap-desc" data-i18n="cap1_desc">رندرهای فتورئالیستیک از داخل و خارج ساختمان، با نورپردازی دقیق روز و شب، ماهیت فضایی پروژه را پیش از اجرا به تصویر می‌کشند.</p>
+      <div class="process-step-tags" style="margin-top:20px">
+        <span class="process-tag">3ds Max</span>
+        <span class="process-tag">V-Ray</span>
+        <span class="process-tag">Corona</span>
+      </div>
+    </div>
+    <div class="cap-card reveal" style="transition-delay:.1s">
+      <div class="cap-num">02</div>
+      <svg class="cap-icon" viewBox="0 0 44 44" fill="none">
+        <circle cx="22" cy="22" r="16" stroke="#c8cdd4" stroke-width="0.7" fill="none" opacity="0.3"/>
+        <circle cx="22" cy="22" r="10" stroke="#b8a070" stroke-width="0.8" fill="none" opacity="0.6"/>
+        <line x1="22" y1="6" x2="22" y2="38" stroke="#c8cdd4" stroke-width="0.5" opacity="0.2"/>
+        <line x1="6" y1="22" x2="38" y2="22" stroke="#c8cdd4" stroke-width="0.5" opacity="0.2"/>
+        <ellipse cx="22" cy="22" rx="16" ry="7" stroke="#b8a070" stroke-width="0.5" fill="none" opacity="0.3"/>
+      </svg>
+      <h3 class="cap-title" data-i18n="cap2_title">مدل‌سازی پارامتریک</h3>
+      <p class="cap-desc" data-i18n="cap2_desc">ساخت مدل‌های سه‌بعدی دقیق با کنترل پارامتریک کامل، امکان تغییر طراحی در لحظه و ارائه واریانت‌های مختلف را فراهم می‌کند.</p>
+      <div class="process-step-tags" style="margin-top:20px">
+        <span class="process-tag">Rhino</span>
+        <span class="process-tag">Grasshopper</span>
+        <span class="process-tag">Revit</span>
+      </div>
+    </div>
+    <div class="cap-card reveal" style="transition-delay:.2s">
+      <div class="cap-num">03</div>
+      <svg class="cap-icon" viewBox="0 0 44 44" fill="none">
+        <rect x="6" y="6" width="32" height="20" rx="2" stroke="#c8cdd4" stroke-width="0.7" opacity="0.4"/>
+        <rect x="10" y="10" width="24" height="12" rx="1" stroke="#b8a070" stroke-width="0.5" fill="none" opacity="0.5"/>
+        <line x1="6" y1="30" x2="38" y2="30" stroke="#c8cdd4" stroke-width="0.5" opacity="0.3"/>
+        <rect x="14" y="30" width="16" height="8" rx="1" stroke="#c8cdd4" stroke-width="0.5" opacity="0.3"/>
+      </svg>
+      <h3 class="cap-title" data-i18n="cap3_title">رندر انیمیشن ۳D</h3>
+      <p class="cap-desc" data-i18n="cap3_desc">فلای‌تروها، واک‌تروهای سینماتیک و انیمیشن‌های معماری برای ارائه به کارفرما، سرمایه‌گذار یا مخاطب عمومی.</p>
+      <div class="process-step-tags" style="margin-top:20px">
+        <span class="process-tag">Cinema 4D</span>
+        <span class="process-tag">After Effects</span>
+        <span class="process-tag">Unreal Engine</span>
+      </div>
+    </div>
+    <div class="cap-card reveal" style="transition-delay:.3s">
+      <div class="cap-num">04</div>
+      <svg class="cap-icon" viewBox="0 0 44 44" fill="none">
+        <path d="M8 36 L8 14 L22 6 L36 14 L36 36" stroke="#c8cdd4" stroke-width="0.7" fill="none" opacity="0.4"/>
+        <path d="M8 14 L22 22 L36 14" stroke="#b8a070" stroke-width="0.8" fill="none" opacity="0.6"/>
+        <line x1="22" y1="22" x2="22" y2="36" stroke="#c8cdd4" stroke-width="0.5" opacity="0.3"/>
+      </svg>
+      <h3 class="cap-title" data-i18n="cap4_title">طراحی دیجیتال مفهومی</h3>
+      <p class="cap-desc" data-i18n="cap4_desc">از اسکچ اولیه تا مدل سه‌بعدی کامل — ایده‌های معماری پیچیده را به فرم‌های دیجیتال قابل ارائه تبدیل می‌کنیم.</p>
+      <div class="process-step-tags" style="margin-top:20px">
+        <span class="process-tag">SketchUp</span>
+        <span class="process-tag">Lumion</span>
+        <span class="process-tag">Blender</span>
+      </div>
+    </div>
+    <div class="cap-card reveal" style="transition-delay:.4s">
+      <div class="cap-num">05</div>
+      <svg class="cap-icon" viewBox="0 0 44 44" fill="none">
+        <path d="M10 34 C10 24 16 16 22 16 C28 16 34 24 34 34" stroke="#c8cdd4" stroke-width="0.7" fill="none" opacity="0.4"/>
+        <circle cx="22" cy="12" r="5" stroke="#b8a070" stroke-width="0.8" fill="none" opacity="0.6"/>
+        <line x1="10" y1="34" x2="34" y2="34" stroke="#c8cdd4" stroke-width="0.5" opacity="0.3"/>
+        <line x1="14" y1="28" x2="30" y2="28" stroke="#b8a070" stroke-width="0.4" opacity="0.3"/>
+      </svg>
+      <h3 class="cap-title" data-i18n="cap5_title">رندر نورپردازی ویژه</h3>
+      <p class="cap-desc" data-i18n="cap5_desc">شبیه‌سازی نور طبیعی و مصنوعی با دقت فیزیکی — از نور طلوع تا نورپردازی شبانه معماری با HDR و GI.</p>
+      <div class="process-step-tags" style="margin-top:20px">
+        <span class="process-tag">HDRI Lighting</span>
+        <span class="process-tag">GI</span>
+        <span class="process-tag">LUT Grading</span>
+      </div>
+    </div>
+    <div class="cap-card reveal" style="transition-delay:.5s">
+      <div class="cap-num">06</div>
+      <svg class="cap-icon" viewBox="0 0 44 44" fill="none">
+        <rect x="6" y="10" width="32" height="24" rx="2" stroke="#c8cdd4" stroke-width="0.7" opacity="0.4"/>
+        <rect x="10" y="14" width="10" height="16" rx="1" stroke="#b8a070" stroke-width="0.5" fill="none" opacity="0.5"/>
+        <rect x="24" y="14" width="10" height="7" rx="1" stroke="#b8a070" stroke-width="0.5" fill="none" opacity="0.5"/>
+        <rect x="24" y="23" width="10" height="7" rx="1" stroke="#c8cdd4" stroke-width="0.5" fill="none" opacity="0.3"/>
+      </svg>
+      <h3 class="cap-title" data-i18n="cap6_title">ارائه VR / AR تعاملی</h3>
+      <p class="cap-desc" data-i18n="cap6_desc">تجربه فضاهای معماری در محیط واقعیت مجازی — مشتری را قبل از ساخت، درون پروژه قرار می‌دهیم.</p>
+      <div class="process-step-tags" style="margin-top:20px">
+        <span class="process-tag">Unreal 5</span>
+        <span class="process-tag">Twinmotion</span>
+        <span class="process-tag">WebGL</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROJECTS ═══ -->
+<section id="projects">
+  <div class="section-label reveal" data-i18n="section_projects">نمونه پروژه‌ها</div>
+  <div class="projects-intro">
+    <h2 class="projects-title reveal" data-i18n="projects_title">طراحی‌هایی که<br>مرز واقعیت را<br>جابجا کردند</h2>
+    <p class="projects-copy reveal" data-i18n="projects_copy">هر پروژه سه‌بعدی یک روایت بصری است. از برج‌های بلند شهری تا ویلاهای ساحلی، از فضاهای عمومی تا خصوصی‌ترین لحظات یک خانه — هر فضا سزاوار بهترین تجسم است.</p>
+  </div>
+
+  <div class="projects-grid">
+    <!-- Row 1: Main + Side -->
+    <div class="proj-row-main">
+      <div class="proj-card proj-tall reveal" onmousemove="tiltProj(this,event)" onmouseleave="resetProj(this)">
+        <svg class="proj-scene" viewBox="0 0 800 560" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="psky1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#05030f"/><stop offset="100%" stop-color="#0d0820"/></linearGradient>
+            <radialGradient id="pmoon1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#f0e8d0"/><stop offset="70%" stop-color="#c8b890"/><stop offset="100%" stop-color="#8a7050" stop-opacity="0"/></radialGradient>
+            <radialGradient id="pglow1" cx="50%" cy="90%" r="70%"><stop offset="0%" stop-color="#b8a070" stop-opacity="0.5"/><stop offset="100%" stop-color="#b8a070" stop-opacity="0"/></radialGradient>
+            <filter id="pf1"><feGaussianBlur stdDeviation="8"/></filter>
+            <filter id="pf2"><feGaussianBlur stdDeviation="3"/></filter>
+            <filter id="pf3"><feGaussianBlur stdDeviation="1.5"/></filter>
+          </defs>
+          <rect width="800" height="560" fill="url(#psky1)"/>
+          <!-- Stars -->
+          <circle cx="60" cy="40" r="1" fill="#fff" opacity="0.6"/><circle cx="180" cy="25" r="0.8" fill="#fff" opacity="0.5"/><circle cx="320" cy="15" r="1.2" fill="#fff" opacity="0.7"/><circle cx="500" cy="30" r="0.9" fill="#fff" opacity="0.6"/><circle cx="650" cy="20" r="1" fill="#fff" opacity="0.5"/><circle cx="760" cy="45" r="0.8" fill="#fff" opacity="0.7"/><circle cx="120" cy="70" r="0.7" fill="#fff" opacity="0.4"/><circle cx="400" cy="55" r="0.9" fill="#fff" opacity="0.5"/><circle cx="700" cy="60" r="0.8" fill="#fff" opacity="0.4"/><circle cx="240" cy="90" r="0.6" fill="#fff" opacity="0.4"/>
+          <!-- Moon -->
+          <circle cx="680" cy="80" r="40" fill="url(#pmoon1)" opacity="0.85"/>
+          <circle cx="694" cy="68" r="32" fill="#05030f" opacity="0.45"/>
+          <!-- Ground glow -->
+          <ellipse cx="400" cy="540" rx="380" ry="60" fill="url(#pglow1)" filter="url(#pf1)" opacity="0.8"/>
+          <!-- Ground -->
+          <rect x="0" y="460" width="800" height="100" fill="#08061a" opacity="0.9"/>
+          <line x1="0" y1="460" x2="800" y2="460" stroke="#b8a070" stroke-width="0.5" opacity="0.25"/>
+          <!-- TOWER — Zentrum Tower (futuristic angular skyscraper) -->
+          <!-- Base -->
+          <rect x="295" y="340" width="210" height="120" fill="#0c0a20" stroke="#b8a070" stroke-width="0.5" opacity="0.9"/>
+          <!-- Lower mid section -->
+          <rect x="315" y="240" width="170" height="105" fill="#0e0c22" stroke="#c8cdd4" stroke-width="0.4" opacity="0.85"/>
+          <!-- Mid section tapered -->
+          <polygon points="330,145 400,135 470,145 470,245 330,245" fill="#100e26" stroke="#b8a070" stroke-width="0.5" opacity="0.9"/>
+          <!-- Upper tower -->
+          <polygon points="352,55 400,40 448,55 448,150 352,150" fill="#0e0c22" stroke="#c8cdd4" stroke-width="0.4" opacity="0.85"/>
+          <!-- Spire -->
+          <polygon points="390,0 400,38 410,0" fill="#b8a070" opacity="0.7"/>
+          <line x1="400" y1="0" x2="400" y2="40" stroke="#b8a070" stroke-width="1.5" opacity="0.85"/>
+          <!-- Tower crown glow -->
+          <circle cx="400" cy="35" r="20" fill="#b8a070" opacity="0.1" filter="url(#pf2)"/>
+          <!-- Windows pattern — base -->
+          <line x1="330" y1="360" x2="330" y2="455" stroke="#c8cdd4" stroke-width="0.3" opacity="0.2"/>
+          <line x1="360" y1="360" x2="360" y2="455" stroke="#c8cdd4" stroke-width="0.3" opacity="0.2"/>
+          <line x1="400" y1="360" x2="400" y2="455" stroke="#c8cdd4" stroke-width="0.3" opacity="0.2"/>
+          <line x1="440" y1="360" x2="440" y2="455" stroke="#c8cdd4" stroke-width="0.3" opacity="0.2"/>
+          <line x1="470" y1="360" x2="470" y2="455" stroke="#c8cdd4" stroke-width="0.3" opacity="0.2"/>
+          <line x1="295" y1="375" x2="505" y2="375" stroke="#c8cdd4" stroke-width="0.3" opacity="0.15"/>
+          <line x1="295" y1="400" x2="505" y2="400" stroke="#c8cdd4" stroke-width="0.3" opacity="0.15"/>
+          <line x1="295" y1="425" x2="505" y2="425" stroke="#c8cdd4" stroke-width="0.3" opacity="0.15"/>
+          <!-- Windows lit (warm gold) -->
+          <rect x="303" y="365" width="18" height="8" rx="1" fill="#b8a070" opacity="0.4"/><rect x="335" y="365" width="18" height="8" rx="1" fill="#b8a070" opacity="0.3"/><rect x="370" y="365" width="18" height="8" rx="1" fill="#e8d4a8" opacity="0.35"/><rect x="415" y="365" width="18" height="8" rx="1" fill="#b8a070" opacity="0.3"/>
+          <rect x="303" y="388" width="18" height="8" rx="1" fill="#e8d4a8" opacity="0.3"/><rect x="450" y="388" width="18" height="8" rx="1" fill="#b8a070" opacity="0.4"/>
+          <rect x="335" y="412" width="18" height="8" rx="1" fill="#b8a070" opacity="0.35"/><rect x="415" y="412" width="18" height="8" rx="1" fill="#e8d4a8" opacity="0.25"/>
+          <!-- Mid tower windows -->
+          <rect x="325" y="256" width="14" height="7" rx="1" fill="#b8a070" opacity="0.4"/>
+          <rect x="350" y="256" width="14" height="7" rx="1" fill="#e8d4a8" opacity="0.3"/>
+          <rect x="380" y="256" width="14" height="7" rx="1" fill="#b8a070" opacity="0.35"/>
+          <rect x="412" y="256" width="14" height="7" rx="1" fill="#b8a070" opacity="0.3"/>
+          <rect x="446" y="256" width="14" height="7" rx="1" fill="#e8d4a8" opacity="0.4"/>
+          <rect x="325" y="275" width="14" height="7" rx="1" fill="#e8d4a8" opacity="0.25"/>
+          <rect x="446" y="275" width="14" height="7" rx="1" fill="#b8a070" opacity="0.35"/>
+          <!-- Upper windows -->
+          <rect x="360" y="65" width="10" height="6" rx="1" fill="#b8a070" opacity="0.5"/>
+          <rect x="380" y="65" width="10" height="6" rx="1" fill="#e8d4a8" opacity="0.4"/>
+          <rect x="430" y="65" width="10" height="6" rx="1" fill="#b8a070" opacity="0.4"/>
+          <rect x="360" y="80" width="10" height="6" rx="1" fill="#e8d4a8" opacity="0.35"/>
+          <!-- Secondary buildings left -->
+          <rect x="140" y="360" width="120" height="100" fill="#080618" stroke="#c8cdd4" stroke-width="0.4" opacity="0.7"/>
+          <rect x="155" y="280" width="90" height="82" fill="#0a0820" stroke="#b8a070" stroke-width="0.4" opacity="0.7"/>
+          <polygon points="160,210 200,195 240,210 240,282 160,282" fill="#080618" stroke="#c8cdd4" stroke-width="0.3" opacity="0.7"/>
+          <!-- Sec left windows -->
+          <rect x="148" y="370" width="10" height="6" rx="1" fill="#b8a070" opacity="0.3"/>
+          <rect x="168" y="370" width="10" height="6" rx="1" fill="#e8d4a8" opacity="0.25"/>
+          <rect x="200" y="370" width="10" height="6" rx="1" fill="#b8a070" opacity="0.3"/>
+          <rect x="220" y="390" width="10" height="6" rx="1" fill="#e8d4a8" opacity="0.2"/>
+          <!-- Secondary buildings right -->
+          <rect x="540" y="380" width="120" height="80" fill="#080618" stroke="#c8cdd4" stroke-width="0.4" opacity="0.7"/>
+          <rect x="555" y="300" width="90" height="82" fill="#0a0820" stroke="#b8a070" stroke-width="0.4" opacity="0.7"/>
+          <polygon points="570,230 600,220 630,230 630,302 570,302" fill="#080618" stroke="#c8cdd4" stroke-width="0.3" opacity="0.7"/>
+          <!-- Ground light pool -->
+          <ellipse cx="400" cy="462" rx="160" ry="12" fill="#b8a070" opacity="0.08" filter="url(#pf3)"/>
+          <!-- Reflections on ground -->
+          <line x1="400" y1="465" x2="400" y2="560" stroke="#b8a070" stroke-width="1" opacity="0.06"/>
+          <line x1="320" y1="470" x2="310" y2="560" stroke="#c8cdd4" stroke-width="0.5" opacity="0.04"/>
+          <line x1="480" y1="470" x2="490" y2="560" stroke="#c8cdd4" stroke-width="0.5" opacity="0.04"/>
+          <!-- Frame decorative lines -->
+          <line x1="0" y1="0" x2="40" y2="0" stroke="#b8a070" stroke-width="0.6" opacity="0.3"/>
+          <line x1="0" y1="0" x2="0" y2="40" stroke="#b8a070" stroke-width="0.6" opacity="0.3"/>
+          <line x1="760" y1="0" x2="800" y2="0" stroke="#b8a070" stroke-width="0.6" opacity="0.3"/>
+          <line x1="800" y1="0" x2="800" y2="40" stroke="#b8a070" stroke-width="0.6" opacity="0.3"/>
+        </svg>
+        <div class="proj-corner proj-corner-tl"></div>
+        <div class="proj-corner proj-corner-tr"></div>
+        <div class="proj-corner proj-corner-bl"></div>
+        <div class="proj-corner proj-corner-br"></div>
+        <div class="proj-label">
+          <div class="proj-label-cat" data-i18n="proj1_cat">معماری تجاری · دبی · ۲۰۲۴</div>
+          <div class="proj-label-title" data-i18n="proj1_title">Zentrum Tower</div>
+          <div class="proj-label-meta">340m · 72 floors · Mixed-use</div>
+          <div class="proj-label-cta" data-i18n="view_project">مشاهده پروژه</div>
+        </div>
+      </div>
+      <div class="proj-card proj-tall reveal" style="transition-delay:.1s" onmousemove="tiltProj(this,event)" onmouseleave="resetProj(this)">
+        <svg class="proj-scene" viewBox="0 0 500 560" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="psky2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#060407"/><stop offset="100%" stop-color="#100816"/></linearGradient>
+            <radialGradient id="pwarm2" cx="50%" cy="60%" r="60%"><stop offset="0%" stop-color="#c87040" stop-opacity="0.3"/><stop offset="100%" stop-color="#c87040" stop-opacity="0"/></radialGradient>
+            <filter id="pf4"><feGaussianBlur stdDeviation="6"/></filter>
+            <filter id="pf5"><feGaussianBlur stdDeviation="2"/></filter>
+          </defs>
+          <rect width="500" height="560" fill="url(#psky2)"/>
+          <circle cx="80" cy="35" r="0.8" fill="#fff" opacity="0.5"/><circle cx="200" cy="20" r="1" fill="#fff" opacity="0.6"/><circle cx="350" cy="28" r="0.8" fill="#fff" opacity="0.4"/><circle cx="440" cy="15" r="1.2" fill="#fff" opacity="0.7"/>
+          <!-- Warm dusk sky -->
+          <ellipse cx="250" cy="350" rx="280" ry="200" fill="url(#pwarm2)" filter="url(#pf4)" opacity="0.6"/>
+          <!-- Desert villa - low horizontal modernist -->
+          <!-- Ground/landscape -->
+          <rect x="0" y="400" width="500" height="160" fill="#100a06"/>
+          <line x1="0" y1="400" x2="500" y2="400" stroke="#b8a070" stroke-width="0.3" opacity="0.2"/>
+          <!-- Pool (reflective blue) -->
+          <rect x="60" y="380" width="380" height="25" rx="2" fill="#0a1828" stroke="#b8a070" stroke-width="0.4" opacity="0.8"/>
+          <line x1="60" y1="390" x2="440" y2="390" stroke="#4080c0" stroke-width="0.3" opacity="0.3"/>
+          <!-- Pool glow -->
+          <rect x="60" y="380" width="380" height="25" rx="2" fill="#1040a0" opacity="0.12"/>
+          <!-- Main villa structure -->
+          <rect x="50" y="280" width="400" height="105" fill="#0c0804" stroke="#b8a070" stroke-width="0.5" opacity="0.9"/>
+          <!-- Roof overhang -->
+          <rect x="30" y="270" width="440" height="15" rx="1" fill="#140c06" stroke="#b8a070" stroke-width="0.4" opacity="0.9"/>
+          <!-- Left wing -->
+          <rect x="30" y="300" width="80" height="85" fill="#100a04" stroke="#c8cdd4" stroke-width="0.3" opacity="0.8"/>
+          <!-- Right wing -->
+          <rect x="390" y="300" width="80" height="85" fill="#100a04" stroke="#c8cdd4" stroke-width="0.3" opacity="0.8"/>
+          <!-- Large glass facade segments -->
+          <rect x="60" y="285" width="60" height="90" rx="0" fill="#0a1826" stroke="#b8a070" stroke-width="0.5" opacity="0.7"/>
+          <rect x="130" y="285" width="10" height="90" fill="#0c0804"/>
+          <rect x="140" y="285" width="70" height="90" rx="0" fill="#0a1826" stroke="#b8a070" stroke-width="0.5" opacity="0.6"/>
+          <rect x="220" y="285" width="10" height="90" fill="#0c0804"/>
+          <rect x="230" y="285" width="80" height="90" rx="0" fill="#0a1826" stroke="#b8a070" stroke-width="0.5" opacity="0.7"/>
+          <rect x="320" y="285" width="10" height="90" fill="#0c0804"/>
+          <rect x="330" y="285" width="70" height="90" rx="0" fill="#0a1826" stroke="#b8a070" stroke-width="0.5" opacity="0.6"/>
+          <rect x="410" y="285" width="10" height="90" fill="#0c0804"/>
+          <rect x="420" y="285" width="30" height="90" rx="0" fill="#0a1826" stroke="#b8a070" stroke-width="0.5" opacity="0.5"/>
+          <!-- Interior warm glow through glass -->
+          <rect x="61" y="286" width="58" height="88" fill="#b87040" opacity="0.06"/>
+          <rect x="141" y="286" width="68" height="88" fill="#b87040" opacity="0.08"/>
+          <rect x="231" y="286" width="78" height="88" fill="#b87040" opacity="0.05"/>
+          <rect x="331" y="286" width="68" height="88" fill="#b87040" opacity="0.07"/>
+          <!-- Pool reflection of villa -->
+          <rect x="60" y="382" width="380" height="20" fill="#0a1826" opacity="0.2"/>
+          <!-- Landscape – low desert shrubs and pebble -->
+          <ellipse cx="100" cy="408" rx="30" ry="4" fill="#1a1206" opacity="0.7"/>
+          <ellipse cx="300" cy="420" rx="45" ry="5" fill="#1a1206" opacity="0.6"/>
+          <ellipse cx="420" cy="412" rx="25" ry="4" fill="#1a1206" opacity="0.7"/>
+          <!-- Stone path -->
+          <ellipse cx="250" cy="440" rx="60" ry="5" fill="#16100a" opacity="0.6"/>
+          <!-- Night sky gradient stars -->
+          <circle cx="130" cy="55" r="0.7" fill="#fff" opacity="0.4"/>
+          <circle cx="280" cy="42" r="0.9" fill="#fff" opacity="0.5"/>
+          <!-- Frame accents -->
+          <line x1="0" y1="0" x2="30" y2="0" stroke="#b8a070" stroke-width="0.6" opacity="0.3"/>
+          <line x1="0" y1="0" x2="0" y2="30" stroke="#b8a070" stroke-width="0.6" opacity="0.3"/>
+        </svg>
+        <div class="proj-corner proj-corner-tl"></div>
+        <div class="proj-corner proj-corner-tr"></div>
+        <div class="proj-corner proj-corner-bl"></div>
+        <div class="proj-corner proj-corner-br"></div>
+        <div class="proj-label">
+          <div class="proj-label-cat" data-i18n="proj2_cat">معماری مسکونی · ریاض · ۲۰۲۴</div>
+          <div class="proj-label-title" data-i18n="proj2_title">Desert Horizon Villa</div>
+          <div class="proj-label-meta">1,200m² · Private residence</div>
+          <div class="proj-label-cta" data-i18n="view_project">مشاهده پروژه</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: Three equal -->
+    <div class="proj-row-three">
+      <div class="proj-card proj-short reveal" style="transition-delay:.15s" onmousemove="tiltProj(this,event)" onmouseleave="resetProj(this)">
+        <svg class="proj-scene" viewBox="0 0 400 320" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="psky3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#030810"/><stop offset="100%" stop-color="#060f1e"/></linearGradient>
+            <radialGradient id="pcool3" cx="50%" cy="50%" r="60%"><stop offset="0%" stop-color="#3060a0" stop-opacity="0.35"/><stop offset="100%" stop-color="#3060a0" stop-opacity="0"/></radialGradient>
+            <filter id="pf6"><feGaussianBlur stdDeviation="5"/></filter>
+          </defs>
+          <rect width="400" height="320" fill="url(#psky3)"/>
+          <circle cx="50" cy="20" r="0.7" fill="#fff" opacity="0.5"/>
+          <circle cx="200" cy="12" r="1" fill="#fff" opacity="0.6"/>
+          <circle cx="330" cy="22" r="0.8" fill="#fff" opacity="0.4"/>
+          <!-- Cultural center – dynamic angled roof structure -->
+          <ellipse cx="200" cy="280" rx="200" ry="30" fill="#3060a0" opacity="0.07" filter="url(#pf6)"/>
+          <!-- Ground plane -->
+          <rect x="0" y="250" width="400" height="70" fill="#04080e"/>
+          <!-- Main volume - sweeping curved roof -->
+          <polygon points="20,250 20,180 100,140 300,130 380,170 380,250" fill="#08101e" stroke="#3060a0" stroke-width="0.5" opacity="0.85"/>
+          <!-- Roof cascade levels -->
+          <polygon points="60,250 60,185 150,148 200,144 200,250" fill="#06080e" stroke="#c8cdd4" stroke-width="0.3" opacity="0.7"/>
+          <polygon points="200,250 200,144 260,140 340,155 340,250" fill="#07090f" stroke="#b8a070" stroke-width="0.3" opacity="0.7"/>
+          <!-- Curved facade glass -->
+          <path d="M80 250 Q80 190 130 168 L170 160 L170 250" fill="#0d1828" stroke="#3060a0" stroke-width="0.6" opacity="0.8"/>
+          <path d="M220 250 Q220 165 270 150 L310 148 L310 250" fill="#0d1828" stroke="#3060a0" stroke-width="0.5" opacity="0.7"/>
+          <!-- Center atrium -->
+          <path d="M170 250 L170 160 L230 155 L230 250" fill="#081422" stroke="#b8a070" stroke-width="0.7" opacity="0.85"/>
+          <!-- Roof overhang cantilever -->
+          <polygon points="30,175 380,162 390,158 390,168 30,185" fill="#0c1220" stroke="#c8cdd4" stroke-width="0.3" opacity="0.65"/>
+          <!-- Lit windows -->
+          <rect x="88" y="200" width="14" height="8" rx="1" fill="#3060a0" opacity="0.5"/>
+          <rect x="108" y="200" width="14" height="8" rx="1" fill="#3060a0" opacity="0.4"/>
+          <rect x="88" y="220" width="14" height="8" rx="1" fill="#b8a070" opacity="0.4"/>
+          <rect x="108" y="220" width="14" height="8" rx="1" fill="#3060a0" opacity="0.3"/>
+          <rect x="178" y="190" width="16" height="50" rx="1" fill="#4070b0" opacity="0.2"/>
+          <rect x="228" y="188" width="14" height="10" rx="1" fill="#3060a0" opacity="0.5"/>
+          <rect x="258" y="200" width="14" height="8" rx="1" fill="#b8a070" opacity="0.4"/>
+          <rect x="278" y="200" width="14" height="8" rx="1" fill="#3060a0" opacity="0.4"/>
+          <!-- Landscape reflections -->
+          <ellipse cx="200" cy="256" rx="180" ry="6" fill="#3060a0" opacity="0.05"/>
+          <line x1="0" y1="0" x2="28" y2="0" stroke="#b8a070" stroke-width="0.5" opacity="0.3"/>
+          <line x1="0" y1="0" x2="0" y2="28" stroke="#b8a070" stroke-width="0.5" opacity="0.3"/>
+        </svg>
+        <div class="proj-corner proj-corner-tl"></div>
+        <div class="proj-corner proj-corner-tr"></div>
+        <div class="proj-corner proj-corner-bl"></div>
+        <div class="proj-corner proj-corner-br"></div>
+        <div class="proj-label">
+          <div class="proj-label-cat" data-i18n="proj3_cat">فرهنگی · استانبول · ۲۰۲۳</div>
+          <div class="proj-label-title" data-i18n="proj3_title">Arch Cultural Hub</div>
+          <div class="proj-label-cta" data-i18n="view_project">مشاهده پروژه</div>
+        </div>
+      </div>
+      <div class="proj-card proj-short reveal" style="transition-delay:.2s" onmousemove="tiltProj(this,event)" onmouseleave="resetProj(this)">
+        <svg class="proj-scene" viewBox="0 0 400 320" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="psky4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#08040e"/><stop offset="100%" stop-color="#120a1c"/></linearGradient>
+            <radialGradient id="pglow4" cx="50%" cy="70%" r="60%"><stop offset="0%" stop-color="#6020c0" stop-opacity="0.3"/><stop offset="100%" stop-color="#6020c0" stop-opacity="0"/></radialGradient>
+            <filter id="pf7"><feGaussianBlur stdDeviation="8"/></filter>
+            <filter id="pf8"><feGaussianBlur stdDeviation="2"/></filter>
+          </defs>
+          <rect width="400" height="320" fill="url(#psky4)"/>
+          <circle cx="40" cy="18" r="0.8" fill="#fff" opacity="0.5"/>
+          <circle cx="180" cy="10" r="1" fill="#fff" opacity="0.6"/>
+          <circle cx="320" cy="22" r="0.7" fill="#fff" opacity="0.4"/>
+          <circle cx="360" cy="14" r="0.9" fill="#fff" opacity="0.5"/>
+          <!-- Residential tower complex - twin towers -->
+          <ellipse cx="200" cy="280" rx="180" ry="20" fill="#6020c0" opacity="0.08" filter="url(#pf7)"/>
+          <rect x="0" y="260" width="400" height="60" fill="#0a0610"/>
+          <!-- Left tower -->
+          <rect x="90" y="80" width="80" height="185" fill="#0e0a1e" stroke="#c8cdd4" stroke-width="0.4" opacity="0.85"/>
+          <polygon points="90,80 130,60 170,80" fill="#120e24" stroke="#b8a070" stroke-width="0.5" opacity="0.9"/>
+          <line x1="130" y1="60" x2="130" y2="30" stroke="#b8a070" stroke-width="1" opacity="0.7"/>
+          <circle cx="130" cy="28" r="3" fill="#b8a070" opacity="0.8"/>
+          <!-- Right tower (slightly taller) -->
+          <rect x="220" y="60" width="90" height="205" fill="#0e0a1e" stroke="#c8cdd4" stroke-width="0.4" opacity="0.85"/>
+          <polygon points="220,60 265,38 310,60" fill="#120e24" stroke="#b8a070" stroke-width="0.5" opacity="0.9"/>
+          <line x1="265" y1="38" x2="265" y2="8" stroke="#b8a070" stroke-width="1" opacity="0.7"/>
+          <circle cx="265" cy="6" r="3" fill="#b8a070" opacity="0.8"/>
+          <!-- Windows left tower -->
+          <rect x="98" y="90" width="10" height="6" rx="1" fill="#b8a070" opacity="0.4"/><rect x="114" y="90" width="10" height="6" rx="1" fill="#e8d4a8" opacity="0.35"/><rect x="130" y="90" width="10" height="6" rx="1" fill="#b8a070" opacity="0.3"/><rect x="146" y="90" width="10" height="6" rx="1" fill="#e8d4a8" opacity="0.4"/>
+          <rect x="98" y="108" width="10" height="6" rx="1" fill="#e8d4a8" opacity="0.3"/><rect x="130" y="108" width="10" height="6" rx="1" fill="#b8a070" opacity="0.35"/><rect x="146" y="108" width="10" height="6" rx="1" fill="#e8d4a8" opacity="0.25"/>
+          <rect x="98" y="126" width="10" height="6" rx="1" fill="#b8a070" opacity="0.4"/><rect x="114" y="126" width="10" height="6" rx="1" fill="#e8d4a8" opacity="0.3"/>
+          <rect x="98" y="144" width="10" height="6" rx="1" fill="#e8d4a8" opacity="0.25"/><rect x="146" y="144" width="10" height="6" rx="1" fill="#b8a070" opacity="0.4"/>
+          <!-- Windows right tower -->
+          <rect x="228" y="70" width="11" height="6" rx="1" fill="#b8a070" opacity="0.4"/><rect x="246" y="70" width="11" height="6" rx="1" fill="#e8d4a8" opacity="0.35"/><rect x="264" y="70" width="11" height="6" rx="1" fill="#b8a070" opacity="0.3"/><rect x="283" y="70" width="11" height="6" rx="1" fill="#e8d4a8" opacity="0.4"/>
+          <rect x="228" y="90" width="11" height="6" rx="1" fill="#e8d4a8" opacity="0.3"/><rect x="264" y="90" width="11" height="6" rx="1" fill="#b8a070" opacity="0.35"/><rect x="283" y="90" width="11" height="6" rx="1" fill="#e8d4a8" opacity="0.25"/>
+          <rect x="246" y="110" width="11" height="6" rx="1" fill="#b8a070" opacity="0.4"/><rect x="283" y="110" width="11" height="6" rx="1" fill="#e8d4a8" opacity="0.3"/>
+          <rect x="228" y="130" width="11" height="6" rx="1" fill="#e8d4a8" opacity="0.25"/><rect x="264" y="130" width="11" height="6" rx="1" fill="#b8a070" opacity="0.4"/>
+          <!-- Sky bridge connecting towers -->
+          <rect x="170" y="175" width="50" height="8" rx="2" fill="#140e20" stroke="#b8a070" stroke-width="0.5" opacity="0.85"/>
+          <!-- Ground podium -->
+          <rect x="70" y="255" width="270" height="10" rx="1" fill="#14101e" stroke="#b8a070" stroke-width="0.4" opacity="0.8"/>
+          <!-- Purple glow crown -->
+          <circle cx="265" cy="6" r="12" fill="#6020c0" opacity="0.15" filter="url(#pf8)"/>
+        </svg>
+        <div class="proj-corner proj-corner-tl"></div>
+        <div class="proj-corner proj-corner-tr"></div>
+        <div class="proj-corner proj-corner-bl"></div>
+        <div class="proj-corner proj-corner-br"></div>
+        <div class="proj-label">
+          <div class="proj-label-cat" data-i18n="proj4_cat">مسکونی · تهران · ۲۰۲۴</div>
+          <div class="proj-label-title" data-i18n="proj4_title">Twin Peaks Residences</div>
+          <div class="proj-label-cta" data-i18n="view_project">مشاهده پروژه</div>
+        </div>
+      </div>
+      <div class="proj-card proj-short reveal" style="transition-delay:.25s" onmousemove="tiltProj(this,event)" onmouseleave="resetProj(this)">
+        <svg class="proj-scene" viewBox="0 0 400 320" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="psky5" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#06040a"/><stop offset="100%" stop-color="#0e0814"/></linearGradient>
+            <radialGradient id="pglow5" cx="50%" cy="65%" r="55%"><stop offset="0%" stop-color="#40c080" stop-opacity="0.2"/><stop offset="100%" stop-color="#40c080" stop-opacity="0"/></radialGradient>
+            <filter id="pf9"><feGaussianBlur stdDeviation="6"/></filter>
+            <filter id="pf10"><feGaussianBlur stdDeviation="2"/></filter>
+          </defs>
+          <rect width="400" height="320" fill="url(#psky5)"/>
+          <circle cx="70" cy="15" r="0.8" fill="#fff" opacity="0.5"/>
+          <circle cx="220" cy="8" r="1" fill="#fff" opacity="0.6"/>
+          <circle cx="350" cy="20" r="0.8" fill="#fff" opacity="0.4"/>
+          <!-- Biophilic pavilion with organic forms -->
+          <ellipse cx="200" cy="280" rx="200" ry="20" fill="#40c080" opacity="0.06" filter="url(#pf9)"/>
+          <rect x="0" y="255" width="400" height="65" fill="#04080a"/>
+          <!-- Organic canopy structure -->
+          <path d="M40 255 Q40 200 80 170 Q120 140 200 130 Q280 120 340 155 Q380 175 380 255" fill="#060e0a" stroke="#40c080" stroke-width="0.6" opacity="0.7"/>
+          <!-- Inner layer -->
+          <path d="M70 255 Q70 210 110 185 Q150 162 200 155 Q250 148 300 170 Q340 188 340 255" fill="#040a06" stroke="#c8cdd4" stroke-width="0.4" opacity="0.5"/>
+          <!-- Structural ribs of canopy -->
+          <path d="M200 130 Q200 200 200 255" stroke="#40c080" stroke-width="0.5" fill="none" opacity="0.4"/>
+          <path d="M120 148 Q160 200 160 255" stroke="#40c080" stroke-width="0.4" fill="none" opacity="0.3"/>
+          <path d="M280 142 Q250 200 240 255" stroke="#40c080" stroke-width="0.4" fill="none" opacity="0.3"/>
+          <path d="M80 175 Q120 215 120 255" stroke="#40c080" stroke-width="0.3" fill="none" opacity="0.25"/>
+          <path d="M330 168 Q300 215 290 255" stroke="#40c080" stroke-width="0.3" fill="none" opacity="0.25"/>
+          <!-- Living wall panels -->
+          <rect x="100" y="195" width="50" height="55" rx="3" fill="#061008" stroke="#40c080" stroke-width="0.5" opacity="0.7"/>
+          <rect x="175" y="190" width="50" height="60" rx="3" fill="#061008" stroke="#40c080" stroke-width="0.5" opacity="0.7"/>
+          <rect x="255" y="192" width="50" height="58" rx="3" fill="#061008" stroke="#40c080" stroke-width="0.5" opacity="0.7"/>
+          <!-- Green texture on panels -->
+          <rect x="103" y="198" width="44" height="8" rx="2" fill="#40c080" opacity="0.1"/>
+          <rect x="103" y="210" width="44" height="8" rx="2" fill="#40c080" opacity="0.08"/>
+          <rect x="103" y="222" width="44" height="8" rx="2" fill="#40c080" opacity="0.1"/>
+          <rect x="178" y="195" width="44" height="8" rx="2" fill="#40c080" opacity="0.1"/>
+          <rect x="178" y="208" width="44" height="8" rx="2" fill="#40c080" opacity="0.08"/>
+          <!-- Water feature at base -->
+          <ellipse cx="200" cy="256" rx="160" ry="6" fill="#0a2018" stroke="#40c080" stroke-width="0.3" opacity="0.6"/>
+          <!-- Path lit -->
+          <ellipse cx="200" cy="258" rx="80" ry="3" fill="#40c080" opacity="0.06" filter="url(#pf10)"/>
+        </svg>
+        <div class="proj-corner proj-corner-tl"></div>
+        <div class="proj-corner proj-corner-tr"></div>
+        <div class="proj-corner proj-corner-bl"></div>
+        <div class="proj-corner proj-corner-br"></div>
+        <div class="proj-label">
+          <div class="proj-label-cat" data-i18n="proj5_cat">بیوفیلیک · سنگاپور · ۲۰۲۴</div>
+          <div class="proj-label-title" data-i18n="proj5_title">Verdant Pavilion</div>
+          <div class="proj-label-cta" data-i18n="view_project">مشاهده پروژه</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: Two, different ratio -->
+    <div class="proj-row-two">
+      <div class="proj-card proj-medium reveal" style="transition-delay:.3s" onmousemove="tiltProj(this,event)" onmouseleave="resetProj(this)">
+        <svg class="proj-scene" viewBox="0 0 500 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="psky6" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#030508"/><stop offset="100%" stop-color="#070c14"/></linearGradient>
+            <radialGradient id="pglow6" cx="50%" cy="70%" r="60%"><stop offset="0%" stop-color="#c0a030" stop-opacity="0.3"/><stop offset="100%" stop-color="#c0a030" stop-opacity="0"/></radialGradient>
+            <filter id="pf11"><feGaussianBlur stdDeviation="7"/></filter>
+          </defs>
+          <rect width="500" height="400" fill="url(#psky6)"/>
+          <circle cx="50" cy="25" r="0.8" fill="#fff" opacity="0.5"/>
+          <circle cx="220" cy="12" r="1" fill="#fff" opacity="0.6"/>
+          <circle cx="380" cy="20" r="0.9" fill="#fff" opacity="0.4"/>
+          <circle cx="460" cy="30" r="0.7" fill="#fff" opacity="0.5"/>
+          <!-- Museum of art - monolithic with cut-outs -->
+          <ellipse cx="250" cy="370" rx="240" ry="25" fill="#c0a030" opacity="0.06" filter="url(#pf11)"/>
+          <rect x="0" y="310" width="500" height="90" fill="#040608"/>
+          <!-- Primary block -->
+          <rect x="60" y="120" width="380" height="195" fill="#070b12" stroke="#c8cdd4" stroke-width="0.5" opacity="0.85"/>
+          <!-- Upper canopy extension -->
+          <rect x="30" y="108" width="440" height="18" rx="0" fill="#0b1020" stroke="#b8a070" stroke-width="0.5" opacity="0.9"/>
+          <!-- Dramatic cut-out voids (windows to sky) -->
+          <rect x="80" y="135" width="90" height="100" fill="#040608" stroke="#b8a070" stroke-width="0.4" opacity="0.5"/>
+          <rect x="210" y="135" width="80" height="60" fill="#040608" stroke="#b8a070" stroke-width="0.4" opacity="0.5"/>
+          <rect x="340" y="135" width="80" height="100" fill="#040608" stroke="#b8a070" stroke-width="0.4" opacity="0.5"/>
+          <rect x="210" y="215" width="80" height="20" fill="#040608" stroke="#b8a070" stroke-width="0.3" opacity="0.4"/>
+          <!-- Entry portal -->
+          <rect x="200" y="240" width="100" height="75" fill="#040608" stroke="#b8a070" stroke-width="0.6" opacity="0.8"/>
+          <!-- Entry light -->
+          <rect x="201" y="241" width="98" height="73" fill="#c0a030" opacity="0.04"/>
+          <!-- Facade texture lines -->
+          <line x1="60" y1="250" x2="200" y2="250" stroke="#c8cdd4" stroke-width="0.25" opacity="0.15"/>
+          <line x1="300" y1="250" x2="440" y2="250" stroke="#c8cdd4" stroke-width="0.25" opacity="0.15"/>
+          <line x1="60" y1="270" x2="200" y2="270" stroke="#c8cdd4" stroke-width="0.25" opacity="0.12"/>
+          <line x1="300" y1="270" x2="440" y2="270" stroke="#c8cdd4" stroke-width="0.25" opacity="0.12"/>
+          <!-- Ground plaza stepped -->
+          <rect x="40" y="308" width="420" height="6" rx="1" fill="#0c1018" stroke="#b8a070" stroke-width="0.3" opacity="0.7"/>
+          <rect x="0" y="314" width="500" height="4" fill="#0a0e14" opacity="0.8"/>
+          <!-- Gold accent band -->
+          <rect x="60" y="315" width="380" height="1.5" fill="#b8a070" opacity="0.25"/>
+        </svg>
+        <div class="proj-corner proj-corner-tl"></div>
+        <div class="proj-corner proj-corner-tr"></div>
+        <div class="proj-corner proj-corner-bl"></div>
+        <div class="proj-corner proj-corner-br"></div>
+        <div class="proj-label">
+          <div class="proj-label-cat" data-i18n="proj6_cat">فرهنگی · لوزان · ۲۰۲۳</div>
+          <div class="proj-label-title" data-i18n="proj6_title">Monolith Museum</div>
+          <div class="proj-label-meta">Contemporary Art · 8,400m²</div>
+          <div class="proj-label-cta" data-i18n="view_project">مشاهده پروژه</div>
+        </div>
+      </div>
+      <div class="proj-card proj-medium reveal" style="transition-delay:.35s" onmousemove="tiltProj(this,event)" onmouseleave="resetProj(this)">
+        <svg class="proj-scene" viewBox="0 0 680 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="psky7" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#020308"/><stop offset="100%" stop-color="#050810"/></linearGradient>
+            <radialGradient id="pglow7" cx="50%" cy="70%" r="60%"><stop offset="0%" stop-color="#40a0e0" stop-opacity="0.2"/><stop offset="100%" stop-color="#40a0e0" stop-opacity="0"/></radialGradient>
+            <filter id="pf12"><feGaussianBlur stdDeviation="7"/></filter>
+            <filter id="pf13"><feGaussianBlur stdDeviation="2.5"/></filter>
+          </defs>
+          <rect width="680" height="400" fill="url(#psky7)"/>
+          <circle cx="80" cy="22" r="1" fill="#fff" opacity="0.6"/>
+          <circle cx="250" cy="10" r="0.8" fill="#fff" opacity="0.5"/>
+          <circle cx="420" cy="18" r="1.2" fill="#fff" opacity="0.7"/>
+          <circle cx="580" cy="25" r="0.9" fill="#fff" opacity="0.4"/>
+          <!-- Waterfront mixed-use complex -->
+          <ellipse cx="340" cy="380" rx="320" ry="25" fill="#40a0e0" opacity="0.07" filter="url(#pf12)"/>
+          <!-- Water -->
+          <rect x="0" y="300" width="680" height="100" fill="#030a12"/>
+          <line x1="0" y1="300" x2="680" y2="300" stroke="#40a0e0" stroke-width="0.4" opacity="0.2"/>
+          <!-- Water ripples -->
+          <ellipse cx="340" cy="320" rx="280" ry="5" fill="none" stroke="#40a0e0" stroke-width="0.3" opacity="0.1"/>
+          <ellipse cx="340" cy="335" rx="220" ry="4" fill="none" stroke="#40a0e0" stroke-width="0.2" opacity="0.08"/>
+          <!-- Main tower complex waterfront -->
+          <!-- Tower A (center-left) -->
+          <rect x="180" y="80" width="120" height="225" fill="#070b16" stroke="#c8cdd4" stroke-width="0.4" opacity="0.85"/>
+          <polygon points="180,80 240,55 300,80" fill="#0b1020" stroke="#b8a070" stroke-width="0.5" opacity="0.9"/>
+          <line x1="240" y1="55" x2="240" y2="25" stroke="#b8a070" stroke-width="1.2" opacity="0.8"/>
+          <circle cx="240" cy="22" r="4" fill="#b8a070" opacity="0.7"/>
+          <!-- Tower B (center-right, taller) -->
+          <rect x="360" y="50" width="140" height="255" fill="#070b16" stroke="#c8cdd4" stroke-width="0.4" opacity="0.85"/>
+          <polygon points="360,50 430,28 500,50" fill="#0b1020" stroke="#b8a070" stroke-width="0.5" opacity="0.9"/>
+          <line x1="430" y1="28" x2="430" y2="5" stroke="#b8a070" stroke-width="1.2" opacity="0.8"/>
+          <circle cx="430" cy="3" r="4" fill="#b8a070" opacity="0.7"/>
+          <!-- Podium connecting -->
+          <rect x="140" y="248" width="400" height="55" rx="2" fill="#0d1220" stroke="#b8a070" stroke-width="0.4" opacity="0.8"/>
+          <!-- Podium arch / promenade -->
+          <path d="M140 285 Q340 265 540 285" stroke="#b8a070" stroke-width="0.5" fill="none" opacity="0.4"/>
+          <!-- Low rise wing left -->
+          <rect x="40" y="215" width="145" height="88" fill="#09101c" stroke="#c8cdd4" stroke-width="0.3" opacity="0.75"/>
+          <!-- Low rise wing right -->
+          <rect x="500" y="205" width="145" height="98" fill="#09101c" stroke="#c8cdd4" stroke-width="0.3" opacity="0.75"/>
+          <!-- Windows tower A -->
+          <rect x="188" y="92" width="12" height="7" rx="1" fill="#b8a070" opacity="0.4"/>
+          <rect x="208" y="92" width="12" height="7" rx="1" fill="#e8d4a8" opacity="0.35"/>
+          <rect x="260" y="92" width="12" height="7" rx="1" fill="#b8a070" opacity="0.4"/>
+          <rect x="188" y="112" width="12" height="7" rx="1" fill="#e8d4a8" opacity="0.3"/>
+          <rect x="260" y="112" width="12" height="7" rx="1" fill="#b8a070" opacity="0.35"/>
+          <rect x="280" y="112" width="12" height="7" rx="1" fill="#e8d4a8" opacity="0.25"/>
+          <!-- Windows tower B -->
+          <rect x="372" y="62" width="14" height="8" rx="1" fill="#b8a070" opacity="0.4"/>
+          <rect x="396" y="62" width="14" height="8" rx="1" fill="#e8d4a8" opacity="0.35"/>
+          <rect x="460" y="62" width="14" height="8" rx="1" fill="#b8a070" opacity="0.4"/>
+          <rect x="480" y="62" width="14" height="8" rx="1" fill="#e8d4a8" opacity="0.3"/>
+          <rect x="372" y="84" width="14" height="8" rx="1" fill="#e8d4a8" opacity="0.3"/>
+          <rect x="460" y="84" width="14" height="8" rx="1" fill="#b8a070" opacity="0.35"/>
+          <rect x="372" y="108" width="14" height="8" rx="1" fill="#b8a070" opacity="0.4"/>
+          <rect x="480" y="108" width="14" height="8" rx="1" fill="#e8d4a8" opacity="0.25"/>
+          <!-- Reflections in water -->
+          <rect x="200" y="305" width="80" height="60" fill="#0b1420" opacity="0.4"/>
+          <rect x="380" y="305" width="90" height="70" fill="#0b1420" opacity="0.35"/>
+          <!-- Sky glow crown reflection in water -->
+          <ellipse cx="240" cy="318" rx="35" ry="5" fill="#b8a070" opacity="0.07" filter="url(#pf13)"/>
+          <ellipse cx="430" cy="315" rx="40" ry="5" fill="#b8a070" opacity="0.07" filter="url(#pf13)"/>
+        </svg>
+        <div class="proj-corner proj-corner-tl"></div>
+        <div class="proj-corner proj-corner-tr"></div>
+        <div class="proj-corner proj-corner-bl"></div>
+        <div class="proj-corner proj-corner-br"></div>
+        <div class="proj-label">
+          <div class="proj-label-cat" data-i18n="proj7_cat">مختلط · باکو · ۲۰۲۴</div>
+          <div class="proj-label-title" data-i18n="proj7_title">Caspian Waterfront</div>
+          <div class="proj-label-meta">Mixed-use · 240,000m²</div>
+          <div class="proj-label-cta" data-i18n="view_project">مشاهده پروژه</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROCESS ═══ -->
+<section id="process">
+  <div class="section-label reveal" data-i18n="section_process">فرآیند کار</div>
+  <div class="process-inner">
+    <div class="process-steps">
+      <div class="process-step reveal">
+        <div class="process-step-num">01</div>
+        <div class="process-step-content">
+          <h3 class="process-step-title" data-i18n="proc1_title">بریفینگ و کشف مفهوم</h3>
+          <p class="process-step-desc" data-i18n="proc1_desc">در نشست اول، با شما درباره چشم‌انداز، هدف، و محدودیت‌های پروژه صحبت می‌کنیم. نتیجه: یک بریف بصری دقیق که پایه همه تصمیم‌های طراحی می‌شود.</p>
+          <div class="process-step-tags">
+            <span class="process-tag" data-i18n="tag_brief">بریف بصری</span>
+            <span class="process-tag" data-i18n="tag_moodboard">مودبورد</span>
+            <span class="process-tag" data-i18n="tag_ref">تحلیل مرجع</span>
+          </div>
+        </div>
+      </div>
+      <div class="process-step reveal" style="transition-delay:.1s">
+        <div class="process-step-num">02</div>
+        <div class="process-step-content">
+          <h3 class="process-step-title" data-i18n="proc2_title">مدل‌سازی و بلاک‌کردن</h3>
+          <p class="process-step-desc" data-i18n="proc2_desc">مدل سه‌بعدی اولیه با توده‌بندی کلی ساخته می‌شود. این مرحله امکان تصمیم‌گیری درباره نسبت‌ها، مصالح، و روابط فضایی را فراهم می‌کند.</p>
+          <div class="process-step-tags">
+            <span class="process-tag">3ds Max</span>
+            <span class="process-tag">Rhino</span>
+            <span class="process-tag" data-i18n="tag_blockout">بلاک‌اوت</span>
+          </div>
+        </div>
+      </div>
+      <div class="process-step reveal" style="transition-delay:.2s">
+        <div class="process-step-num">03</div>
+        <div class="process-step-content">
+          <h3 class="process-step-title" data-i18n="proc3_title">مصالح و نورپردازی</h3>
+          <p class="process-step-desc" data-i18n="proc3_desc">ساخت متریال‌های واقعی با خصوصیات PBR — سطح، بازتاب، زبری. تنظیم نورپردازی فیزیکی با HDR و GI. رندرهای پیش‌نمایش برای تأیید جهت کلی.</p>
+          <div class="process-step-tags">
+            <span class="process-tag">V-Ray</span>
+            <span class="process-tag">PBR Materials</span>
+            <span class="process-tag">HDRI</span>
+          </div>
+        </div>
+      </div>
+      <div class="process-step reveal" style="transition-delay:.3s">
+        <div class="process-step-num">04</div>
+        <div class="process-step-content">
+          <h3 class="process-step-title" data-i18n="proc4_title">رندر نهایی و پست‌پروداکشن</h3>
+          <p class="process-step-desc" data-i18n="proc4_desc">رندرهای با کیفیت بالا در رزولوشن درخواستی — تا ۱۶K. پست‌پروداکشن در Photoshop/Nuke برای رنگ‌بندی، افزودن محیط، و تحویل فایل‌های نهایی.</p>
+          <div class="process-step-tags">
+            <span class="process-tag">8K–16K</span>
+            <span class="process-tag">Photoshop</span>
+            <span class="process-tag" data-i18n="tag_color">گریدینگ رنگ</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STATS ═══ -->
+<div id="svc-stats">
+  <div class="stat-box reveal">
+    <span class="stat-num">80+</span>
+    <span class="stat-label" data-i18n="stat3d_1">پروژه معماری</span>
+  </div>
+  <div class="stat-box reveal" style="transition-delay:.1s">
+    <span class="stat-num">16K</span>
+    <span class="stat-label" data-i18n="stat3d_2">رزولوشن رندر</span>
+  </div>
+  <div class="stat-box reveal" style="transition-delay:.2s">
+    <span class="stat-num">12</span>
+    <span class="stat-label" data-i18n="stat3d_3">موتور رندر</span>
+  </div>
+  <div class="stat-box reveal" style="transition-delay:.3s">
+    <span class="stat-num">5★</span>
+    <span class="stat-label" data-i18n="stat3d_4">رضایت مشتری</span>
+  </div>
+</div>
+
+<!-- ═══ CTA ═══ -->
+<section id="svc-cta">
+  <div>
+    <h2 class="svc-cta-title reveal" data-i18n="cta_title">پروژه‌تان را<br>زنده ببینید</h2>
+    <p class="svc-cta-sub reveal" data-i18n="cta_sub">از اولین اسکچ تا رندر نهایی ۱۶K — آماده‌ایم تا ایده شما را به یک تجربه بصری فراموش‌نشدنی تبدیل کنیم. با ما تماس بگیرید.</p>
+    <a href="index.html#contact" class="svc-cta-btn reveal" data-i18n="cta_btn">شروع پروژه</a>
+  </div>
+  <div class="svc-cta-visual reveal" style="transition-delay:.2s">
+    <div class="svc-cta-canvas-wrap">
+      <canvas id="cta-canvas"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- PRE-FOOTER TICKER -->
+<div class="pre-footer-ticker">
+  <div class="pre-footer-ticker-inner">
+    <span class="pre-footer-ticker-item">3D <b>Design</b></span>
+    <span class="pre-footer-ticker-item"><b>Architecture</b> · Viz</span>
+    <span class="pre-footer-ticker-item">Modiamic <b>Studio</b></span>
+    <span class="pre-footer-ticker-item">Photorealistic <b>Render</b></span>
+    <span class="pre-footer-ticker-item"><b>16K</b> Resolution</span>
+    <span class="pre-footer-ticker-item">طراحی · <b>معماری</b></span>
+    <span class="pre-footer-ticker-item">3D <b>Design</b></span>
+    <span class="pre-footer-ticker-item"><b>Architecture</b> · Viz</span>
+    <span class="pre-footer-ticker-item">Modiamic <b>Studio</b></span>
+    <span class="pre-footer-ticker-item">Photorealistic <b>Render</b></span>
+    <span class="pre-footer-ticker-item"><b>16K</b> Resolution</span>
+    <span class="pre-footer-ticker-item">طراحی · <b>معماری</b></span>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Modiamic Studio</div>
+  <div class="footer-copy" data-i18n="footer_copy">© 2024 All rights reserved</div>
+  <div class="footer-links">
+    <a href="https://www.instagram.com/modiamic" target="_blank" rel="noopener" class="footer-social-link">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+      <span>Instagram</span>
+    </a>
+    <a href="https://wa.me/905391377686" target="_blank" rel="noopener" class="footer-social-link">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.477 2 12c0 1.82.487 3.53 1.338 5.007L2 22l5.119-1.32A9.945 9.945 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 9.5c.167-.5.667-1.5 1.5-1.5s1.333.667 1.5 1.5c.167.833-.167 1.333-.5 1.667-.333.333-.5.667 0 1.333.5.667 1.5 1.5 2.5 1.833.667.222 1.167-.167 1.5-.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span>WhatsApp</span>
+    </a>
+    <a href="#">Behance</a>
+    <a href="#">LinkedIn</a>
+  </div>
+</footer>
+
+<script>
+/* ══════════════════════════════════════
+   i18n TRANSLATIONS
+══════════════════════════════════════ */
+const TRANSLATIONS = {
+  fa: {
+    dir:'rtl', code:'FA',
+    nav_services:'خدمات', nav_works:'کارها', nav_studio:'استودیو', nav_contact:'تماس', nav_home:'خانه',
+    hero_breadcrumb:'طراحی ۳D & معماری', hero_tag:'3D · Arch · Viz',
+    hero_title:'طراحی سه‌بعدی<br>& معماری',
+    hero_sub:'از مفهوم تا رندر نهایی — ما فضاهایی می‌سازیم که قبل از ساخته شدن، دیده می‌شوند',
+    scroll_hint:'پایین بروید',
+    section_overview:'درباره این سرویس',
+    overview_title:'هنر دیدن<br>پیش از ساختن',
+    overview_body1:'در Modiamic، معماری را نه تنها به عنوان علم سازه، بلکه به عنوان هنر تجربه می‌بینیم. هر پروژه سه‌بعدی که خلق می‌کنیم، پیش از آنکه به واقعیت تبدیل شود، یک سفر بصری کامل است.',
+    overview_body2:'با تکنیک‌های رندرینگ فتورئالیستیک، نورپردازی فیزیکی‌محور، و مدل‌سازی دقیق پارامتریک، طراحی‌هایی ارائه می‌دهیم که مرز دیجیتال و واقعیت را محو می‌کنند.',
+    overview_cta:'شروع پروژه',
+    spec1_label:'رزولوشن رندر', spec2_label:'موتور رندر', spec3_label:'فرمت خروجی', spec4_label:'تحویل', days_text:'روز کاری',
+    section_cap:'توانمندی‌ها',
+    cap1_title:'ویژوالیزیشن معماری', cap1_desc:'رندرهای فتورئالیستیک از داخل و خارج ساختمان، با نورپردازی دقیق روز و شب، ماهیت فضایی پروژه را پیش از اجرا به تصویر می‌کشند.',
+    cap2_title:'مدل‌سازی پارامتریک', cap2_desc:'ساخت مدل‌های سه‌بعدی دقیق با کنترل پارامتریک کامل، امکان تغییر طراحی در لحظه و ارائه واریانت‌های مختلف را فراهم می‌کند.',
+    cap3_title:'رندر انیمیشن ۳D', cap3_desc:'فلای‌تروها، واک‌تروهای سینماتیک و انیمیشن‌های معماری برای ارائه به کارفرما، سرمایه‌گذار یا مخاطب عمومی.',
+    cap4_title:'طراحی دیجیتال مفهومی', cap4_desc:'از اسکچ اولیه تا مدل سه‌بعدی کامل — ایده‌های معماری پیچیده را به فرم‌های دیجیتال قابل ارائه تبدیل می‌کنیم.',
+    cap5_title:'رندر نورپردازی ویژه', cap5_desc:'شبیه‌سازی نور طبیعی و مصنوعی با دقت فیزیکی — از نور طلوع تا نورپردازی شبانه معماری با HDR و GI.',
+    cap6_title:'ارائه VR / AR تعاملی', cap6_desc:'تجربه فضاهای معماری در محیط واقعیت مجازی — مشتری را قبل از ساخت، درون پروژه قرار می‌دهیم.',
+    section_projects:'نمونه پروژه‌ها',
+    projects_title:'طراحی‌هایی که<br>مرز واقعیت را<br>جابجا کردند',
+    projects_copy:'هر پروژه سه‌بعدی یک روایت بصری است. از برج‌های بلند شهری تا ویلاهای ساحلی، از فضاهای عمومی تا خصوصی‌ترین لحظات یک خانه — هر فضا سزاوار بهترین تجسم است.',
+    proj1_cat:'معماری تجاری · دبی · ۲۰۲۴', proj1_title:'Zentrum Tower',
+    proj2_cat:'معماری مسکونی · ریاض · ۲۰۲۴', proj2_title:'Desert Horizon Villa',
+    proj3_cat:'فرهنگی · استانبول · ۲۰۲۳', proj3_title:'Arch Cultural Hub',
+    proj4_cat:'مسکونی · تهران · ۲۰۲۴', proj4_title:'Twin Peaks Residences',
+    proj5_cat:'بیوفیلیک · سنگاپور · ۲۰۲۴', proj5_title:'Verdant Pavilion',
+    proj6_cat:'فرهنگی · لوزان · ۲۰۲۳', proj6_title:'Monolith Museum',
+    proj7_cat:'مختلط · باکو · ۲۰۲۴', proj7_title:'Caspian Waterfront',
+    view_project:'مشاهده پروژه',
+    section_process:'فرآیند کار',
+    proc1_title:'بریفینگ و کشف مفهوم', proc1_desc:'در نشست اول، با شما درباره چشم‌انداز، هدف، و محدودیت‌های پروژه صحبت می‌کنیم. نتیجه: یک بریف بصری دقیق که پایه همه تصمیم‌های طراحی می‌شود.',
+    proc2_title:'مدل‌سازی و بلاک‌کردن', proc2_desc:'مدل سه‌بعدی اولیه با توده‌بندی کلی ساخته می‌شود. این مرحله امکان تصمیم‌گیری درباره نسبت‌ها، مصالح، و روابط فضایی را فراهم می‌کند.',
+    proc3_title:'مصالح و نورپردازی', proc3_desc:'ساخت متریال‌های واقعی با خصوصیات PBR — سطح، بازتاب، زبری. تنظیم نورپردازی فیزیکی با HDR و GI. رندرهای پیش‌نمایش برای تأیید جهت کلی.',
+    proc4_title:'رندر نهایی و پست‌پروداکشن', proc4_desc:'رندرهای با کیفیت بالا در رزولوشن درخواستی — تا ۱۶K. پست‌پروداکشن در Photoshop/Nuke برای رنگ‌بندی، افزودن محیط، و تحویل فایل‌های نهایی.',
+    tag_brief:'بریف بصری', tag_moodboard:'مودبورد', tag_ref:'تحلیل مرجع', tag_blockout:'بلاک‌اوت', tag_color:'گریدینگ رنگ',
+    stat3d_1:'پروژه معماری', stat3d_2:'رزولوشن رندر', stat3d_3:'موتور رندر', stat3d_4:'رضایت مشتری',
+    cta_title:'پروژه‌تان را<br>زنده ببینید',
+    cta_sub:'از اولین اسکچ تا رندر نهایی ۱۶K — آماده‌ایم تا ایده شما را به یک تجربه بصری فراموش‌نشدنی تبدیل کنیم. با ما تماس بگیرید.',
+    cta_btn:'شروع پروژه',
+    footer_copy:'© ۲۰۲۴ تمامی حقوق محفوظ است'
+  },
+  en: {
+    dir:'ltr', code:'EN',
+    nav_services:'Services', nav_works:'Works', nav_studio:'Studio', nav_contact:'Contact', nav_home:'Home',
+    hero_breadcrumb:'3D Design & Architecture', hero_tag:'3D · Arch · Viz',
+    hero_title:'3D Design<br>& Architecture',
+    hero_sub:'From concept to final render — we create spaces that are seen before they are built',
+    scroll_hint:'Scroll Down',
+    section_overview:'About This Service',
+    overview_title:'The Art of Seeing<br>Before Building',
+    overview_body1:'At Modiamic, we experience architecture not merely as structural science, but as art. Every 3D project we create is a complete visual journey before it becomes reality.',
+    overview_body2:'With photorealistic rendering techniques, physics-based lighting, and precise parametric modeling, we deliver designs that blur the line between digital and reality.',
+    overview_cta:'Start a Project',
+    spec1_label:'Render Resolution', spec2_label:'Render Engine', spec3_label:'Output Format', spec4_label:'Delivery', days_text:'Working Days',
+    section_cap:'Capabilities',
+    cap1_title:'Architectural Visualization', cap1_desc:'Photorealistic interior and exterior renders with precise day and night lighting, capturing the spatial essence of any project before construction.',
+    cap2_title:'Parametric Modeling', cap2_desc:'Precise 3D models with full parametric control, enabling instant design changes and multiple variants to explore every design direction.',
+    cap3_title:'3D Animation & Flythrough', cap3_desc:'Cinematic flythroughs, walkthroughs, and architectural animations for client presentations, investors, and public audiences.',
+    cap4_title:'Conceptual Digital Design', cap4_desc:'From initial sketch to full 3D model — we transform complex architectural ideas into compelling digital presentations.',
+    cap5_title:'Specialized Lighting Render', cap5_desc:'Physical simulation of natural and artificial light — from golden hour to architectural night lighting with HDR and GI.',
+    cap6_title:'VR / AR Interactive Presentation', cap6_desc:'Experience architectural spaces in virtual reality — placing clients inside the project before a single brick is laid.',
+    section_projects:'Featured Projects',
+    projects_title:'Designs that<br>Pushed the<br>Boundaries',
+    projects_copy:'Every 3D project is a visual narrative. From towering urban skyscrapers to coastal villas, from public spaces to the most intimate rooms — every space deserves its finest expression.',
+    proj1_cat:'Commercial Architecture · Dubai · 2024', proj1_title:'Zentrum Tower',
+    proj2_cat:'Residential Architecture · Riyadh · 2024', proj2_title:'Desert Horizon Villa',
+    proj3_cat:'Cultural · Istanbul · 2023', proj3_title:'Arch Cultural Hub',
+    proj4_cat:'Residential · Tehran · 2024', proj4_title:'Twin Peaks Residences',
+    proj5_cat:'Biophilic · Singapore · 2024', proj5_title:'Verdant Pavilion',
+    proj6_cat:'Cultural · Lausanne · 2023', proj6_title:'Monolith Museum',
+    proj7_cat:'Mixed-use · Baku · 2024', proj7_title:'Caspian Waterfront',
+    view_project:'View Project',
+    section_process:'Our Process',
+    proc1_title:'Briefing & Concept Discovery', proc1_desc:'In the first session, we discuss your vision, objectives, and constraints. The result: a precise visual brief that forms the foundation of every design decision.',
+    proc2_title:'Modeling & Blocking', proc2_desc:'The initial 3D model is built with overall massing. This stage allows decisions on proportions, materials, and spatial relationships.',
+    proc3_title:'Materials & Lighting', proc3_desc:'Building real-world materials with PBR properties — surface, reflection, roughness. Physical lighting setup with HDR and GI. Preview renders for direction approval.',
+    proc4_title:'Final Render & Post-Production', proc4_desc:'High-quality renders at requested resolution — up to 16K. Post-production in Photoshop/Nuke for color grading, environment compositing, and final file delivery.',
+    tag_brief:'Visual Brief', tag_moodboard:'Moodboard', tag_ref:'Reference Analysis', tag_blockout:'Blockout', tag_color:'Color Grading',
+    stat3d_1:'Architecture Projects', stat3d_2:'Render Resolution', stat3d_3:'Render Engines', stat3d_4:'Client Satisfaction',
+    cta_title:'See Your Project<br>Come to Life',
+    cta_sub:'From first sketch to final 16K render — we are ready to transform your idea into an unforgettable visual experience. Get in touch.',
+    cta_btn:'Start a Project',
+    footer_copy:'© 2024 All rights reserved'
+  },
+  tr: {
+    dir:'ltr', code:'TR',
+    nav_services:'Hizmetler', nav_works:'Çalışmalar', nav_studio:'Stüdyo', nav_contact:'İletişim', nav_home:'Ana Sayfa',
+    hero_breadcrumb:'3D Tasarım & Mimarlık', hero_tag:'3D · Arch · Viz',
+    hero_title:'3D Tasarım<br>& Mimarlık',
+    hero_sub:'Konseptten nihai render\'a — inşa edilmeden önce görülebilen mekanlar yaratıyoruz',
+    scroll_hint:'Aşağı Kaydır',
+    section_overview:'Bu Hizmet Hakkında',
+    overview_title:'İnşa Etmeden Önce<br>Görme Sanatı',
+    overview_body1:'Modiamic olarak mimarlığı yalnızca yapısal bir bilim olarak değil, bir sanat olarak deneyimliyoruz. Yarattığımız her 3D proje, gerçeğe dönüşmeden önce eksiksiz bir görsel yolculuktur.',
+    overview_body2:'Fotorealistik render teknikleri, fizik tabanlı aydınlatma ve hassas parametrik modelleme ile dijital ve gerçeklik arasındaki sınırı silen tasarımlar sunuyoruz.',
+    overview_cta:'Projeyi Başlat',
+    spec1_label:'Render Çözünürlüğü', spec2_label:'Render Motoru', spec3_label:'Çıktı Formatı', spec4_label:'Teslimat', days_text:'İş Günü',
+    section_cap:'Yetenekler',
+    cap1_title:'Mimari Görselleştirme', cap1_desc:'Gündüz ve gece için hassas aydınlatmayla iç ve dış mekan fotorealistik renderları, projenin mekânsal özünü inşaattan önce aktarır.',
+    cap2_title:'Parametrik Modelleme', cap2_desc:'Tam parametrik kontrolle hassas 3D modeller, anlık tasarım değişikliklerine ve birden fazla varyant keşfine olanak tanır.',
+    cap3_title:'3D Animasyon & Flythrough', cap3_desc:'Müşteri sunumları, yatırımcılar ve geniş kitleler için sinematik flythrough, walkthrough ve mimari animasyonlar.',
+    cap4_title:'Kavramsal Dijital Tasarım', cap4_desc:'İlk eskizden tam 3D modele — karmaşık mimari fikirleri etkileyici dijital sunumlara dönüştürüyoruz.',
+    cap5_title:'Özel Aydınlatma Render', cap5_desc:'Altın saatten HDR ve GI ile mimari gece aydınlatmasına kadar doğal ve yapay ışığın fiziksel simülasyonu.',
+    cap6_title:'VR / AR Etkileşimli Sunum', cap6_desc:'Mimari mekanları sanal gerçeklikte deneyimleyin — müşterileri projenin içine, tek bir tuğla bile döşenmeden önce koyuyoruz.',
+    section_projects:'Öne Çıkan Projeler',
+    projects_title:'Sınırları Zorlayan<br>Tasarımlar',
+    projects_copy:'Her 3D proje görsel bir anlatıdır. Yüksek şehir gökdelenlerinden kıyı villalarına, kamusal alanlardan en özel odalara — her mekan en iyi ifadesini hak eder.',
+    proj1_cat:'Ticari Mimarlık · Dubai · 2024', proj1_title:'Zentrum Tower',
+    proj2_cat:'Konut Mimarisi · Riyad · 2024', proj2_title:'Desert Horizon Villa',
+    proj3_cat:'Kültürel · İstanbul · 2023', proj3_title:'Arch Cultural Hub',
+    proj4_cat:'Konut · Tahran · 2024', proj4_title:'Twin Peaks Residences',
+    proj5_cat:'Biyofilik · Singapur · 2024', proj5_title:'Verdant Pavilion',
+    proj6_cat:'Kültürel · Lozan · 2023', proj6_title:'Monolith Museum',
+    proj7_cat:'Karma Kullanım · Bakü · 2024', proj7_title:'Caspian Waterfront',
+    view_project:'Projeyi Gör',
+    section_process:'Çalışma Sürecimiz',
+    proc1_title:'Brifing & Konsept Keşfi', proc1_desc:'İlk toplantıda vizyonunuzu, hedeflerinizi ve kısıtlarınızı konuşuyoruz. Sonuç: Her tasarım kararının temelini oluşturan hassas bir görsel brief.',
+    proc2_title:'Modelleme & Bloklama', proc2_desc:'İlk 3D model genel kütleler halinde oluşturulur. Bu aşama oranlar, malzemeler ve mekânsal ilişkiler üzerine kararlar almayı mümkün kılar.',
+    proc3_title:'Malzeme & Aydınlatma', proc3_desc:'PBR özelliklerine sahip gerçek dünya malzemeleri inşa edilir. HDR ve GI ile fizik tabanlı aydınlatma kurulumu. Yön onayı için önizleme renderları.',
+    proc4_title:'Final Render & Post-Prodüksiyon', proc4_desc:'İstenen çözünürlükte yüksek kaliteli renderlar — 16K\'ya kadar. Renk derecelendirme, ortam kompozisyonu ve final dosya teslimatı için post-prodüksiyon.',
+    tag_brief:'Görsel Brief', tag_moodboard:'Duygu Panosu', tag_ref:'Referans Analizi', tag_blockout:'Bloklama', tag_color:'Renk Derecelendirme',
+    stat3d_1:'Mimari Proje', stat3d_2:'Render Çözünürlüğü', stat3d_3:'Render Motoru', stat3d_4:'Müşteri Memnuniyeti',
+    cta_title:'Projenizin<br>Hayata Geçtiğini<br>Görün',
+    cta_sub:'İlk eskizden 16K nihai rendere — fikrinizi unutulmaz bir görsel deneyime dönüştürmeye hazırız. Hemen iletişime geçin.',
+    cta_btn:'Projeyi Başlat',
+    footer_copy:'© 2024 Tüm hakları saklıdır'
+  },
+  de: {
+    dir:'ltr', code:'DE',
+    nav_services:'Leistungen', nav_works:'Arbeiten', nav_studio:'Studio', nav_contact:'Kontakt', nav_home:'Startseite',
+    hero_breadcrumb:'3D-Design & Architektur', hero_tag:'3D · Arch · Viz',
+    hero_title:'3D-Design<br>& Architektur',
+    hero_sub:'Vom Konzept bis zum finalen Rendering — wir erschaffen Räume, die gesehen werden, bevor sie gebaut sind',
+    scroll_hint:'Scrollen',
+    section_overview:'Über Diesen Service',
+    overview_title:'Die Kunst,<br>vor dem Bauen zu sehen',
+    overview_body1:'Bei Modiamic erleben wir Architektur nicht nur als Bauwissenschaft, sondern als Kunst. Jedes 3D-Projekt, das wir erschaffen, ist eine vollständige visuelle Reise, bevor es Realität wird.',
+    overview_body2:'Mit fotorealistischen Rendering-Techniken, physikbasierter Beleuchtung und präzisem parametrischem Modeling liefern wir Designs, die die Grenze zwischen Digital und Realität verwischen.',
+    overview_cta:'Projekt Starten',
+    spec1_label:'Render-Auflösung', spec2_label:'Render-Engine', spec3_label:'Ausgabeformat', spec4_label:'Lieferzeit', days_text:'Arbeitstage',
+    section_cap:'Leistungen',
+    cap1_title:'Architekturvisualisierung', cap1_desc:'Fotorealistische Innen- und Außenrenderings mit präziser Tages- und Nachtbeleuchtung, die das räumliche Wesen jedes Projekts vor dem Bau erfasst.',
+    cap2_title:'Parametrisches Modeling', cap2_desc:'Präzise 3D-Modelle mit vollständiger parametrischer Kontrolle, die sofortige Designänderungen und mehrere Varianten ermöglichen.',
+    cap3_title:'3D-Animation & Flythrough', cap3_desc:'Cineastische Flythroughs, Walkthroughs und Architekturanimationen für Kundenpräsentationen, Investoren und die Öffentlichkeit.',
+    cap4_title:'Konzeptionelles digitales Design', cap4_desc:'Vom ersten Entwurf bis zum vollständigen 3D-Modell — wir verwandeln komplexe Architekturideen in überzeugende digitale Präsentationen.',
+    cap5_title:'Spezielles Beleuchtungs-Rendering', cap5_desc:'Physikalische Simulation von natürlichem und künstlichem Licht — von der goldenen Stunde bis zur architektonischen Nachtbeleuchtung mit HDR und GI.',
+    cap6_title:'VR / AR Interaktive Präsentation', cap6_desc:'Erleben Sie Architekturräume in der virtuellen Realität — Kunden werden ins Projekt versetzt, bevor ein einziger Stein gelegt wird.',
+    section_projects:'Ausgewählte Projekte',
+    projects_title:'Designs, die<br>Grenzen<br>verschoben haben',
+    projects_copy:'Jedes 3D-Projekt ist eine visuelle Erzählung. Von Hochhäusern bis zu Küstenvillen, von öffentlichen Räumen bis zu den intimsten Zimmern — jeder Raum verdient seinen schönsten Ausdruck.',
+    proj1_cat:'Gewerbeimmobilie · Dubai · 2024', proj1_title:'Zentrum Tower',
+    proj2_cat:'Wohnarchitektur · Riad · 2024', proj2_title:'Desert Horizon Villa',
+    proj3_cat:'Kulturell · Istanbul · 2023', proj3_title:'Arch Cultural Hub',
+    proj4_cat:'Wohnen · Teheran · 2024', proj4_title:'Twin Peaks Residences',
+    proj5_cat:'Biophil · Singapur · 2024', proj5_title:'Verdant Pavilion',
+    proj6_cat:'Kulturell · Lausanne · 2023', proj6_title:'Monolith Museum',
+    proj7_cat:'Gemischt · Baku · 2024', proj7_title:'Caspian Waterfront',
+    view_project:'Projekt Ansehen',
+    section_process:'Unser Prozess',
+    proc1_title:'Briefing & Konzeptfindung', proc1_desc:'Im ersten Gespräch diskutieren wir Ihre Vision, Ziele und Einschränkungen. Ergebnis: Ein präzises visuelles Briefing, das die Grundlage aller Designentscheidungen bildet.',
+    proc2_title:'Modellierung & Blocking', proc2_desc:'Das erste 3D-Modell wird mit Gesamtmassen erstellt. Diese Phase ermöglicht Entscheidungen über Proportionen, Materialien und räumliche Beziehungen.',
+    proc3_title:'Materialien & Beleuchtung', proc3_desc:'Echte Materialien mit PBR-Eigenschaften werden erstellt. Physikalisches Beleuchtungs-Setup mit HDR und GI. Vorschau-Renderings zur Richtungsfreigabe.',
+    proc4_title:'Finales Rendering & Post-Produktion', proc4_desc:'Hochwertige Renderings in gewünschter Auflösung — bis zu 16K. Post-Produktion in Photoshop/Nuke für Color-Grading, Compositing und finale Dateiauslieferung.',
+    tag_brief:'Visuelles Briefing', tag_moodboard:'Moodboard', tag_ref:'Referenzanalyse', tag_blockout:'Blocking', tag_color:'Color-Grading',
+    stat3d_1:'Architekturprojekte', stat3d_2:'Render-Auflösung', stat3d_3:'Render-Engines', stat3d_4:'Kundenzufriedenheit',
+    cta_title:'Sehen Sie Ihr Projekt<br>lebendig werden',
+    cta_sub:'Vom ersten Entwurf bis zum finalen 16K-Rendering — wir sind bereit, Ihre Idee in ein unvergessliches visuelles Erlebnis zu verwandeln.',
+    cta_btn:'Projekt Starten',
+    footer_copy:'© 2024 Alle Rechte vorbehalten'
+  },
+  fr: {
+    dir:'ltr', code:'FR',
+    nav_services:'Services', nav_works:'Travaux', nav_studio:'Studio', nav_contact:'Contact', nav_home:'Accueil',
+    hero_breadcrumb:'Design 3D & Architecture', hero_tag:'3D · Arch · Viz',
+    hero_title:'Design 3D<br>& Architecture',
+    hero_sub:'Du concept au rendu final — nous créons des espaces vus avant d\'être construits',
+    scroll_hint:'Défiler',
+    section_overview:'À Propos de ce Service',
+    overview_title:'L\'Art de Voir<br>Avant de Construire',
+    overview_body1:'Chez Modiamic, nous vivons l\'architecture non seulement comme une science structurale, mais comme un art. Chaque projet 3D que nous créons est un voyage visuel complet avant de devenir réalité.',
+    overview_body2:'Avec des techniques de rendu photoréaliste, un éclairage physique et une modélisation paramétrique précise, nous livrons des designs qui effacent la frontière entre le numérique et la réalité.',
+    overview_cta:'Démarrer un Projet',
+    spec1_label:'Résolution de Rendu', spec2_label:'Moteur de Rendu', spec3_label:'Format de Sortie', spec4_label:'Livraison', days_text:'Jours Ouvrables',
+    section_cap:'Capacités',
+    cap1_title:'Visualisation Architecturale', cap1_desc:'Rendus photoréalistes d\'intérieur et d\'extérieur avec un éclairage précis de jour et de nuit, capturant l\'essence spatiale de tout projet avant construction.',
+    cap2_title:'Modélisation Paramétrique', cap2_desc:'Modèles 3D précis avec contrôle paramétrique complet, permettant des modifications instantanées et l\'exploration de multiples variantes.',
+    cap3_title:'Animation 3D & Flythrough', cap3_desc:'Flythroughs cinématiques, walkthroughs et animations architecturales pour présentations clients, investisseurs et le grand public.',
+    cap4_title:'Design Digital Conceptuel', cap4_desc:'Du premier croquis au modèle 3D complet — nous transformons des idées architecturales complexes en présentations numériques percutantes.',
+    cap5_title:'Rendu d\'Éclairage Spécial', cap5_desc:'Simulation physique de la lumière naturelle et artificielle — de l\'heure dorée à l\'éclairage architectural nocturne avec HDR et GI.',
+    cap6_title:'Présentation Interactive VR / AR', cap6_desc:'Vivez des espaces architecturaux en réalité virtuelle — en plaçant les clients dans le projet avant la pose de la première pierre.',
+    section_projects:'Projets Sélectionnés',
+    projects_title:'Des designs qui ont<br>repoussé<br>les limites',
+    projects_copy:'Chaque projet 3D est un récit visuel. Des gratte-ciel urbains aux villas côtières, des espaces publics aux pièces les plus intimes — chaque espace mérite sa plus belle expression.',
+    proj1_cat:'Architecture Commerciale · Dubai · 2024', proj1_title:'Zentrum Tower',
+    proj2_cat:'Architecture Résidentielle · Riyad · 2024', proj2_title:'Desert Horizon Villa',
+    proj3_cat:'Culturel · Istanbul · 2023', proj3_title:'Arch Cultural Hub',
+    proj4_cat:'Résidentiel · Téhéran · 2024', proj4_title:'Twin Peaks Residences',
+    proj5_cat:'Biophilique · Singapour · 2024', proj5_title:'Verdant Pavilion',
+    proj6_cat:'Culturel · Lausanne · 2023', proj6_title:'Monolith Museum',
+    proj7_cat:'Mixte · Bakou · 2024', proj7_title:'Caspian Waterfront',
+    view_project:'Voir le Projet',
+    section_process:'Notre Processus',
+    proc1_title:'Briefing & Découverte du Concept', proc1_desc:'Lors de la première session, nous discutons de votre vision, objectifs et contraintes. Résultat: un brief visuel précis qui fonde toutes les décisions de design.',
+    proc2_title:'Modélisation & Blocking', proc2_desc:'Le modèle 3D initial est construit avec les masses générales. Cette étape permet des décisions sur les proportions, matériaux et relations spatiales.',
+    proc3_title:'Matériaux & Éclairage', proc3_desc:'Construction de matériaux réels avec propriétés PBR. Configuration d\'éclairage physique avec HDR et GI. Rendus d\'aperçu pour validation de direction.',
+    proc4_title:'Rendu Final & Post-Production', proc4_desc:'Rendus haute qualité à la résolution demandée — jusqu\'à 16K. Post-production dans Photoshop/Nuke pour étalonnage couleur, compositing et livraison finale.',
+    tag_brief:'Brief Visuel', tag_moodboard:'Moodboard', tag_ref:'Analyse de Références', tag_blockout:'Blocking', tag_color:'Étalonnage Couleur',
+    stat3d_1:'Projets Architecture', stat3d_2:'Résolution Rendu', stat3d_3:'Moteurs de Rendu', stat3d_4:'Satisfaction Client',
+    cta_title:'Voyez Votre Projet<br>Prendre Vie',
+    cta_sub:'Du premier croquis au rendu final 16K — nous sommes prêts à transformer votre idée en une expérience visuelle inoubliable.',
+    cta_btn:'Démarrer un Projet',
+    footer_copy:'© 2024 Tous droits réservés'
+  },
+  it: {
+    dir:'ltr', code:'IT',
+    nav_services:'Servizi', nav_works:'Lavori', nav_studio:'Studio', nav_contact:'Contatti', nav_home:'Home',
+    hero_breadcrumb:'Design 3D & Architettura', hero_tag:'3D · Arch · Viz',
+    hero_title:'Design 3D<br>& Architettura',
+    hero_sub:'Dal concept al render finale — creiamo spazi che si vedono prima di essere costruiti',
+    scroll_hint:'Scorri',
+    section_overview:'Su Questo Servizio',
+    overview_title:'L\'Arte di Vedere<br>Prima di Costruire',
+    overview_body1:'Da Modiamic, viviamo l\'architettura non solo come scienza strutturale, ma come arte. Ogni progetto 3D che creiamo è un viaggio visivo completo prima di diventare realtà.',
+    overview_body2:'Con tecniche di rendering fotorealistico, illuminazione fisica e modellazione parametrica precisa, offriamo design che cancellano il confine tra digitale e realtà.',
+    overview_cta:'Avvia un Progetto',
+    spec1_label:'Risoluzione Render', spec2_label:'Motore di Render', spec3_label:'Formato Output', spec4_label:'Consegna', days_text:'Giorni Lavorativi',
+    section_cap:'Capacità',
+    cap1_title:'Visualizzazione Architettonica', cap1_desc:'Render fotorealistici di interni ed esterni con illuminazione precisa di giorno e notte, catturando l\'essenza spaziale di ogni progetto prima della costruzione.',
+    cap2_title:'Modellazione Parametrica', cap2_desc:'Modelli 3D precisi con controllo parametrico completo, consentendo modifiche istantanee e l\'esplorazione di multiple varianti.',
+    cap3_title:'Animazione 3D & Flythrough', cap3_desc:'Flythrough cinematici, walkthrough e animazioni architettoniche per presentazioni a clienti, investitori e pubblico generale.',
+    cap4_title:'Design Digitale Concettuale', cap4_desc:'Dal primo schizzo al modello 3D completo — trasformiamo idee architettoniche complesse in presentazioni digitali convincenti.',
+    cap5_title:'Render con Illuminazione Speciale', cap5_desc:'Simulazione fisica di luce naturale e artificiale — dall\'ora d\'oro all\'illuminazione architettonica notturna con HDR e GI.',
+    cap6_title:'Presentazione Interattiva VR / AR', cap6_desc:'Sperimentate spazi architettonici in realtà virtuale — mettendo i clienti all\'interno del progetto prima che venga posata la prima pietra.',
+    section_projects:'Progetti Selezionati',
+    projects_title:'Design che hanno<br>spostato<br>i confini',
+    projects_copy:'Ogni progetto 3D è una narrazione visiva. Da grattacieli urbani a ville costiere, da spazi pubblici alle stanze più intime — ogni spazio merita la sua più bella espressione.',
+    proj1_cat:'Architettura Commerciale · Dubai · 2024', proj1_title:'Zentrum Tower',
+    proj2_cat:'Architettura Residenziale · Riad · 2024', proj2_title:'Desert Horizon Villa',
+    proj3_cat:'Culturale · Istanbul · 2023', proj3_title:'Arch Cultural Hub',
+    proj4_cat:'Residenziale · Teheran · 2024', proj4_title:'Twin Peaks Residences',
+    proj5_cat:'Biofilico · Singapore · 2024', proj5_title:'Verdant Pavilion',
+    proj6_cat:'Culturale · Losanna · 2023', proj6_title:'Monolith Museum',
+    proj7_cat:'Uso Misto · Baku · 2024', proj7_title:'Caspian Waterfront',
+    view_project:'Vedi Progetto',
+    section_process:'Il Nostro Processo',
+    proc1_title:'Briefing & Scoperta del Concetto', proc1_desc:'Nella prima sessione, discutiamo la tua visione, obiettivi e vincoli. Risultato: un brief visivo preciso che fonda tutte le decisioni di design.',
+    proc2_title:'Modellazione & Blocking', proc2_desc:'Il modello 3D iniziale viene costruito con masse generali. Questa fase consente decisioni su proporzioni, materiali e relazioni spaziali.',
+    proc3_title:'Materiali & Illuminazione', proc3_desc:'Costruzione di materiali reali con proprietà PBR. Setup di illuminazione fisica con HDR e GI. Render di anteprima per approvazione della direzione.',
+    proc4_title:'Render Finale & Post-Produzione', proc4_desc:'Render di alta qualità alla risoluzione richiesta — fino a 16K. Post-produzione in Photoshop/Nuke per color grading, compositing e consegna finale.',
+    tag_brief:'Brief Visivo', tag_moodboard:'Moodboard', tag_ref:'Analisi Riferimenti', tag_blockout:'Blocking', tag_color:'Color Grading',
+    stat3d_1:'Progetti Architettura', stat3d_2:'Risoluzione Render', stat3d_3:'Motori di Render', stat3d_4:'Soddisfazione Cliente',
+    cta_title:'Guarda il Tuo Progetto<br>Prendere Vita',
+    cta_sub:'Dal primo schizzo al render finale 16K — siamo pronti a trasformare la tua idea in un\'esperienza visiva indimenticabile.',
+    cta_btn:'Avvia un Progetto',
+    footer_copy:'© 2024 Tutti i diritti riservati'
+  },
+  es: {
+    dir:'ltr', code:'ES',
+    nav_services:'Servicios', nav_works:'Trabajos', nav_studio:'Estudio', nav_contact:'Contacto', nav_home:'Inicio',
+    hero_breadcrumb:'Diseño 3D & Arquitectura', hero_tag:'3D · Arch · Viz',
+    hero_title:'Diseño 3D<br>& Arquitectura',
+    hero_sub:'Del concepto al render final — creamos espacios que se ven antes de ser construidos',
+    scroll_hint:'Desplazarse',
+    section_overview:'Sobre Este Servicio',
+    overview_title:'El Arte de Ver<br>Antes de Construir',
+    overview_body1:'En Modiamic, vivimos la arquitectura no solo como ciencia estructural, sino como arte. Cada proyecto 3D que creamos es un viaje visual completo antes de convertirse en realidad.',
+    overview_body2:'Con técnicas de renderizado fotorrealista, iluminación física y modelado paramétrico preciso, entregamos diseños que borran la línea entre lo digital y la realidad.',
+    overview_cta:'Iniciar Proyecto',
+    spec1_label:'Resolución de Render', spec2_label:'Motor de Render', spec3_label:'Formato de Salida', spec4_label:'Entrega', days_text:'Días Hábiles',
+    section_cap:'Capacidades',
+    cap1_title:'Visualización Arquitectónica', cap1_desc:'Renders fotorrealistas de interior y exterior con iluminación precisa de día y noche, capturando la esencia espacial de cualquier proyecto antes de la construcción.',
+    cap2_title:'Modelado Paramétrico', cap2_desc:'Modelos 3D precisos con control paramétrico completo, permitiendo cambios instantáneos de diseño y exploración de múltiples variantes.',
+    cap3_title:'Animación 3D & Flythrough', cap3_desc:'Flythroughs cinematográficos, walkthroughs y animaciones arquitectónicas para presentaciones a clientes, inversores y audiencias públicas.',
+    cap4_title:'Diseño Digital Conceptual', cap4_desc:'Del primer boceto al modelo 3D completo — transformamos ideas arquitectónicas complejas en presentaciones digitales convincentes.',
+    cap5_title:'Render de Iluminación Especial', cap5_desc:'Simulación física de luz natural y artificial — desde la hora dorada hasta la iluminación arquitectónica nocturna con HDR y GI.',
+    cap6_title:'Presentación Interactiva VR / AR', cap6_desc:'Experimenta espacios arquitectónicos en realidad virtual — colocando a los clientes dentro del proyecto antes de poner el primer ladrillo.',
+    section_projects:'Proyectos Destacados',
+    projects_title:'Diseños que han<br>superado<br>los límites',
+    projects_copy:'Cada proyecto 3D es una narrativa visual. Desde rascacielos urbanos hasta villas costeras, de espacios públicos a las habitaciones más íntimas — cada espacio merece su mejor expresión.',
+    proj1_cat:'Arquitectura Comercial · Dubai · 2024', proj1_title:'Zentrum Tower',
+    proj2_cat:'Arquitectura Residencial · Riad · 2024', proj2_title:'Desert Horizon Villa',
+    proj3_cat:'Cultural · Estambul · 2023', proj3_title:'Arch Cultural Hub',
+    proj4_cat:'Residencial · Teherán · 2024', proj4_title:'Twin Peaks Residences',
+    proj5_cat:'Biofílico · Singapur · 2024', proj5_title:'Verdant Pavilion',
+    proj6_cat:'Cultural · Lausana · 2023', proj6_title:'Monolith Museum',
+    proj7_cat:'Uso Mixto · Bakú · 2024', proj7_title:'Caspian Waterfront',
+    view_project:'Ver Proyecto',
+    section_process:'Nuestro Proceso',
+    proc1_title:'Briefing & Descubrimiento del Concepto', proc1_desc:'En la primera sesión, hablamos de tu visión, objetivos y limitaciones. Resultado: un brief visual preciso que fundamenta todas las decisiones de diseño.',
+    proc2_title:'Modelado & Blocking', proc2_desc:'El modelo 3D inicial se construye con masas generales. Esta etapa permite decisiones sobre proporciones, materiales y relaciones espaciales.',
+    proc3_title:'Materiales & Iluminación', proc3_desc:'Construcción de materiales reales con propiedades PBR. Configuración de iluminación física con HDR y GI. Renders de vista previa para aprobación de dirección.',
+    proc4_title:'Render Final & Post-Producción', proc4_desc:'Renders de alta calidad a la resolución solicitada — hasta 16K. Post-producción en Photoshop/Nuke para gradación de color, compositing y entrega de archivos finales.',
+    tag_brief:'Brief Visual', tag_moodboard:'Moodboard', tag_ref:'Análisis de Referencia', tag_blockout:'Blocking', tag_color:'Gradación de Color',
+    stat3d_1:'Proyectos Arquitectura', stat3d_2:'Resolución Render', stat3d_3:'Motores de Render', stat3d_4:'Satisfacción Cliente',
+    cta_title:'Vea Su Proyecto<br>Cobrar Vida',
+    cta_sub:'Del primer boceto al render final 16K — estamos listos para transformar tu idea en una experiencia visual inolvidable.',
+    cta_btn:'Iniciar Proyecto',
+    footer_copy:'© 2024 Todos los derechos reservados'
+  },
+  el: {
+    dir:'ltr', code:'EL',
+    nav_services:'Υπηρεσίες', nav_works:'Έργα', nav_studio:'Στούντιο', nav_contact:'Επικοινωνία', nav_home:'Αρχική',
+    hero_breadcrumb:'3D Σχεδιασμός & Αρχιτεκτονική', hero_tag:'3D · Arch · Viz',
+    hero_title:'3D Σχεδιασμός<br>& Αρχιτεκτονική',
+    hero_sub:'Από το concept ως το τελικό render — δημιουργούμε χώρους που φαίνονται πριν χτιστούν',
+    scroll_hint:'Κύλιση',
+    section_overview:'Για Αυτή την Υπηρεσία',
+    overview_title:'Η Τέχνη να Βλέπεις<br>Πριν Χτίσεις',
+    overview_body1:'Στη Modiamic, βιώνουμε την αρχιτεκτονική όχι μόνο ως δομική επιστήμη, αλλά ως τέχνη. Κάθε 3D project που δημιουργούμε είναι ένα ολοκληρωμένο οπτικό ταξίδι πριν γίνει πραγματικότητα.',
+    overview_body2:'Με τεχνικές φωτορεαλιστικού rendering, φυσικής φωτεινότητας και ακριβή παραμετρικά μοντέλα, παραδίδουμε σχέδια που σβήνουν τα όρια μεταξύ ψηφιακού και πραγματικού.',
+    overview_cta:'Ξεκινήστε Έργο',
+    spec1_label:'Ανάλυση Render', spec2_label:'Μηχανή Render', spec3_label:'Μορφή Εξόδου', spec4_label:'Παράδοση', days_text:'Εργάσιμες Ημέρες',
+    section_cap:'Δυνατότητες',
+    cap1_title:'Αρχιτεκτονική Οπτικοποίηση', cap1_desc:'Φωτορεαλιστικά renders εσωτερικού και εξωτερικού με ακριβή φωτισμό ημέρας και νύχτας, αποτυπώνοντας τη χωρική ουσία κάθε έργου πριν την κατασκευή.',
+    cap2_title:'Παραμετρική Μοντελοποίηση', cap2_desc:'Ακριβή 3D μοντέλα με πλήρη παραμετρικό έλεγχο, επιτρέποντας άμεσες αλλαγές σχεδίου και εξερεύνηση πολλαπλών παραλλαγών.',
+    cap3_title:'3D Animation & Flythrough', cap3_desc:'Κινηματογραφικά flythroughs, walkthroughs και αρχιτεκτονικές animations για παρουσιάσεις σε πελάτες, επενδυτές και ευρύ κοινό.',
+    cap4_title:'Εννοιολογικός Ψηφιακός Σχεδιασμός', cap4_desc:'Από το πρώτο σκίτσο ως το πλήρες 3D μοντέλο — μετατρέπουμε σύνθετες αρχιτεκτονικές ιδέες σε πειστικές ψηφιακές παρουσιάσεις.',
+    cap5_title:'Ειδικό Render Φωτισμού', cap5_desc:'Φυσική προσομοίωση φυσικού και τεχνητού φωτός — από τη χρυσή ώρα ως τον αρχιτεκτονικό νυχτερινό φωτισμό με HDR και GI.',
+    cap6_title:'Διαδραστική Παρουσίαση VR / AR', cap6_desc:'Ζήστε αρχιτεκτονικούς χώρους στην εικονική πραγματικότητα — τοποθετώντας πελάτες μέσα στο έργο πριν μπει η πρώτη πέτρα.',
+    section_projects:'Επιλεγμένα Έργα',
+    projects_title:'Σχέδια που<br>έσπασαν<br>τα όρια',
+    projects_copy:'Κάθε 3D project είναι μια οπτική αφήγηση. Από ουρανοξύστες έως παραθαλάσσιες βίλες, από δημόσιους χώρους ως τα πιο ιδιωτικά δωμάτια — κάθε χώρος αξίζει την ωραιότερη έκφρασή του.',
+    proj1_cat:'Εμπορική Αρχιτεκτονική · Ντουμπάι · 2024', proj1_title:'Zentrum Tower',
+    proj2_cat:'Κατοικία · Ριάντ · 2024', proj2_title:'Desert Horizon Villa',
+    proj3_cat:'Πολιτιστικό · Κωνσταντινούπολη · 2023', proj3_title:'Arch Cultural Hub',
+    proj4_cat:'Κατοικία · Τεχεράνη · 2024', proj4_title:'Twin Peaks Residences',
+    proj5_cat:'Βιοφιλικό · Σιγκαπούρη · 2024', proj5_title:'Verdant Pavilion',
+    proj6_cat:'Πολιτιστικό · Λωζάνη · 2023', proj6_title:'Monolith Museum',
+    proj7_cat:'Μεικτή Χρήση · Μπακού · 2024', proj7_title:'Caspian Waterfront',
+    view_project:'Δείτε το Έργο',
+    section_process:'Η Διαδικασία Μας',
+    proc1_title:'Briefing & Ανακάλυψη Concept', proc1_desc:'Στη πρώτη συνεδρία, συζητάμε το όραμα, τους στόχους και τους περιορισμούς σας. Αποτέλεσμα: ένα ακριβές οπτικό briefing που θεμελιώνει όλες τις αποφάσεις σχεδιασμού.',
+    proc2_title:'Μοντελοποίηση & Blocking', proc2_desc:'Το αρχικό 3D μοντέλο κατασκευάζεται με γενικές μάζες. Αυτό το στάδιο επιτρέπει αποφάσεις για αναλογίες, υλικά και χωρικές σχέσεις.',
+    proc3_title:'Υλικά & Φωτισμός', proc3_desc:'Κατασκευή πραγματικών υλικών με ιδιότητες PBR. Ρύθμιση φυσικού φωτισμού με HDR και GI. Renders προεπισκόπησης για έγκριση κατεύθυνσης.',
+    proc4_title:'Τελικό Render & Post-Παραγωγή', proc4_desc:'Υψηλής ποιότητας renders στην ζητούμενη ανάλυση — έως 16K. Post-παραγωγή σε Photoshop/Nuke για βαθμονόμηση χρωμάτων, compositing και τελική παράδοση.',
+    tag_brief:'Οπτικό Briefing', tag_moodboard:'Moodboard', tag_ref:'Ανάλυση Αναφορών', tag_blockout:'Blocking', tag_color:'Βαθμονόμηση Χρωμάτων',
+    stat3d_1:'Αρχιτεκτονικά Έργα', stat3d_2:'Ανάλυση Render', stat3d_3:'Μηχανές Render', stat3d_4:'Ικανοποίηση Πελατών',
+    cta_title:'Δείτε το Έργο σας<br>να Ζωντανεύει',
+    cta_sub:'Από το πρώτο σκίτσο ως το τελικό 16K render — είμαστε έτοιμοι να μετατρέψουμε την ιδέα σας σε μια αξέχαστη οπτική εμπειρία.',
+    cta_btn:'Ξεκινήστε Έργο',
+    footer_copy:'© 2024 Όλα τα δικαιώματα διατηρούνται'
+  }
+};
+
+let currentLang = 'fa';
+
+function applyLanguage(lang) {
+  const t = TRANSLATIONS[lang];
+  if (!t) return;
+  currentLang = lang;
+  document.documentElement.setAttribute('dir', t.dir);
+  document.documentElement.setAttribute('lang', lang);
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (t[key] !== undefined) el.placeholder = t[key];
+  });
+  document.getElementById('lang-current-label').textContent = t.code;
+  document.querySelectorAll('.lang-option').forEach(opt => {
+    opt.classList.toggle('selected', opt.dataset.lang === lang);
+  });
+  try { localStorage.setItem('modiamic_lang', lang); } catch(e) {}
+}
+
+const langBtn = document.getElementById('lang-btn');
+const langDropdown = document.getElementById('lang-dropdown');
+langBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const isOpen = langDropdown.classList.contains('open');
+  langDropdown.classList.toggle('open', !isOpen);
+  langBtn.classList.toggle('active', !isOpen);
+});
+document.addEventListener('click', () => {
+  langDropdown.classList.remove('open');
+  langBtn.classList.remove('active');
+});
+langDropdown.addEventListener('click', (e) => {
+  const opt = e.target.closest('.lang-option');
+  if (opt) {
+    applyLanguage(opt.dataset.lang);
+    langDropdown.classList.remove('open');
+    langBtn.classList.remove('active');
+  }
+});
+
+(function initLang() {
+  let saved;
+  try { saved = localStorage.getItem('modiamic_lang'); } catch(e) {}
+  applyLanguage(saved && TRANSLATIONS[saved] ? saved : 'fa');
+})();
+
+/* ══ SCROLL PROGRESS ══ */
+const scrollBar = document.getElementById('scroll-progress');
+function updateScrollBar() {
+  const st = window.scrollY;
+  const dh = document.documentElement.scrollHeight - window.innerHeight;
+  scrollBar.style.width = (dh > 0 ? (st/dh)*100 : 0) + '%';
+}
+window.addEventListener('scroll', updateScrollBar, {passive:true});
+updateScrollBar();
+
+/* ══ BACK TO TOP ══ */
+const backTop = document.getElementById('back-top');
+window.addEventListener('scroll', () => {
+  backTop.classList.toggle('visible', window.scrollY > 500);
+}, {passive:true});
+
+/* ══ NAV BACKGROUND ON SCROLL ══ */
+const navEl = document.querySelector('nav');
+window.addEventListener('scroll', () => {
+  navEl.style.background = window.scrollY > 60
+    ? 'rgba(5,5,7,0.97)'
+    : 'linear-gradient(to bottom,rgba(5,5,7,0.95) 0%,transparent 100%)';
+}, {passive:true});
+
+/* ══ HAMBURGER ══ */
+const navToggle = document.getElementById('nav-toggle');
+const navOverlay = document.getElementById('nav-overlay');
+function openNav() { navToggle.classList.add('open'); navOverlay.classList.add('open'); document.body.style.overflow='hidden'; }
+function closeNav() { navToggle.classList.remove('open'); navOverlay.classList.remove('open'); document.body.style.overflow=''; }
+navToggle.addEventListener('click', () => { if(navOverlay.classList.contains('open')) closeNav(); else openNav(); });
+
+/* ══ HAMBURGER STYLE ══ */
+(function styleToggle(){
+  const t = navToggle;
+  t.style.cssText = 'width:44px;height:44px;border-radius:50%;position:relative;display:none;align-items:center;justify-content:center;background:none;border:none;outline:none;cursor:pointer;';
+  const spans = t.querySelectorAll('span');
+  spans.forEach((s,i) => {
+    s.style.cssText = 'position:absolute;left:50%;transform:translateX(-50%);height:1.5px;border-radius:2px;background:linear-gradient(90deg,#8a8f96,#e8ecf0);transition:transform .5s cubic-bezier(.22,1,.36,1),opacity .3s,width .4s cubic-bezier(.22,1,.36,1);transform-origin:center;';
+    if(i===0){s.style.top='15px';s.style.width='20px';}
+    if(i===1){s.style.top='22.5px';s.style.width='14px';s.style.marginLeft='3px';}
+    if(i===2){s.style.top='30px';s.style.width='20px';}
+  });
+  // open state
+  t.addEventListener('transitionend',()=>{});
+  t.addEventListener('click', function(){
+    const open = navOverlay.classList.contains('open');
+    const sp = t.querySelectorAll('span');
+    if(!open) {
+      sp[0].style.transform = 'translateX(-50%) translateY(7.5px) rotate(45deg)';
+      sp[0].style.width = '18px';
+      sp[1].style.opacity = '0';
+      sp[2].style.transform = 'translateX(-50%) translateY(-7.5px) rotate(-45deg)';
+      sp[2].style.width = '18px';
+      sp.forEach(s => { s.style.background='linear-gradient(90deg,#b8a070,#e8d4a8)'; s.style.boxShadow='0 0 8px rgba(184,160,112,0.7)'; });
+    } else {
+      sp[0].style.transform = 'translateX(-50%)'; sp[0].style.width='20px';
+      sp[1].style.opacity = '1';
+      sp[2].style.transform = 'translateX(-50%)'; sp[2].style.width='20px';
+      sp.forEach(s => { s.style.background='linear-gradient(90deg,#8a8f96,#e8ecf0)'; s.style.boxShadow='none'; });
+    }
+  });
+  if(window.innerWidth <= 600) t.style.display='flex';
+  window.addEventListener('resize', () => { t.style.display = window.innerWidth <= 600 ? 'flex' : 'none'; });
+})();
+
+/* ══ CURSOR ══ */
+const cur = document.getElementById('cursor');
+let mx = window.innerWidth/2, my = window.innerHeight/2;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cur.style.left = mx+'px'; cur.style.top = my+'px';
+}, {passive:true});
+let pulseT = 0;
+(function animOrb(){
+  pulseT += 0.04;
+  const p = 1 + Math.sin(pulseT)*0.12;
+  if(!cur.classList.contains('big')) cur.style.transform = `translate(-50%,-50%) scale(${p})`;
+  requestAnimationFrame(animOrb);
+})();
+document.querySelectorAll('a,button,.proj-card,.cap-card,.stat-box').forEach(el => {
+  el.addEventListener('mouseenter', () => { cur.classList.add('big'); cur.style.transform='translate(-50%,-50%) scale(1)'; });
+  el.addEventListener('mouseleave', () => { cur.classList.remove('big'); });
+});
+
+/* ══ REVEAL ══ */
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+/* ══ PROJECT CARD TILT ══ */
+function tiltProj(el, e) {
+  const r = el.getBoundingClientRect();
+  const cx = r.left + r.width/2, cy = r.top + r.height/2;
+  const dx = (e.clientX - cx) / (r.width/2);
+  const dy = (e.clientY - cy) / (r.height/2);
+  const maxT = 4;
+  el.style.transform = `perspective(1000px) rotateX(${-dy*maxT}deg) rotateY(${dx*maxT}deg)`;
+  const wx = ((e.clientX - r.left) / r.width)*100;
+  const wy = ((e.clientY - r.top) / r.height)*100;
+  el.style.setProperty('--wx', wx+'%');
+  el.style.setProperty('--wy', wy+'%');
+}
+function resetProj(el) {
+  el.style.transform = '';
+  el.style.setProperty('--wx','50%');
+  el.style.setProperty('--wy','50%');
+}
+
+/* ══ HERO CANVAS — Animated 3D wireframe building ══ */
+(function initHeroCanvas(){
+  const canvas = document.getElementById('page-hero-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let t = 0;
+  // Particles
+  const pts = Array.from({length:80},() => ({
+    x: Math.random(), y: Math.random(),
+    vx: (Math.random()-.5)*0.0004, vy: (Math.random()-.5)*0.0003,
+    r: Math.random()*1.2+0.3, a: Math.random()*0.5+0.2
+  }));
+
+  function draw() {
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = '#050507';
+    ctx.fillRect(0,0,W,H);
+
+    // Gradient vignette
+    const vg = ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,Math.max(W,H)*0.7);
+    vg.addColorStop(0,'rgba(8,6,18,0)');
+    vg.addColorStop(1,'rgba(3,2,8,0.65)');
+    ctx.fillStyle = vg;
+    ctx.fillRect(0,0,W,H);
+
+    // Stars / particles
+    pts.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<0)p.x=1; if(p.x>1)p.x=0;
+      if(p.y<0)p.y=1; if(p.y>1)p.y=0;
+      ctx.beginPath();
+      ctx.arc(p.x*W, p.y*H, p.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(200,205,212,${p.a})`;
+      ctx.fill();
+    });
+
+    // Animated wireframe tower lines
+    const cx = W*0.72, cy = H*0.5;
+    const baseW = Math.min(W,H)*0.18;
+    const baseH = Math.min(W,H)*0.55;
+    const twist = Math.sin(t*0.5)*0.08;
+
+    ctx.save();
+    ctx.globalAlpha = 0.18;
+    ctx.strokeStyle = '#b8a070';
+    ctx.lineWidth = 0.8;
+
+    // Draw tower floors
+    const floors = 12;
+    for(let f=0;f<=floors;f++){
+      const progress = f/floors;
+      const y = cy + baseH/2 - progress*baseH;
+      const w = baseW * (1 - progress*0.35);
+      const tw = twist * progress;
+      const x1 = cx - w/2 + tw*baseW, x2 = cx + w/2 + tw*baseW;
+      const depth = w*0.25;
+      
+      // floor outline
+      if(f%2===0){
+        ctx.globalAlpha = 0.2;
+        ctx.strokeStyle = '#c8cdd4';
+      } else {
+        ctx.globalAlpha = 0.08;
+        ctx.strokeStyle = '#b8a070';
+      }
+      ctx.beginPath();
+      ctx.moveTo(x1,y); ctx.lineTo(x2,y);
+      ctx.lineTo(x2+depth, y-depth*0.5);
+      ctx.lineTo(x1+depth, y-depth*0.5);
+      ctx.closePath();
+      ctx.stroke();
+    }
+
+    // Vertical lines
+    ctx.globalAlpha = 0.12;
+    ctx.strokeStyle = '#b8a070';
+    ctx.lineWidth = 0.6;
+    const segments = 5;
+    for(let s=0;s<=segments;s++){
+      const progress = s/segments;
+      ctx.beginPath();
+      for(let f=0;f<=floors;f++){
+        const fp = f/floors;
+        const y = cy + baseH/2 - fp*baseH;
+        const w = baseW*(1-fp*0.35);
+        const tw = twist*fp;
+        const x = (cx - w/2 + tw*baseW) + progress*w;
+        if(f===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+    }
+
+    // Gold glow at top
+    const topY = cy - baseH/2;
+    const topX = cx;
+    const grd = ctx.createRadialGradient(topX, topY, 0, topX, topY, 100);
+    grd.addColorStop(0,'rgba(184,160,112,0.18)');
+    grd.addColorStop(1,'rgba(184,160,112,0)');
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.arc(topX, topY, 100, 0, Math.PI*2);
+    ctx.fill();
+
+    ctx.restore();
+    t += 0.008;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ══ OVERVIEW CANVAS — rotating 3D cube/room ══ */
+(function initOverviewCanvas(){
+  const canvas = document.getElementById('overview-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  function resize(){ canvas.width=canvas.offsetWidth; canvas.height=canvas.offsetHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let t = 0;
+  function project(x,y,z,cx,cy,fov){
+    const scale = fov/(fov+z);
+    return { x: cx + x*scale, y: cy + y*scale, s: scale };
+  }
+
+  function drawScene(){
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = '#090910';
+    ctx.fillRect(0,0,W,H);
+
+    const cx = W/2, cy = H/2;
+    const fov = 300;
+    const s = Math.min(W,H)*0.32;
+    const rotY = t * 0.4;
+    const rotX = Math.sin(t*0.3)*0.2;
+
+    function rotatePoint(x,y,z){
+      // rotate Y
+      const x2 = x*Math.cos(rotY) + z*Math.sin(rotY);
+      const z2 = -x*Math.sin(rotY) + z*Math.cos(rotY);
+      // rotate X
+      const y2 = y*Math.cos(rotX) - z2*Math.sin(rotX);
+      const z3 = y*Math.sin(rotX) + z2*Math.cos(rotX);
+      return [x2,y2,z3];
+    }
+
+    // Cube vertices
+    const v = [
+      [-s,-s,-s],[s,-s,-s],[s,s,-s],[-s,s,-s],
+      [-s,-s,s],[s,-s,s],[s,s,s],[-s,s,s]
+    ].map(([x,y,z]) => {
+      const [rx,ry,rz] = rotatePoint(x,y,z);
+      return project(rx,ry,rz,cx,cy,fov);
+    });
+
+    const edges = [
+      [0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],
+      [0,4],[1,5],[2,6],[3,7]
+    ];
+
+    ctx.save();
+    ctx.strokeStyle = 'rgba(184,160,112,0.6)';
+    ctx.lineWidth = 0.8;
+    edges.forEach(([a,b]) => {
+      ctx.beginPath();
+      ctx.moveTo(v[a].x, v[a].y);
+      ctx.lineTo(v[b].x, v[b].y);
+      ctx.stroke();
+    });
+
+    // Center glow
+    const grd = ctx.createRadialGradient(cx,cy,0,cx,cy,s*0.6);
+    grd.addColorStop(0,'rgba(184,160,112,0.1)');
+    grd.addColorStop(1,'rgba(184,160,112,0)');
+    ctx.fillStyle = grd;
+    ctx.beginPath(); ctx.arc(cx,cy,s*0.6,0,Math.PI*2); ctx.fill();
+
+    // Axis lines
+    ctx.globalAlpha = 0.15;
+    ctx.strokeStyle = '#c8cdd4';
+    ctx.lineWidth = 0.5;
+    const ax = rotatePoint(s*1.5,0,0).map((v,i)=>v);
+    const ap = project(...rotatePoint(s*1.5,0,0),cx,cy,fov);
+    const ap0 = project(...rotatePoint(-s*1.5,0,0),cx,cy,fov);
+    ctx.beginPath(); ctx.moveTo(ap0.x,ap0.y); ctx.lineTo(ap.x,ap.y); ctx.stroke();
+    const bp = project(...rotatePoint(0,s*1.5,0),cx,cy,fov);
+    const bp0 = project(...rotatePoint(0,-s*1.5,0),cx,cy,fov);
+    ctx.beginPath(); ctx.moveTo(bp0.x,bp0.y); ctx.lineTo(bp.x,bp.y); ctx.stroke();
+
+    ctx.restore();
+    t += 0.01;
+    requestAnimationFrame(drawScene);
+  }
+  drawScene();
+})();
+
+/* ══ CTA CANVAS — animated geometric structure ══ */
+(function initCtaCanvas(){
+  const canvas = document.getElementById('cta-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  function resize(){ canvas.width=canvas.offsetWidth; canvas.height=canvas.offsetHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let t = 0;
+  const nodes = Array.from({length:18},(_,i) => ({
+    angle: (i/18)*Math.PI*2,
+    r: 80 + (i%3)*40,
+    speed: 0.003 + (i%4)*0.001,
+    phase: Math.random()*Math.PI*2
+  }));
+
+  function draw(){
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = '#090910';
+    ctx.fillRect(0,0,W,H);
+
+    const cx = W/2, cy = H/2;
+
+    // Draw connecting lines between near nodes
+    const pts2d = nodes.map(n => ({
+      x: cx + Math.cos(n.angle + t*n.speed + n.phase)*n.r*(0.8+Math.sin(t*0.5+n.phase)*0.2),
+      y: cy + Math.sin(n.angle + t*n.speed + n.phase)*n.r*0.7*(0.8+Math.cos(t*0.4+n.phase)*0.15)
+    }));
+
+    ctx.save();
+    ctx.lineWidth = 0.5;
+    for(let i=0;i<pts2d.length;i++){
+      for(let j=i+1;j<pts2d.length;j++){
+        const dx=pts2d[i].x-pts2d[j].x, dy=pts2d[i].y-pts2d[j].y;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<120){
+          ctx.globalAlpha=(1-dist/120)*0.3;
+          ctx.strokeStyle='#b8a070';
+          ctx.beginPath();
+          ctx.moveTo(pts2d[i].x,pts2d[i].y);
+          ctx.lineTo(pts2d[j].x,pts2d[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Draw nodes
+    pts2d.forEach((p,i) => {
+      ctx.globalAlpha = 0.7;
+      ctx.fillStyle = i%3===0 ? '#b8a070' : '#c8cdd4';
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, i%4===0?2.5:1.5, 0, Math.PI*2);
+      ctx.fill();
+    });
+
+    // Central glow
+    const grd = ctx.createRadialGradient(cx,cy,0,cx,cy,80);
+    grd.addColorStop(0,'rgba(184,160,112,0.12)');
+    grd.addColorStop(1,'rgba(184,160,112,0)');
+    ctx.globalAlpha=1;
+    ctx.fillStyle=grd;
+    ctx.beginPath(); ctx.arc(cx,cy,80,0,Math.PI*2); ctx.fill();
+
+    ctx.restore();
+    t += 0.012;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+</script>
+</body>
+</html>
